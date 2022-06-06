@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+		<title>Liquibase Script Generator</title>
+		
+		<!-- W3C CSS -->
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		
+		<!-- W3CSS Function -->
+		<script type="text/javascript" th:src="@{/js/W3Function.js}"></script>
+		
+		<!-- Bootstrap: Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+		<!-- Bootstrap: Optional theme -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+		<!-- Bootstrap: Latest compiled and minified JavaScript -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>		
+	</HEAD>
+	
+	<BODY>
+		<div class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px; background-color: rgb(224, 224, 224);" id="menuSidebar">
+  			<button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">Close &times;</button>
+  			<h2 class="w3-bar-item">Menu</h2>
+  			<a href="#" class="w3-bar-item w3-button">DB Schema Creation</a>
+  			
+    		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsTablesDrop')">Operations on Tables <i class="fa fa-caret-down"></i></button>
+    		<div id="operationsTablesDrop" class="w3-hide w3-white w3-card">
+      			<a href="#" class="w3-bar-item w3-button">Table Creation</a>
+      			<a href="#" class="w3-bar-item w3-button">Delete Table</a>
+    		</div>
+  			
+    		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsMetadataDrop')">Operations on Metadata <i class="fa fa-caret-down"></i></button>
+    		<div id="operationsMetadataDrop" class="w3-hide w3-white w3-card">
+      			<a href="#" class="w3-bar-item w3-button">Add Column</a>
+      			<a href="#" class="w3-bar-item w3-button">Delete Column</a>
+      			<a href="#" class="w3-bar-item w3-button">Add Foreign Key Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button">Delete Foreign Key Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button">Add NOT NULL Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button">Delete NOT NULL Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button">Add Default Value</a>
+      			<a href="#" class="w3-bar-item w3-button">Change Data Type</a>
+    		</div>
+  			
+    		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsDataDrop')">Operations on Data <i class="fa fa-caret-down"></i></button>
+    		<div id="operationsDataDrop" class="w3-hide w3-white w3-card">
+      			<a href="#" class="w3-bar-item w3-button">INSERT</a>
+      			<a href="#" class="w3-bar-item w3-button">UPDATE</a>
+      			<a href="#" class="w3-bar-item w3-button">DELETE</a>
+    		</div>
+  			
+		</div>
+
+		<div class="w3-main" style="margin-left:200px;">
+			<div style="background-color: #ff3d00;">
+  				<button class="w3-button w3-xlarge" style="background-color: #ff3d00;" onclick="w3_open()">&#9776;</button>
+  				<div class="w3-container" style="background-color: #ff3d00;">
+    				<h2>Liquibase XML Script Generator</h2>
+  				</div>
+  			</div>
+		</div>
+		
+		<div class="w3-main" style="margin-left:200px;" align="center">
+			<h1>HOMEPAGE</h1>
+		</div>
+		
+	</BODY>
+</HTML>

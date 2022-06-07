@@ -1,4 +1,4 @@
-package it.alten.tirocinio;
+package it.alten.tirocinio.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

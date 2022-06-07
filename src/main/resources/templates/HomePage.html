@@ -20,17 +20,25 @@
 	</HEAD>
 	
 	<BODY>
+		<!-- LEFT SIDEBAR -->
 		<div class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px; background-color: rgb(224, 224, 224);" id="menuSidebar">
+  			
+  			<!-- CLOSE BUTTON FOR RETIRE SIDEBAR -->
   			<button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">Close &times;</button>
+  			
   			<h2 class="w3-bar-item">Menu</h2>
+  			
+  			<!-- SCHEMA OPERATION OPTIONS -->
   			<a href="#" class="w3-bar-item w3-button">DB Schema Creation</a>
   			
+  			<!-- TABLE OPERATION OPTIONS -->
     		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsTablesDrop')">Operations on Tables <i class="fa fa-caret-down"></i></button>
     		<div id="operationsTablesDrop" class="w3-hide w3-white w3-card">
       			<a href="#" class="w3-bar-item w3-button">Table Creation</a>
       			<a href="#" class="w3-bar-item w3-button">Delete Table</a>
     		</div>
   			
+  			<!-- METADATA OPERATION OPTIONS -->
     		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsMetadataDrop')">Operations on Metadata <i class="fa fa-caret-down"></i></button>
     		<div id="operationsMetadataDrop" class="w3-hide w3-white w3-card">
       			<a href="#" class="w3-bar-item w3-button">Add Column</a>
@@ -43,15 +51,17 @@
       			<a href="#" class="w3-bar-item w3-button">Change Data Type</a>
     		</div>
   			
+  			<!-- DATA OPERATION OPTIONS -->
     		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsDataDrop')">Operations on Data <i class="fa fa-caret-down"></i></button>
     		<div id="operationsDataDrop" class="w3-hide w3-white w3-card">
       			<a href="#" class="w3-bar-item w3-button">INSERT</a>
       			<a href="#" class="w3-bar-item w3-button">UPDATE</a>
       			<a href="#" class="w3-bar-item w3-button">DELETE</a>
     		</div>
-  			
 		</div>
+		<!-- END SIDEBAR -->
 
+		<!-- HEADER -->
 		<div class="w3-main" style="margin-left:200px;">
 			<div style="background-color: #ff3d00;">
   				<button class="w3-button w3-xlarge" style="background-color: #ff3d00;" onclick="w3_open()">&#9776;</button>
@@ -60,10 +70,15 @@
   				</div>
   			</div>
 		</div>
+		<!-- END HEADER -->
 		
+		<!-- BODY -->
 		<div class="w3-main" style="margin-left:200px;" align="center">
-			<h1>HOMEPAGE</h1>
+			<div class="container-fluid" style="border: 1px solid  black; margin: 10px">
+				<h1>HALLO WORLD</h1>
+			</div>
 		</div>
+		<!-- END BODY -->
 		
 	</BODY>
 </HTML>

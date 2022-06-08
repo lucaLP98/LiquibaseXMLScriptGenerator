@@ -1,0 +1,102 @@
+<form class="form-horizontal">
+
+	<!-- ID CHANGESET -->
+  <div class="form-group">
+    <label for="idChangeSet" class="col-sm-2 control-label">ID ChangeSet</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="idChangeSet" placeholder="id changeset">
+    </div>
+  </div>
+  <!-- END ID CHANGESET -->
+  
+  <!-- AUTHOR -->
+  <div class="form-group">
+    <label for="authorName" class="col-sm-2 control-label">Author</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="authorName" placeholder="Author">
+    </div>
+  </div>
+  <!-- END AUTHOR -->
+
+  <!-- SCHEMA NAME -->
+  <div class="form-group">
+    <label for="tableSchema" class="col-sm-2 control-label">Schema Name</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="tableSchema">
+  		<option>1</option>
+  		<option>2</option>
+  		<option>3</option>
+  		<option>4</option>
+  		<option>5</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END SCHEMA NAME -->
+  
+  <!-- TABLE NAME-->
+  <div class="form-group">
+    <label for="tableName" class="col-sm-2 control-label">Table Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="tableName" placeholder="table name">
+    </div>
+  </div>
+  <!-- END TABLE NAME -->
+    
+  <br><hr style="border-top: 2px dotted #bbb;"><br>
+  
+  <!-- PRIMARY KEY COLUMN NAME-->
+  <div class="form-group">
+    <label for="columnName" class="col-sm-2 control-label">PK Column Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="columnName" placeholder="primary key column name">
+    </div>
+  </div>
+  <!-- END PRIMARY KEY COLUMN NAME -->
+   
+  <!-- PRIMARY KEY COLUMN TYPE -->
+  <div class="form-group">
+    <label for="columnType" class="col-sm-2 control-label">PK Column Type</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="columnType">
+      	<option>BIT(1)</option>
+      	<option>TINYINT</option>
+  		<option>INT</option>
+  		<option>MEDIUMINT</option>
+  		<option>BIGINT</option>
+  		<option>FLOAT</option>
+  		<option>DOUBLE</option>
+  		<option>DECIMAL</option>
+  		<option>NUMERIC</option>
+  		<option>LONGBLOB</option>
+  		<option>DATETIME</option>
+  		<option>TIME</option>
+  		<option>TIMESTAMP</option>
+  		<option>DATE</option>
+  		<option>CHAR</option>
+  		<option>VARCHAR(255)</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END PRIMARY KEY COLUMN TYPE -->
+  
+  <!-- PRIMARY KEY RADIO BUTTON-->
+  <div class="form-group">
+    <label for="primaryKey" class="col-sm-2 control-label">Primary Key</label>
+    <div class="col-sm-10">
+    	<label class="radio-inline">
+      		<input disabled checked="checked" type="radio" name="primaryKey" value="yesPrimaryKey"> YES
+    	</label>
+      	<label class="radio-inline">
+      		<input disabled type="radio" name="primaryKey" value="noPrimaryKey"> NO
+      	</label>
+    </div>
+  </div>
+  <!-- END PRIMARY KEY RADIO BUTTON -->
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">Generate Script</button>
+    </div>
+  </div>
+  
+</form>

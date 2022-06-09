@@ -12,8 +12,8 @@ import it.alten.tirocinio.model.Schema;
  */
 public interface SchemaRepository extends CrudRepository<Schema, String> {
 	/*
-	 * Query for retrive of names of all schemas present in the database
+	 * Query for retrieve of names of all schemas present in the database
 	 */
-	@Query(value = "select schema_name from information_schema.schemata order by schema_name", nativeQuery = true)
+	@Query(value = "select schema_name from information_schema.schemata schema_name", nativeQuery = true)
 	Set<Schema> getAllDBSchema();
 }

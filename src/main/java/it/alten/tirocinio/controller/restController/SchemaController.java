@@ -17,10 +17,16 @@ import it.alten.tirocinio.api.DTO.SchemaListDTO;
 public class SchemaController {
 	private final SchemaService schemaService;
 	
+	/*
+	 * Constructors
+	 */
 	public SchemaController(SchemaService schemaService) {
 		this.schemaService = schemaService;
 	}
 	
+	/*
+	 * GET requests
+	 */
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public SchemaListDTO getAllDatabaseSchema(){

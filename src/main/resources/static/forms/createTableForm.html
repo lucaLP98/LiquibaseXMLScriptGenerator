@@ -1,5 +1,4 @@
 <form class="form-horizontal">
-
 	<!-- ID CHANGESET -->
   <div class="form-group">
     <label for="idChangeSet" class="col-sm-2 control-label">ID ChangeSet</label>
@@ -22,12 +21,7 @@
   <div class="form-group">
     <label for="tableSchema" class="col-sm-2 control-label">Schema Name</label>
     <div class="col-sm-10">
-      <select class="form-control" id="tableSchema">
-  		<option>1</option>
-  		<option>2</option>
-  		<option>3</option>
-  		<option>4</option>
-  		<option>5</option>
+      <select class="form-control" id="tableSchemaSelect">
 	  </select>
     </div>
   </div>
@@ -58,22 +52,22 @@
     <label for="columnType" class="col-sm-2 control-label">PK Column Type</label>
     <div class="col-sm-10">
       <select class="form-control" id="columnType">
-      	<option>BIT(1)</option>
-      	<option>TINYINT</option>
-  		<option>INT</option>
-  		<option>MEDIUMINT</option>
-  		<option>BIGINT</option>
-  		<option>FLOAT</option>
-  		<option>DOUBLE</option>
-  		<option>DECIMAL</option>
-  		<option>NUMERIC</option>
-  		<option>LONGBLOB</option>
-  		<option>DATETIME</option>
-  		<option>TIME</option>
-  		<option>TIMESTAMP</option>
-  		<option>DATE</option>
-  		<option>CHAR</option>
-  		<option>VARCHAR(255)</option>
+      	<option value="BIT(1)">BIT(1)</option>
+      	<option value="TINYINT">TINYINT</option>
+  		<option value="INT">INT</option>
+  		<option value="MEDIUMINT">MEDIUMINT</option value="BIT(1)">
+  		<option value="BIGINT">BIGINT</option value="BIT(1)">
+  		<option value="FLOAT">FLOAT</option>
+  		<option value="DOUBLE">DOUBLE</option>
+  		<option value="DECIMAL">DECIMAL</option value="BIT(1)">
+  		<option value="NUMERIC">NUMERIC</option>
+  		<option value="LONGBLOB">LONGBLOB</option>
+  		<option value="DATETIME">DATETIME</option value="BIT(1)">
+  		<option value="TIME">TIME</option>
+  		<option value="TIMESTAMP">TIMESTAMP</option>
+  		<option value="DATE">DATE</option value="BIT(1)">
+  		<option value="CHAR">CHAR</option>
+  		<option value="VARCHAR(255)">VARCHAR(255)</option>
 	  </select>
     </div>
   </div>
@@ -98,5 +92,4 @@
       <button type="submit" class="btn btn-default">Generate Script</button>
     </div>
   </div>
-  
 </form>

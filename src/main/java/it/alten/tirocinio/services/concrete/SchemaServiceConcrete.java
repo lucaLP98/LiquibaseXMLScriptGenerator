@@ -20,18 +20,20 @@ public class SchemaServiceConcrete implements SchemaService {
 	public SchemaServiceConcrete(SchemaRepository schemaRepository) {
 		this.schemaRepository = schemaRepository;
 	}
-
-	@Override
-	public SchemaListDTO getAllDatabaseSchema() {			
+	
+	private SchemaListDTO SchemaSetToListDTO(Set<Schema> schemas) {
 		List<SchemaDTO> schemasDTO = new ArrayList<>();
-		Set<Schema> schemas = schemaRepository.getAllDBSchema();
 		
 		for(Schema s : schemas) {
 			schemasDTO.add(SchemaMapper.INSTANCE.schemaToSchemaDTO(s));
 		}
-		SchemaListDTO schemaListDTO = new SchemaListDTO(schemasDTO);
 		
-		return schemaListDTO;
+		return new SchemaListDTO(schemasDTO);
+	}
+
+	@Override
+	public SchemaListDTO getAllDatabaseSchema() {				
+		return SchemaSetToListDTO(schemaRepository.getAllDBSchema());
 	}
 
 }

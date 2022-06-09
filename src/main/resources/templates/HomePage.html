@@ -6,6 +6,9 @@
 		<script src="jquery-3.6.0.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		
+		<script type="text/javascript" th:src="@{/js/formFunction.js}"></script>
+		<script type="text/javascript" th:src="@{/js/generateScript.js}"></script>
+		
 		<!-- W3C CSS -->
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		
@@ -37,7 +40,7 @@
   			<!-- TABLE OPERATION OPTIONS -->
     		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsTablesDrop')">Operations on Tables <i class="fa fa-caret-down"></i></button>
     		<div id="operationsTablesDrop" class="w3-hide w3-white w3-card">
-      			<a href="#" class="w3-bar-item w3-button" onclick="javascript: $('#formContainer').load('forms/createTableForm.html');">Table Creation</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadTableForm()">Table Creation</a>
       			<a href="#" class="w3-bar-item w3-button">Delete Table</a>
     		</div>
   			

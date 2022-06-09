@@ -8,7 +8,7 @@ import it.alten.tirocinio.api.DTO.SchemaDTO;
 import it.alten.tirocinio.model.Schema;
 
 /*
- * Mapper for Schema and Schema DTO
+ * Mapper for Schema and SchemaDTO
  */
 @Mapper
 public interface SchemaMapper {

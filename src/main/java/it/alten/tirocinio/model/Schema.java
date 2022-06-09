@@ -15,10 +15,16 @@ public class Schema {
 	@Column(name = "schema_name", insertable=false, updatable=false)
 	private String schemaName;
 	
-	public void serSchemaName(String schemaName) {
+	/*
+	 * Setter methods
+	 */
+	public void setSchemaName(String schemaName) {
 		this.schemaName = schemaName;
 	}
 	
+	/*
+	 * Getter methods
+	 */
 	public String getSchemaName() {
 		return schemaName;
 	} 

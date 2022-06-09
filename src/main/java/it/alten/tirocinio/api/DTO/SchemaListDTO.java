@@ -1,35 +1,36 @@
 package it.alten.tirocinio.api.DTO;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /*
  * List of Data Transfer Object for Database Schema information
  */
 public class SchemaListDTO {
+	@JsonProperty("schema_list")
 	private List<SchemaDTO> schemaList;
 	
-	public SchemaListDTO() {
-		
-	}
+	/*
+	 * Constructors
+	 */
+	public SchemaListDTO() { }
 	
 	public SchemaListDTO(List<SchemaDTO> schemaList) {
 		this.schemaList = schemaList;
 	}
 	
+	/*
+	 * Setter methods
+	 */
 	public void setSchemaList(List<SchemaDTO> schemaList) {
 		this.schemaList = schemaList;
 	}
 	
+	/*
+	 * Getter methods
+	 */
 	public List<SchemaDTO> getSchemaList() {
 		return this.schemaList;
-	}
-	
-	@Override
-	public String toString() {
-		String ret = "";
-		for(SchemaDTO s : schemaList) {
-			ret = s + " ";
-		}
-		
-		return ret;
 	}
 }

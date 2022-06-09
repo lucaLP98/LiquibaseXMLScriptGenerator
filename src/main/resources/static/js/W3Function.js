@@ -1,4 +1,12 @@
 /*
+ * This file contain the javascript function for W3.CSS
+ *
+ * Author : Luca Pastore
+ * Target : Alten Italia SpA
+ * File : W3Function.js
+ */
+
+/*
  * Open Menu SideBar
  */
 function w3_open() { document.getElementById("menuSidebar").style.display = "block"; }

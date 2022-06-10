@@ -1,0 +1,74 @@
+
+  <div class="form-group">
+    <label for="column_name" class="col-sm-2 control-label">Column Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="column_name" name="column_name" placeholder="column name">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="coulmn_type" class="col-sm-2 control-label">Column Type</label>
+    <div class="col-sm-10">
+      <select class="form-control" name="coulmn_type" id="coulmn_type">
+      	<option value="BIT(1)">BIT(1)</option>
+      	<option value="TINYINT">TINYINT</option>
+  		<option value="INT">INT</option>
+  		<option value="MEDIUMINT">MEDIUMINT</option>
+  		<option value="BIGINT">BIGINT</option>
+  		<option value="FLOAT">FLOAT</option>
+  		<option value="DOUBLE">DOUBLE</option>
+  		<option value="DECIMAL">DECIMAL</option>
+  		<option value="NUMERIC">NUMERIC</option>
+  		<option value="LONGBLOB">LONGBLOB</option>
+  		<option value="DATETIME">DATETIME</option>
+  		<option value="TIME">TIME</option>
+  		<option value="TIMESTAMP">TIMESTAMP</option>
+  		<option value="DATE">DATE</option>
+  		<option value="CHAR">CHAR</option>
+  		<option value="VARCHAR(255)">VARCHAR(255)</option>
+	  </select>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="column_default" class="col-sm-2 control-label">Default Value</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="column_default" id="column_default" placeholder="default value">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="is_nullable" class="col-sm-2 control-label">Nullable</label>
+    <div class="col-sm-10">
+    	<select class="form-control" name="is_nullable" id="is_nullable">
+      		<option value="true">YES</option>
+      		<option value="false">NO</option>
+	  </select>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="is_unique" class="col-sm-2 control-label">Unique</label>
+    <div class="col-sm-10">
+    	<select class="form-control" name="is_unique" id="is_unique">
+      		<option value="true">YES</option>
+      		<option value="false">NO</option>
+	  	</select>
+    </div>
+  </div>
+  
+  <br><hr style="border-top: 2px dotted #bbb;">
+  
+ <!-- BUTTON ADD NEW COLUMN -->
+  <div id="newCoulmnForm">
+  	<div class="form-group">
+  		<div class="col-sm-offset-2 col-sm-10">
+  			<button type="button" class="btn btn-default" onclick="addColumnToTable()">
+     			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      			Add Column
+     		</button>
+  		</div>
+  	</div>
+  </div>
+  <!-- END BUTTON ADD NEW COLUMN -->
+  

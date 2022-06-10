@@ -1,27 +1,30 @@
-<form class="form-horizontal">
+
+<form class="form-horizontal" id="tableForm">
+
 	<!-- ID CHANGESET -->
   <div class="form-group">
-    <label for="idChangeSet" class="col-sm-2 control-label">ID ChangeSet</label>
+    <label for="id_changeset" class="col-sm-2 control-label">ID ChangeSet</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="idChangeSet" placeholder="id changeset">
+      <input type="text" class="form-control" name="id_changeset" id="id_changeset" placeholder="id changeset">
     </div>
   </div>
   <!-- END ID CHANGESET -->
   
   <!-- AUTHOR -->
   <div class="form-group">
-    <label for="authorName" class="col-sm-2 control-label">Author</label>
+    <label for="author" class="col-sm-2 control-label">Author</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="authorName" placeholder="Author">
+      <input type="text" class="form-control" name="author" id="author" placeholder="Author">
     </div>
   </div>
   <!-- END AUTHOR -->
 
   <!-- SCHEMA NAME -->
   <div class="form-group">
-    <label for="tableSchema" class="col-sm-2 control-label">Schema Name</label>
+    <label for="table_schema" class="col-sm-2 control-label">Schema Name</label>
     <div class="col-sm-10">
-      <select class="form-control" id="tableSchemaSelect">
+      <select class="form-control" id="table_schema" name="table_schema">
+      	<option disabled selected value> -- select an option -- </option>
 	  </select>
     </div>
   </div>
@@ -29,9 +32,9 @@
   
   <!-- TABLE NAME-->
   <div class="form-group">
-    <label for="tableName" class="col-sm-2 control-label">Table Name</label>
+    <label for="table_name" class="col-sm-2 control-label">Table Name</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="tableName" placeholder="table name">
+      <input type="text" class="form-control" id="table_name" name="table_name" placeholder="table name">
     </div>
   </div>
   <!-- END TABLE NAME -->
@@ -40,18 +43,18 @@
   
   <!-- PRIMARY KEY COLUMN NAME-->
   <div class="form-group">
-    <label for="columnName" class="col-sm-2 control-label">PK Column Name</label>
+    <label for="pkName" class="col-sm-2 control-label">PK Column Name</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="columnName" placeholder="primary key column name">
+      <input type="text" class="form-control" id="pkName" name="pkName" placeholder="primary key column name">
     </div>
   </div>
   <!-- END PRIMARY KEY COLUMN NAME -->
    
   <!-- PRIMARY KEY COLUMN TYPE -->
   <div class="form-group">
-    <label for="columnType" class="col-sm-2 control-label">PK Column Type</label>
+    <label for="pkType" class="col-sm-2 control-label">PK Column Type</label>
     <div class="col-sm-10">
-      <select class="form-control" id="columnType">
+      <select class="form-control" id="pkType" name="pkType">
       	<option value="BIT(1)">BIT(1)</option>
       	<option value="TINYINT">TINYINT</option>
   		<option value="INT">INT</option>
@@ -78,7 +81,7 @@
     <label for="primaryKey" class="col-sm-2 control-label">Primary Key</label>
     <div class="col-sm-10">
     	<label class="radio-inline">
-      		<input disabled checked="checked" type="radio" name="primaryKey" value="yesPrimaryKey"> YES
+      		<input checked="checked" type="radio" name="primaryKey" value="yesPrimaryKey"> YES
     	</label>
       	<label class="radio-inline">
       		<input disabled type="radio" name="primaryKey" value="noPrimaryKey"> NO
@@ -87,9 +90,26 @@
   </div>
   <!-- END PRIMARY KEY RADIO BUTTON -->
   
+  <br><hr style="border-top: 2px dotted #bbb;">
+  
+  <!-- BUTTON ADD NEW COLUMN -->
+  <div id="newCoulmnForm">
+  	<div class="form-group">
+  		<div class="col-sm-offset-2 col-sm-10">
+  			<button id="addColumnButton" type="button" class="btn btn-default" onclick="addColumnToTable()">
+     			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      			Add Column
+     		</button>
+  		</div>
+  	</div>
+  </div>
+  <!-- END BUTTON ADD NEW COLUMN -->
+  
+  <hr style="border-top: 2px dotted #bbb;"><br>
+  
   <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-default">Generate Script</button>
-    </div>
+  	<div class="col-sm-offset-2 col-sm-10">
+      <button type="button" class="btn btn-success" onclick="sendGeneratorScriptCreateTableRequest()" >Generate Script</button>
+  	</div>
   </div>
 </form>

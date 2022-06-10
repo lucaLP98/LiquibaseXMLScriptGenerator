@@ -1,6 +1,6 @@
 package it.alten.tirocinio.services;
 
-import it.alten.tirocinio.api.DTO.SchemaListDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
 
 /*
  * Service for Database Schema Information

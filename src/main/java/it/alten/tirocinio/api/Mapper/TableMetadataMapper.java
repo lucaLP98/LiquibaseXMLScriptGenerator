@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import it.alten.tirocinio.api.DTO.TableMetadataDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
 import it.alten.tirocinio.model.TableMetadata;
 
 /*

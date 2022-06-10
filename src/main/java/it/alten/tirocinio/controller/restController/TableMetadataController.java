@@ -7,16 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.alten.tirocinio.api.DTO.TableMetadataDTO;
-import it.alten.tirocinio.api.DTO.TableMetadataListDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataListDTO;
 import it.alten.tirocinio.services.TableMetadataService;
 
 /*
  * Spring Controller for operation on Database Tables
- * 
- * Author : Luca Pastore
- * Target : Alten Italia SpA
- * File : TableMetadataController.java
  */
 @RestController
 @RequestMapping("/api/tables/")
@@ -41,7 +37,7 @@ public class TableMetadataController {
 	
 	@GetMapping("/bySchema/{schemaName}")
 	@ResponseStatus(HttpStatus.OK)
-	public TableMetadataListDTO getAllTablesBySchema(@PathVariable String schemaName) {
+	public TableMetadataListDTO getAllTablesBySchema(@PathVariable String schemaName) {		
 		return tableMetadataService.getAllTablesBySchema(schemaName);
 	}
 	

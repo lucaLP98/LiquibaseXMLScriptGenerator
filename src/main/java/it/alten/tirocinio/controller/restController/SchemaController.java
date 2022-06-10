@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
 import it.alten.tirocinio.services.SchemaService;
-import it.alten.tirocinio.api.DTO.SchemaListDTO;
 
 /*
- * Spring Controller for operation on Database Schemas
+ * Spring Rest Controller for operation on Database Schemas
  */
 @RestController
 @RequestMapping("/api/schema/")

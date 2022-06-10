@@ -1,11 +1,11 @@
-package it.alten.tirocinio.api.DTO;
+package it.alten.tirocinio.api.DTO.entityDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /*
  * Data Transfer Object for Database Tables information
  */
-public class TableMetadataDTO {
+public class TableMetadataDTO {	
 	@JsonProperty("table_schema")
 	private String tableSchema;
 	
@@ -23,20 +23,6 @@ public class TableMetadataDTO {
 	
 	@JsonProperty("table_comment")
 	private String tableComment;
-	
-	/*
-	 * Constructors
-	 */
-	public TableMetadataDTO() {}
-	
-	public TableMetadataDTO(String tableName, String tableSchema, String tableType, Integer tableRows, String createTime, String tableComment) {
-		this.createTime = createTime;
-		this.tableComment = tableComment;
-		this.tableName = tableName;
-		this.tableRows = tableRows;
-		this.tableSchema = tableSchema;
-		this.tableType = tableType;
-	}
 	
 	/*
 	 * Setter methods 

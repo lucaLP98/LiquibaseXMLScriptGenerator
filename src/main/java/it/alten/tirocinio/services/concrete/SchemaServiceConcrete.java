@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import it.alten.tirocinio.api.DTO.SchemaDTO;
-import it.alten.tirocinio.api.DTO.SchemaListDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.SchemaDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
 import it.alten.tirocinio.api.Mapper.SchemaMapper;
 import it.alten.tirocinio.model.Schema;
 import it.alten.tirocinio.repository.SchemaRepository;

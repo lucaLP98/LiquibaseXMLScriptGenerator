@@ -1,17 +1,17 @@
  /*
  * Set of function for load form for various types of scripts
- *
- * Author : Luca Pastore
- * Target : Alten Italia SpA
- * File : W3Function.js
  */
 
-//Function that fills the schemaSelect whith all schema present in database - for each schema will create an option
-function createOptionForSchemaSelect(selectName){
+/*
+ * Function that fills the schema select whith all schema present in database - for each schema will create an option
+ *
+ * param selectId is the ID of the select element to which we want to add options
+ */
+function createOptionForSchemaSelect(selectId){
 	const xhttp = new XMLHttpRequest();
 	
 	xhttp.onload = function() {
-    	let select = document.getElementById(selectName);
+    	let select = document.getElementById(selectId);
     	let jsonResponse = JSON.parse(this.response);
     	let schemaArray = jsonResponse.schema_list;
     	for(let i=0; i<schemaArray.length; i++){
@@ -26,8 +26,69 @@ function createOptionForSchemaSelect(selectName){
   	xhttp.send();
 };
 
-//load the page createTableForm.html in Homepage for the creation of "Create Table" Script
-function loadTableForm(){
+/*
+ * Function tha remove all option for the input Select element 
+ *
+ * param selectElement is the element and not its ID
+ */
+function removeOptions(selectElement) {
+   var i, L = selectElement.options.length - 1;
+   for(i = L; i >= 0; i--) {
+      selectElement.remove(i);
+   }
+}
+
+/*
+ * load the page createTableForm.html in Homepage for the creation of "Create Table" Script
+ */
+function loadCreateTableForm(){
 	$('#formContainer').load('forms/createTableForm.html');
-	createOptionForSchemaSelect("tableSchemaSelect");
+	let schemaSelectId = "table_schema";
+	createOptionForSchemaSelect(schemaSelectId);
 };
+
+/*
+ * load the page dropTableForm.html in Homepage for the creation of "Drop Table" Script
+ */
+function loadDropTableForm(){
+	$('#formContainer').load('forms/dropTableForm.html');
+	let schemaSelectId = "table_schema";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * Function that fills the table select whith all table present in a specific schema database - for each table will create an option
+ *
+ * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
+ * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
+ */
+function loadTableOption(schemaSelectId, tableSelectId){
+	let schemaSelect = document.getElementById(schemaSelectId);
+	let schemaSelected = schemaSelect.value;
+
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		let tableSelect = document.getElementById(tableSelectId);
+		tableSelect.disabled = false;
+    	removeOptions(tableSelect);
+    	let jsonResponse = JSON.parse(this.response);
+    	let tableArray = jsonResponse.table_list;
+    	for(let i=0; i<tableArray.length; i++){
+			let option = document.createElement("option");
+			option.value = tableArray[i].table_name;
+			option.innerHTML = tableArray[i].table_name;
+			tableSelect.appendChild(option); 
+		}
+   	}
+   	
+  	xhttp.open("GET", "/api/tables/bySchema/" + schemaSelected, true);
+  	xhttp.send();
+}
+
+/*
+ * Function for load in "createTableForm.html" the form for insert new column to add at table
+ */
+function addColumnToTable(){
+  	$('#newCoulmnForm').load('forms/columnTableForm.html');
+  	document.getElementById("newCoulmnForm").removeAttribute("id");
+}

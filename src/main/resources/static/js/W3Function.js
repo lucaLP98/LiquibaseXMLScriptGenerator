@@ -1,9 +1,5 @@
 /*
  * This file contain the javascript function for W3.CSS
- *
- * Author : Luca Pastore
- * Target : Alten Italia SpA
- * File : W3Function.js
  */
 
 /*
@@ -18,6 +14,8 @@ function w3_close() { document.getElementById("menuSidebar").style.display = "no
 
 /*
  * Opne the cascade sub menu for each item ov sidebar menu
+ *
+ * param idDrop: the id of dropListButton
  */	
 function dropSubMenu(idDrop) {
   	var x = document.getElementById(idDrop);

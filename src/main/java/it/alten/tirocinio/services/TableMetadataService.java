@@ -1,7 +1,7 @@
 package it.alten.tirocinio.services;
 
-import it.alten.tirocinio.api.DTO.TableMetadataListDTO;
-import it.alten.tirocinio.api.DTO.TableMetadataDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataListDTO;
 
 /*
  * Service for Database Tables Information

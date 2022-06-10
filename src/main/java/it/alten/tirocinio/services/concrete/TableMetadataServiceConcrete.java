@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import it.alten.tirocinio.api.DTO.TableMetadataDTO;
-import it.alten.tirocinio.api.DTO.TableMetadataListDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
+import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataListDTO;
 import it.alten.tirocinio.api.Mapper.TableMetadataMapper;
 import it.alten.tirocinio.model.TableMetadata;
 import it.alten.tirocinio.repository.TableMetadataRepository;

@@ -40,8 +40,8 @@
   			<!-- TABLE OPERATION OPTIONS -->
     		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsTablesDrop')">Operations on Tables <i class="fa fa-caret-down"></i></button>
     		<div id="operationsTablesDrop" class="w3-hide w3-white w3-card">
-      			<a href="#" class="w3-bar-item w3-button" onclick="loadTableForm()">Table Creation</a>
-      			<a href="#" class="w3-bar-item w3-button">Delete Table</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadCreateTableForm()">CREATE TABLE</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadDropTableForm()">DROP TABLE</a>
     		</div>
   			
   			<!-- METADATA OPERATION OPTIONS -->
@@ -90,9 +90,9 @@
 					
 					<!-- SCRIPT TEXT BOX -->
 					<div class="col-md-6">
-						<code><textarea class="form-control" rows="35" style="resize:none; width: 100%; height: 100%; " readonly id="scriptTextArea">The Liquibase XML script will be generated in this box ...</textarea></code>
+						<code><textarea class="form-control" rows="35" style="resize:vertical; width: 100%; height: 100%; " readonly id="scriptTextArea">The Liquibase XML script will be generated in this box ...</textarea></code>
 						<div>
-							<button type="button" class="btn btn-default btn-lg">
+							<button type="button" class="btn btn-default btn-lg" onclick="copyText()">
 								<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
 								Copy
 							</button>

@@ -1,4 +1,4 @@
-package it.alten.tirocinio.api.DTO;
+package it.alten.tirocinio.api.DTO.entityDTO;
 
 import java.util.List;
 
@@ -16,9 +16,7 @@ public class TableMetadataListDTO {
 	 */
 	public TableMetadataListDTO() {}
 	
-	public TableMetadataListDTO(List<TableMetadataDTO> tablesMetadataList) {
-		this.tablesMetadataList = tablesMetadataList;
-	}
+	public TableMetadataListDTO(List<TableMetadataDTO> tablesMetadataList) { this.tablesMetadataList = tablesMetadataList; }
 	
 	/*
 	 * Setter methods

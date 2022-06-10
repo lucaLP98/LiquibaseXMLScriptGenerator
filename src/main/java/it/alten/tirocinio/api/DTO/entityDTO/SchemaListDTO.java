@@ -1,4 +1,4 @@
-package it.alten.tirocinio.api.DTO;
+package it.alten.tirocinio.api.DTO.entityDTO;
 
 import java.util.List;
 
@@ -12,13 +12,11 @@ public class SchemaListDTO {
 	private List<SchemaDTO> schemaList;
 	
 	/*
-	 * Constructors
+	 * constructors
 	 */
-	public SchemaListDTO() { }
+	public SchemaListDTO() {}
 	
-	public SchemaListDTO(List<SchemaDTO> schemaList) {
-		this.schemaList = schemaList;
-	}
+	public SchemaListDTO(List<SchemaDTO> schemaList) { this.schemaList = schemaList; }
 	
 	/*
 	 * Setter methods

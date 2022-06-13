@@ -16,8 +16,11 @@ public class TableMetadataListDTO {
 	 */
 	public TableMetadataListDTO() {}
 	
-	public TableMetadataListDTO(List<TableMetadataDTO> tablesMetadataList) { this.tablesMetadataList = tablesMetadataList; }
+	public TableMetadataListDTO(List<TableMetadataDTO> tablesMetadataList) {
+		this.tablesMetadataList = tablesMetadataList;
+	}
 	
+
 	/*
 	 * Setter methods
 	 */

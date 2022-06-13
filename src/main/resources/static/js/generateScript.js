@@ -59,7 +59,7 @@ function copyText(){
 }
 
 /*
- * AJAX function for send asynch request to generate a Drop Table Script and view it into text area
+ * AJAX function for send asynch request to generate a Drop Table XML Script and view it into text area
  */
 function sendGenerateScriptDropTableRequest(){
 	let dropTableForm = document.getElementById("dropTableForm");
@@ -71,6 +71,8 @@ function sendGenerateScriptDropTableRequest(){
 	object.table_schema = formData.get("table_schema");
 	object.table_name = formData.get("table_name");
 	object.cascade_constraint = formData.get("cascade_constraint");
+	object.on_error = formData.get("on_error");
+	object.on_fail = formData.get("on_fail");
 	var json = JSON.stringify(object);
 	
 	const xhttp = new XMLHttpRequest();
@@ -78,6 +80,32 @@ function sendGenerateScriptDropTableRequest(){
     	document.getElementById("scriptTextArea").innerHTML = this.responseText;
    	}
   	xhttp.open("POST", "/api/scriptGenerator/dropTableScript/", true);
+  	xhttp.setRequestHeader("Content-type", "application/json");
+  	xhttp.send(json);
+}
+
+/*
+ * AJAX function for send asynch request to generate a Drop Column XML Script and view it into text area
+ */
+ function sendGenerateScriptDropColumnRequest(){
+	let dropColumnForm = document.getElementById("dropColumnForm");
+	let formData = new FormData(dropColumnForm);
+	
+	let object = {};
+	object.id_changeset = formData.get("id_changeset");
+	object.author = formData.get("author");
+	object.table_schema = formData.get("table_schema");
+	object.table_name = formData.get("table_name");
+	object.column_name = formData.get("column_name");
+	object.on_error = formData.get("on_error");
+	object.on_fail = formData.get("on_fail");
+	var json = JSON.stringify(object);
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+    	document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   	}
+  	xhttp.open("POST", "/api/scriptGenerator/dropColumnScript/", true);
   	xhttp.setRequestHeader("Content-type", "application/json");
   	xhttp.send(json);
 }

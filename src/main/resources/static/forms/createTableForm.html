@@ -107,6 +107,21 @@
   
   <hr style="border-top: 2px dotted #bbb;"><br>
   
+  <!-- ON ERROR -->
+  <div class="form-group">
+    <label for="table_name" class="col-sm-2 control-label">On Error Condition</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="on_error" name="on_error">
+      	<option disabled selected value> -- select an option -- </option>
+      	<option value="HALT">HALT</option>
+      	<option value="CONTINUE">CONTINUE</option>
+      	<option value="MARK_RAN">MARK_RAN</option>
+      	<option value="WARN">WARN</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END ON ERROR -->
+  
   <div class="form-group">
   	<div class="col-sm-offset-2 col-sm-10">
       <button type="button" class="btn btn-success" onclick="sendGeneratorScriptCreateTableRequest()" >Generate Script</button>

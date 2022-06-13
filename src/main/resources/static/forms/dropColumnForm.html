@@ -1,5 +1,5 @@
 
-<form class="form-horizontal" id="dropTableForm">
+<form class="form-horizontal" id="dropColumnForm">
 
 	<!-- ID CHANGESET -->
   <div class="form-group">
@@ -34,26 +34,23 @@
   <div class="form-group">
     <label for="table_name" class="col-sm-2 control-label">Table Name</label>
     <div class="col-sm-10">
-      <select disabled class="form-control" id="table_name" name="table_name">
+      <select disabled class="form-control" id="table_name" name="table_name" onchange="loadColumnOption('table_schema', 'table_name', 'column_name')">
       	<option disabled selected value> -- select an option -- </option>
 	  </select>
     </div>
   </div>
   <!-- END TABLE NAME -->
   
-  <!-- CASCADE CONSTRAINT RADIO BUTTON-->
+  <!-- COLUMN NAME-->
   <div class="form-group">
-    <label for="cascade_constraint" class="col-sm-2 control-label">Cascade Constraint</label>
+    <label for="column_name" class="col-sm-2 control-label">Column Name</label>
     <div class="col-sm-10">
-    	<label class="radio-inline">
-      		<input checked="checked" type="radio" name="cascade_constraint" value="true"> YES
-    	</label>
-      	<label class="radio-inline">
-      		<input type="radio" name="cascade_constraint" value="false"> NO
-      	</label>
+      <select disabled class="form-control" id="column_name" name="column_name">
+      	<option disabled selected value> -- select an option -- </option>
+	  </select>
     </div>
   </div>
-  <!-- END CASCADE CONSTRAINT RADIO BUTTON -->
+  <!-- END COLUMN NAME -->
   
   <!-- ON ERROR -->
   <div class="form-group">
@@ -87,7 +84,7 @@
  
   <div class="form-group">
   	<div class="col-sm-offset-2 col-sm-10">
-      <button type="button" class="btn btn-success" onclick="sendGenerateScriptDropTableRequest()" >Generate Script</button>
+      <button type="button" class="btn btn-success" onclick="sendGenerateScriptDropColumnRequest()" >Generate Script</button>
   	</div>
   </div>
 </form>

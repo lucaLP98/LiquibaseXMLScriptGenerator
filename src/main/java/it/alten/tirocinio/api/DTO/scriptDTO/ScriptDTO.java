@@ -9,6 +9,12 @@ public abstract class ScriptDTO {
 	@JsonProperty("author")
 	private String author;
 	
+	@JsonProperty("on_error")
+	private String onError;
+	
+	@JsonProperty("on_fail")
+	private String onFail;
+	
 	/*
 	 * Getter methods
 	 */
@@ -20,6 +26,14 @@ public abstract class ScriptDTO {
 		return author;
 	}
 	
+	public String getOnError() {
+		return onError;
+	}
+	
+	public String getOnFail() {
+		return onFail;
+	}
+	
 	/*
 	 * Setter methods
 	 */
@@ -29,5 +43,13 @@ public abstract class ScriptDTO {
 	
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+	
+	public void setOnError(String onError) {
+		this.onError = onError;
+	}
+	
+	public void setOnFail(String onFail) {
+		this.onFail = onFail;
 	}
 }

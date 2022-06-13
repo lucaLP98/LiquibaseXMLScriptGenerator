@@ -48,13 +48,14 @@
     		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsMetadataDrop')">Operations on Metadata <i class="fa fa-caret-down"></i></button>
     		<div id="operationsMetadataDrop" class="w3-hide w3-white w3-card">
       			<a href="#" class="w3-bar-item w3-button">Add Column</a>
-      			<a href="#" class="w3-bar-item w3-button">Delete Column</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadDropColumnForm()">Delete Column</a>
       			<a href="#" class="w3-bar-item w3-button">Add Foreign Key Constraint</a>
       			<a href="#" class="w3-bar-item w3-button">Delete Foreign Key Constraint</a>
       			<a href="#" class="w3-bar-item w3-button">Add NOT NULL Constraint</a>
       			<a href="#" class="w3-bar-item w3-button">Delete NOT NULL Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button">Add UNIQUE Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button">Delete UNIQUE Constraint</a>
       			<a href="#" class="w3-bar-item w3-button">Add Default Value</a>
-      			<a href="#" class="w3-bar-item w3-button">Change Data Type</a>
     		</div>
   			
   			<!-- DATA OPERATION OPTIONS -->
@@ -63,6 +64,15 @@
       			<a href="#" class="w3-bar-item w3-button">INSERT</a>
       			<a href="#" class="w3-bar-item w3-button">UPDATE</a>
       			<a href="#" class="w3-bar-item w3-button">DELETE</a>
+    		</div>
+    		
+    		<!-- CHANGE DATA TYPE -->
+    		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsChangeDataType')">Change Data Type<i class="fa fa-caret-down"></i></button>
+    		<div id="operationsChangeDataType" class="w3-hide w3-white w3-card">
+      			<a href="#" class="w3-bar-item w3-button">Rename Table</a>
+      			<a href="#" class="w3-bar-item w3-button">Rename Column</a>
+      			<a href="#" class="w3-bar-item w3-button">Modify Column Data Type</a>
+      			<a href="#" class="w3-bar-item w3-button">Add Auto Increment Column</a>
     		</div>
 		</div>
 		<!-- END SIDEBAR -->

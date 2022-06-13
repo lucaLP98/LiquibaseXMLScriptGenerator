@@ -57,14 +57,22 @@ function loadDropTableForm(){
 };
 
 /*
- * Function that fills the table select whith all table present in a specific schema database - for each table will create an option
+ * load the page dropColumnForm.html in Homepage for the creation of "Drop Column" Script
+ */
+function loadDropColumnForm(){
+	$('#formContainer').load('forms/dropColumnForm.html');
+	let schemaSelectId = "table_schema";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * Function that fills the table select whith all DB table present in a specific database schema - for each table will create an option
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
  * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
  */
 function loadTableOption(schemaSelectId, tableSelectId){
-	let schemaSelect = document.getElementById(schemaSelectId);
-	let schemaSelected = schemaSelect.value;
+	let schemaSelected = document.getElementById(schemaSelectId).value;
 
 	const xhttp = new XMLHttpRequest();
 	xhttp.onload = function() {
@@ -72,7 +80,7 @@ function loadTableOption(schemaSelectId, tableSelectId){
 		tableSelect.disabled = false;
     	removeOptions(tableSelect);
     	let jsonResponse = JSON.parse(this.response);
-    	let tableArray = jsonResponse.table_list;
+    	let tableArray = jsonResponse.table_list;    	
     	for(let i=0; i<tableArray.length; i++){
 			let option = document.createElement("option");
 			option.value = tableArray[i].table_name;
@@ -82,6 +90,36 @@ function loadTableOption(schemaSelectId, tableSelectId){
    	}
    	
   	xhttp.open("GET", "/api/tables/bySchema/" + schemaSelected, true);
+  	xhttp.send();
+}
+
+/*
+ * Function that fills the columns select whith all DB columns present in a specific database Table - for each column will create an option
+ *
+ * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
+ * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
+ * param columnSelectId : is the ID of select which will contain the list of Columns for the selected DB Table (and Schema)
+ */
+function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId){
+	let schemaSelected = document.getElementById(schemaSelectId).value;
+	let tableSelected = document.getElementById(tableSelectId).value;
+
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		let columnSelect = document.getElementById(columnSelectId);
+		columnSelect.disabled = false;
+    	removeOptions(columnSelect);
+    	let jsonResponse = JSON.parse(this.response);
+    	let columnArray = jsonResponse.column_list;
+    	for(let i=0; i<columnArray.length; i++){
+			let option = document.createElement("option");
+			option.value = columnArray[i].column_name;
+			option.innerHTML = columnArray[i].column_name;
+			columnSelect.appendChild(option); 
+		}
+   	}
+   	
+  	xhttp.open("GET", "/api/columns/byTable/" + schemaSelected + "&" + tableSelected, true);
   	xhttp.send();
 }
 

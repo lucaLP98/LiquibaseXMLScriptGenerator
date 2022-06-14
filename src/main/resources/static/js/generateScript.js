@@ -1,49 +1,89 @@
  /*
  * Set of function for send request to generate XML script and view it 
  */
+ 
+ /*
+ * AJAX function for send asynch request to generate a Create Schema XML Script and view it into text area
+ */
+function sendGeneratorScriptCreateSchemaRequest(){
+	let formData = new FormData(document.getElementById("schemaForm"));
+	
+	let notEmpty = checkNotEmptyField("schemaForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/createSchemaScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
 
 /*
  * AJAX function for send asynch request to generate a Create Table XML Script and view it into text area
  */
 function sendGeneratorScriptCreateTableRequest(){
-	let myForm = document.getElementById("tableForm");
-	let formData = new FormData(myForm);
+	let formData = new FormData(document.getElementById("tableForm"));
 	let object = {};
 	let columnArray = [];
 	let columnRead = false;
+	let notEmpty = true;
 	
-	object.id_changeset = formData.get("id_changeSet");
-	object.author = formData.get("author");
-	object.table_schema = formData.get("table_schema");
-	object.table_name = formData.get("table_name");
-	object.on_error = formData.get("on_error");
-	object.on_fail = formData.get("on_fail");
-	
-	object.pk_name = formData.get("pk_name");
-	object.pk_type = formData.get("pk_type");
-		
-	for(let pair of formData.entries()) {		
-		if(pair[0] == "column_name") {
+	for(let pair of formData.entries()) {			
+		if(pair[1] == "" && notEmpty == true){
+			if(pair[0] != "column_default")	{
+				notEmpty = false
+			}
+		}
+		if(pair[0] == "column_name" && notEmpty == true) {
 			if(columnRead == false){
 				columnRead = true;
 			} 
 			var column = {};
 			columnArray.push(column);			
 			column[pair[0]] = pair[1];	
-		}else if(columnRead == true){
+		}else if(columnRead == true && notEmpty == true){
 			column[pair[0]] = pair[1];
 		}
-	}	
-	object.columns = columnArray;
-	var json = JSON.stringify(object);
+	}
 	
-	const xhttp = new XMLHttpRequest();
-	xhttp.onload = function() {
-    	document.getElementById("scriptTextArea").innerHTML = this.responseText;
-   	}
-  	xhttp.open("POST", "/api/scriptGenerator/createTableScript/", true);
-  	xhttp.setRequestHeader("Content-type", "application/json");
-  	xhttp.send(json);
+	if(notEmpty == true){
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.table_schema = formData.get("table_schema");
+		object.table_name = formData.get("table_name");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+	
+		object.pk_name = formData.get("pk_name");
+		object.pk_type = formData.get("pk_type");
+		
+		
+		object.columns = columnArray;
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/createTableScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+	
 };
 
 /*
@@ -98,7 +138,7 @@ function sendGenerateScriptDropTableRequest(){
 		object.cascade_constraint = formData.get("cascade_constraint");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		var json = JSON.stringify(object);
+		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {
@@ -130,7 +170,7 @@ function sendGenerateScriptDropTableRequest(){
 		object.column_name = formData.get("column_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		var json = JSON.stringify(object);
+		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {

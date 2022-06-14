@@ -2,7 +2,13 @@ package it.alten.tirocinio.api.DTO.scriptDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AddColumnScriptDTO extends ScriptDTO {
+public class AddColumnScriptDTO extends ScriptDTO {	
+	@JsonProperty("schema_name")
+	private String schemaName;
+	
+	@JsonProperty("table_name")
+	private String tableName;
+	
 	@JsonProperty("column_name")
 	private String columnName;
 	
@@ -21,6 +27,14 @@ public class AddColumnScriptDTO extends ScriptDTO {
 	/*
 	 * Getter methods
 	 */
+	public String getSchemaName() {
+		return schemaName;
+	}
+	
+	public String getTableName() {
+		return tableName;
+	}
+	
 	public String getColumnName() {
 		return columnName;
 	}
@@ -44,6 +58,14 @@ public class AddColumnScriptDTO extends ScriptDTO {
 	/*
 	 * Setter methods
 	 */
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+	
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
+	}
+	
 	public void setColumnName(String columnName) {
 		this.columnName = columnName;
 	}

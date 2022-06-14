@@ -22,6 +22,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
 
 import it.alten.tirocinio.model.ColumnMetadata;
@@ -48,7 +49,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	 */
 	private Element createPreConditionElement(Document document, ScriptDTO scriptDTO) {
 		//create preConditionElement
-		Element preConditionElement = document.createElement("preCondition");
+		Element preConditionElement = document.createElement("preConditions");
 		
 		//add preCondition attribute
     	Attr onErrorAtribute = document.createAttribute("onError");
@@ -102,6 +103,25 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	}
 	
 	/*
+	 * Create a ChangeSet element
+	 */
+	private Element createChangeSetElement(Document document, ScriptDTO scriptDTO) {
+		//changeSet element
+        Element changeSet = document.createElement("changeSet");
+        
+        //add changeSet attribute
+    	Attr changeSetAuthor = document.createAttribute("author");
+    	changeSetAuthor.setValue(scriptDTO.getAuthor());
+    	changeSet.setAttributeNode(changeSetAuthor);
+    	
+    	Attr changeSetId = document.createAttribute("id");
+    	changeSetId.setValue(scriptDTO.getIdChangeset());
+    	changeSet.setAttributeNode(changeSetId);
+    	
+    	return changeSet;
+	}
+	
+	/*
 	 * Create a Column XML element to append at parent element
 	 */
 	private Element newColumnScript(Document document, ColumnMetadata column) {
@@ -118,21 +138,27 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	columnRollback.setAttributeNode(columnTypeRolback); 
     	
     	//add constraint element to column
-    	Element constraintNullableRollback = document.createElement("constraints");
-    	columnRollback.appendChild(constraintNullableRollback);
+    	Element constraintRollback = document.createElement("constraints");
+    	columnRollback.appendChild(constraintRollback);
     	
     	//add constraint attribute
     	Attr nullableRolback = document.createAttribute("nullable");     
     	if(column.getIsNullable().equals("YES"))	nullableRolback.setValue("true");
     	else	nullableRolback.setValue("false");
-    	constraintNullableRollback.setAttributeNode(nullableRolback); 
+    	constraintRollback.setAttributeNode(nullableRolback); 
+    	
+    	Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
+		uniqueNameAttribiteConstraint.setValue("Unique_constraint_"+column.getTableSchema()+"_"+column.getTableName()+"_"+column.getColumnName());
+		constraintRollback.setAttributeNode(uniqueNameAttribiteConstraint);
     	
     	if(column.getColumnKey().equals("PRI")) {
-    		Element constraintPrimariKeyRollback = document.createElement("constraints");
-        	columnRollback.appendChild(constraintPrimariKeyRollback);
     		Attr primaryKeyRolback = document.createAttribute("primaryKey");     
     		primaryKeyRolback.setValue("true");
-    		constraintPrimariKeyRollback.setAttributeNode(primaryKeyRolback); 
+    		constraintRollback.setAttributeNode(primaryKeyRolback); 
+    		
+    		Attr prkmaryKeyNameAttribiteConstraint = document.createAttribute("primaryKeyName");
+        	prkmaryKeyNameAttribiteConstraint.setValue("Pk_"+column.getTableSchema()+"_"+column.getTableName());
+        	constraintRollback.setAttributeNode(prkmaryKeyNameAttribiteConstraint);
     	}
     	
     	return columnRollback;
@@ -148,18 +174,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        Document document = documentBuilder.newDocument();
 	        
 	        //changeSet element
-	        Element changeSet = document.createElement("changeSet");
+	        Element changeSet = createChangeSetElement(document, dropTableScriptDTO);
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
-	        
-	        //add changeSet attribute
-        	Attr changeSetAuthor = document.createAttribute("author");
-        	changeSetAuthor.setValue(dropTableScriptDTO.getAuthor());
-        	changeSet.setAttributeNode(changeSetAuthor);
-        	
-        	Attr changeSetId = document.createAttribute("id");
-        	changeSetId.setValue(dropTableScriptDTO.getIdChangeset());
-        	changeSet.setAttributeNode(changeSetId);
         	
         	//add preCondition element
         	Element preConditionElement = createPreConditionElement(document, dropTableScriptDTO);
@@ -167,11 +184,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	changeSet.appendChild(preConditionElement);
         	
         	//add preCondition child
-        	Element notExists = document.createElement("not");
-        	preConditionElement.appendChild(notExists);
         	
         	Element tableExistsElement = document.createElement("tableExists");
-        	notExists.appendChild(tableExistsElement);
+        	preConditionElement.appendChild(tableExistsElement);
         	
         	Attr schemaNamePreCond = document.createAttribute("schemaName");
         	schemaNamePreCond.setValue(dropTableScriptDTO.getTableSchema());
@@ -244,18 +259,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        Document document = documentBuilder.newDocument();
 	        
 	        //changeSet element
-	        Element changeSet = document.createElement("changeSet");
+	        Element changeSet = createChangeSetElement(document, dropColumnScriptDTO);;
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
-	        
-	        //add changeSet attribute
-        	Attr changeSetAuthor = document.createAttribute("author");
-        	changeSetAuthor.setValue(dropColumnScriptDTO.getAuthor());
-        	changeSet.setAttributeNode(changeSetAuthor);
-        	
-        	Attr changeSetId = document.createAttribute("id");
-        	changeSetId.setValue(dropColumnScriptDTO.getIdChangeset());
-        	changeSet.setAttributeNode(changeSetId);
         	
         	//add preCondition element
         	Element preConditionElement = createPreConditionElement(document, dropColumnScriptDTO);
@@ -263,11 +269,8 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	changeSet.appendChild(preConditionElement);
         	
         	//add preCondition child
-        	Element notExists = document.createElement("not");
-        	preConditionElement.appendChild(notExists);
-        	
         	Element columnExistsElement = document.createElement("columnExists");
-        	notExists.appendChild(columnExistsElement);
+        	preConditionElement.appendChild(columnExistsElement);
        	
         	Attr schemaNamePreCond = document.createAttribute("schemaName");
         	schemaNamePreCond.setValue(dropColumnScriptDTO.getTableSchema());
@@ -342,18 +345,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        Document document = documentBuilder.newDocument();
 	        
 	        //changeSet element
-	        Element changeSet = document.createElement("changeSet");
+	        Element changeSet = createPreConditionElement(document, createTableScriptDTO);
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
-	        
-	        //add changeSet attribute
-        	Attr changeSetAuthor = document.createAttribute("author");
-        	changeSetAuthor.setValue(createTableScriptDTO.getAuthor());
-        	changeSet.setAttributeNode(changeSetAuthor);
-        	
-        	Attr changeSetId = document.createAttribute("id");
-        	changeSetId.setValue(createTableScriptDTO.getIdChangeset());
-        	changeSet.setAttributeNode(changeSetId);
         	
         	//add preCondition element
         	Element preConditionElement = createPreConditionElement(document, createTableScriptDTO);
@@ -402,6 +396,10 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	prkmaryKeyAttribiteConstraint.setValue("true");
         	primaryKeyConstraint.setAttributeNode(prkmaryKeyAttribiteConstraint);
         	
+        	Attr prkmaryKeyNameAttribiteConstraint = document.createAttribute("primaryKeyName");
+        	prkmaryKeyNameAttribiteConstraint.setValue("Pk_"+createTableScriptDTO.getTableSchema()+"_"+createTableScriptDTO.getTableName());
+        	primaryKeyConstraint.setAttributeNode(prkmaryKeyNameAttribiteConstraint);
+        	
         	//add Primary key column attribute
         	Attr prkmaryKeyName = document.createAttribute("name");
         	prkmaryKeyName.setValue(createTableScriptDTO.getPrimaryKeyName());
@@ -433,28 +431,34 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         		}
         		
         		//add column constraint
-        		Element nullableConstraint = document.createElement("constraints");
-        		columnElement.appendChild(nullableConstraint);
+        		Element constraintElement = document.createElement("constraints");
+        		columnElement.appendChild(constraintElement);
+        		
         		Attr nullableAttributeConstraint = document.createAttribute("nullable");
         		if(c.getIsNullable().equals("YES")) {        			
         			nullableAttributeConstraint.setValue("true");
         		}else {
         			nullableAttributeConstraint.setValue("false");
         		}
-        		nullableConstraint.setAttributeNode(nullableAttributeConstraint);
+        		constraintElement.setAttributeNode(nullableAttributeConstraint);
         		
-        		Element uniqueConstraint = document.createElement("constraints");
-        		columnElement.appendChild(uniqueConstraint);
         		Attr uniqueAttributeConstraint = document.createAttribute("unique");
         		if(c.getUnique().equals("YES")) {        			
         			uniqueAttributeConstraint.setValue("true");
         		}else {
         			uniqueAttributeConstraint.setValue("false");
         		}
-        		uniqueConstraint.setAttributeNode(uniqueAttributeConstraint);
+        		constraintElement.setAttributeNode(uniqueAttributeConstraint);
+        		
+        		Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
+        		uniqueNameAttribiteConstraint.setValue("Unique_constraint_"+createTableScriptDTO.getTableSchema()+"_"+createTableScriptDTO.getTableName()+"_"+c.getColumnName());
+        		constraintElement.setAttributeNode(uniqueNameAttribiteConstraint);
+        		
         	}
         	
-        	//add rolback element
+        	/*
+        	 * add rollback element
+        	 */
     		Element rollbackElement = document.createElement("rollback");
     		changeSet.appendChild(rollbackElement);
     		
@@ -476,5 +480,51 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         }
 		
 		return createTableXMLScript;
+	}
+	
+	@Override
+	public String generateCreateSchemaLiquibaseXMLScript(CreateSchemaScriptDTO createSchemaScriptDTO){
+		String createSchemaXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, createSchemaScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        //create sql element
+	        Element sqlElement = document.createElement("sql");
+    		changeSet.appendChild(sqlElement);
+    		
+    		Attr sqlElementAttribute = document.createAttribute("endDelimiter");
+    		sqlElementAttribute.setValue(";");
+    		sqlElement.setAttributeNode(sqlElementAttribute);
+    		
+    		sqlElement.appendChild(document.createTextNode("CREATE SCHEMA " + createSchemaScriptDTO.getSchemaName()));
+	        
+    		/*
+        	 * add rollback element
+        	 */
+    		Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element sqlElementRollback = document.createElement("sql");
+    		rollbackElement.appendChild(sqlElementRollback);
+    		Attr sqlElementAttributeRollback  = document.createAttribute("endDelimiter");
+    		sqlElementAttributeRollback.setValue(";");
+    		sqlElementRollback.setAttributeNode(sqlElementAttributeRollback);
+    		sqlElementRollback.appendChild(document.createTextNode("DROP SCHEMA " + createSchemaScriptDTO.getSchemaName()));
+    		
+	        //generate XML script
+	        createSchemaXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+		
+		return createSchemaXMLScript;
 	}
 }

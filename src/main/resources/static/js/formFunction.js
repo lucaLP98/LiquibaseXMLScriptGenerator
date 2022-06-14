@@ -38,6 +38,14 @@ function removeOptions(selectElement) {
 }
 
 /*
+ * load the page createSchemaForm.html in Homepage for the creation of "Create Schema" Script
+ */
+function loadCreateSchemaForm(){
+	$('#formContainer').load('forms/createSchemaForm.html');
+};
+
+
+/*
  * load the page createTableForm.html in Homepage for the creation of "Create Table" Script
  */
 function loadCreateTableForm(){

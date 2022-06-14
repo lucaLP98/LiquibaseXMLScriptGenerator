@@ -23,8 +23,8 @@
   <div class="form-group">
     <label for="table_schema" class="col-sm-2 control-label">Schema Name</label>
     <div class="col-sm-10">
-      <select class="form-control" id="table_schema" name="table_schema" onchange="loadTableOption('table_schema', 'table_name')">
-      	<option disabled selected value> -- select an option -- </option>
+      <select class="form-control" id="table_schema" name="table_schema" onchange="loadTableOption('table_schema', 'table_name', null)">
+      	<option selected value=""> -- select an option -- </option>
 	  </select>
     </div>
   </div>
@@ -35,7 +35,8 @@
     <label for="table_name" class="col-sm-2 control-label">Table Name</label>
     <div class="col-sm-10">
       <select disabled class="form-control" id="table_name" name="table_name">
-      	<option disabled selected value> -- select an option -- </option>
+      	<!-- <option disabled selected value> -- select an option -- </option> -->
+      	<option selected value=""> -- select an option -- </option>
 	  </select>
     </div>
   </div>
@@ -57,7 +58,7 @@
   
   <!-- ON ERROR -->
   <div class="form-group">
-    <label for="table_name" class="col-sm-2 control-label">On Error Condition</label>
+    <label for="on_error" class="col-sm-2 control-label">On Error Condition</label>
     <div class="col-sm-10">
       <select class="form-control" id="on_error" name="on_error">
       	<option disabled selected value> -- select an option -- </option>
@@ -72,7 +73,7 @@
   
   <!-- ON FAIL -->
   <div class="form-group">
-    <label for="table_name" class="col-sm-2 control-label">On Fail Condition</label>
+    <label for="on_fail" class="col-sm-2 control-label">On Fail Condition</label>
     <div class="col-sm-10">
       <select class="form-control" id="on_fail" name="on_fail">
       	<option disabled selected value> -- select an option -- </option>

@@ -2,6 +2,7 @@ package it.alten.tirocinio.services;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 
 /*
  * Service that offers methods for generate different types of Liquibase Script
@@ -16,4 +17,9 @@ public interface ScriptGeneratorService {
 	 * Method for generate a Drop Column Script
 	 */
 	String generateDropColumnLiquibaseXMLScript(DropColumnScriptDTO dropColumnScriptDTO);
+	
+	/*
+	 * Method for generate a Create Table Script
+	 */
+	String generateCreateTableLiquibaseXMLScript(CreateTableScriptDTO createTableScriptDTO);
 }

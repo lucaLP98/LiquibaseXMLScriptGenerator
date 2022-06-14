@@ -18,13 +18,18 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
+
 import it.alten.tirocinio.model.ColumnMetadata;
 import it.alten.tirocinio.model.TableMetadata;
+
 import it.alten.tirocinio.repository.ColumnMetadataRepository;
 import it.alten.tirocinio.repository.TableMetadataRepository;
+
 import it.alten.tirocinio.services.ScriptGeneratorService;
 
 @Service
@@ -325,5 +330,151 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         }
 		
 		return dropColumnXMLScript;
+	}
+	
+	@Override
+	public String generateCreateTableLiquibaseXMLScript(CreateTableScriptDTO createTableScriptDTO) {
+		String createTableXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = document.createElement("changeSet");
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        //add changeSet attribute
+        	Attr changeSetAuthor = document.createAttribute("author");
+        	changeSetAuthor.setValue(createTableScriptDTO.getAuthor());
+        	changeSet.setAttributeNode(changeSetAuthor);
+        	
+        	Attr changeSetId = document.createAttribute("id");
+        	changeSetId.setValue(createTableScriptDTO.getIdChangeset());
+        	changeSet.setAttributeNode(changeSetId);
+        	
+        	//add preCondition element
+        	Element preConditionElement = createPreConditionElement(document, createTableScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+        	//add preCondition child
+        	Element notExists = document.createElement("not");
+        	preConditionElement.appendChild(notExists);
+        	
+        	Element tableExistsElement = document.createElement("tableExists");
+        	notExists.appendChild(tableExistsElement);
+       	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(createTableScriptDTO.getTableSchema());
+        	tableExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(createTableScriptDTO.getTableName());
+        	tableExistsElement.setAttributeNode(tableNamePreCond); 
+        	
+        	//generate CreateTable element
+        	Element createTableElement = document.createElement("createTable");
+	        //add createTable element element to changeSet
+	        changeSet.appendChild(createTableElement);
+	        
+	        //add CreateTable attributes
+	        Attr schemaName = document.createAttribute("schemaName");
+	        schemaName.setValue(createTableScriptDTO.getTableSchema());
+	        createTableElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(createTableScriptDTO.getTableName());
+        	createTableElement.setAttributeNode(tableName); 
+        	
+        	//add primary key column element to CreateTable element
+        	Element primaryKeyElement = document.createElement("column");
+	        //add primaryKey column element to CreateTable
+        	createTableElement.appendChild(primaryKeyElement);
+        	
+        	//add primary key constraint to column
+        	Element primaryKeyConstraint = document.createElement("constraints");
+        	primaryKeyElement.appendChild(primaryKeyConstraint);
+        	
+        	Attr prkmaryKeyAttribiteConstraint = document.createAttribute("primaryKey");
+        	prkmaryKeyAttribiteConstraint.setValue("true");
+        	primaryKeyConstraint.setAttributeNode(prkmaryKeyAttribiteConstraint);
+        	
+        	//add Primary key column attribute
+        	Attr prkmaryKeyName = document.createAttribute("name");
+        	prkmaryKeyName.setValue(createTableScriptDTO.getPrimaryKeyName());
+        	primaryKeyElement.setAttributeNode(prkmaryKeyName);
+        	
+        	Attr prkmaryKeyType = document.createAttribute("type");
+        	prkmaryKeyType.setValue(createTableScriptDTO.getPrimaryKeyType());
+        	primaryKeyElement.setAttributeNode(prkmaryKeyType);
+        	
+        	//add columns to table
+        	for(AddColumnScriptDTO c : createTableScriptDTO.getColumns()) {
+        		//add new column to table
+        		Element columnElement = document.createElement("column");
+        		createTableElement.appendChild(columnElement);
+        		
+        		//add column attributes
+        		Attr columnName = document.createAttribute("name");
+        		columnName.setValue(c.getColumnName());
+        		columnElement.setAttributeNode(columnName);
+            	
+        		Attr columnType = document.createAttribute("type");
+        		columnType.setValue(c.getColumnType());
+        		columnElement.setAttributeNode(columnType);
+        		
+        		if(!c.getColumnDefault().equals("")) {
+        			Attr columnDefaultValue = document.createAttribute("defaultValue");
+        			columnDefaultValue.setValue(c.getColumnDefault());
+            		columnElement.setAttributeNode(columnDefaultValue);
+        		}
+        		
+        		//add column constraint
+        		Element nullableConstraint = document.createElement("constraints");
+        		columnElement.appendChild(nullableConstraint);
+        		Attr nullableAttributeConstraint = document.createAttribute("nullable");
+        		if(c.getIsNullable().equals("YES")) {        			
+        			nullableAttributeConstraint.setValue("true");
+        		}else {
+        			nullableAttributeConstraint.setValue("false");
+        		}
+        		nullableConstraint.setAttributeNode(nullableAttributeConstraint);
+        		
+        		Element uniqueConstraint = document.createElement("constraints");
+        		columnElement.appendChild(uniqueConstraint);
+        		Attr uniqueAttributeConstraint = document.createAttribute("unique");
+        		if(c.getUnique().equals("YES")) {        			
+        			uniqueAttributeConstraint.setValue("true");
+        		}else {
+        			uniqueAttributeConstraint.setValue("false");
+        		}
+        		uniqueConstraint.setAttributeNode(uniqueAttributeConstraint);
+        	}
+        	
+        	//add rolback element
+    		Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element dropTableRollbackElement = document.createElement("dropTable");
+    		rollbackElement.appendChild(dropTableRollbackElement);
+    		
+    		Attr tableSchemaDropTableRollback = document.createAttribute("schemaName");
+    		tableSchemaDropTableRollback.setValue(createTableScriptDTO.getTableSchema());
+    		dropTableRollbackElement.setAttributeNode(tableSchemaDropTableRollback);
+    		
+    		Attr tableNameDropTableRollback = document.createAttribute("tableName");
+    		tableNameDropTableRollback.setValue(createTableScriptDTO.getTableName());
+    		dropTableRollbackElement.setAttributeNode(tableNameDropTableRollback);
+        	
+        	//generate XML script
+        	createTableXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+		
+		return createTableXMLScript;
 	}
 }

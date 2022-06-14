@@ -19,7 +19,6 @@ function createOptionForSchemaSelect(selectId){
 			option.value = schemaArray[i].schema_name;
 			option.innerHTML = schemaArray[i].schema_name;
 			select.appendChild(option);
-
 		}
    	}
   	xhttp.open("GET", "/api/schema/", true);
@@ -70,8 +69,9 @@ function loadDropColumnForm(){
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
  * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
+ * param columnSelectId : is the ID of select which will contain the list of DB Columns for the selected DB Table (may by null if there isn't a columnSelect in page)
  */
-function loadTableOption(schemaSelectId, tableSelectId){
+function loadTableOption(schemaSelectId, tableSelectId, columnSelectId){
 	let schemaSelected = document.getElementById(schemaSelectId).value;
 
 	const xhttp = new XMLHttpRequest();
@@ -79,6 +79,21 @@ function loadTableOption(schemaSelectId, tableSelectId){
 		let tableSelect = document.getElementById(tableSelectId);
 		tableSelect.disabled = false;
     	removeOptions(tableSelect);
+    	
+    	let disabledOption = document.createElement("option");
+    	disabledOption.selected = true;
+    	disabledOption.value = "";
+    	disabledOption.innerHTML = " -- select an option -- "
+    	tableSelect.appendChild(disabledOption);  	
+    	if(columnSelectId != null){
+			let disabledOption2 = document.createElement("option");
+    		disabledOption2.selected = true;
+    		disabledOption2.value = "";
+    		disabledOption2.innerHTML = " -- select an option -- "
+    		let columnSelect = document.getElementById(columnSelectId);
+    		columnSelect.appendChild(disabledOption2); 
+		}
+    	 	
     	let jsonResponse = JSON.parse(this.response);
     	let tableArray = jsonResponse.table_list;    	
     	for(let i=0; i<tableArray.length; i++){
@@ -109,6 +124,13 @@ function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId){
 		let columnSelect = document.getElementById(columnSelectId);
 		columnSelect.disabled = false;
     	removeOptions(columnSelect);
+    	
+    	let disabledOption = document.createElement("option");
+    	disabledOption.selected = true;
+    	disabledOption.value = "";
+    	disabledOption.innerHTML = " -- select an option -- "
+    	columnSelect.appendChild(disabledOption);
+    	
     	let jsonResponse = JSON.parse(this.response);
     	let columnArray = jsonResponse.column_list;
     	for(let i=0; i<columnArray.length; i++){

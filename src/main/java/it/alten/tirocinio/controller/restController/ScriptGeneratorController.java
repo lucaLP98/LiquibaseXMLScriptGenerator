@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+
 import it.alten.tirocinio.services.ScriptGeneratorService;
 
 /*
@@ -28,7 +30,7 @@ public class ScriptGeneratorController {
 	 */
 	
 	/*
-	 * Method for generate drop table xml script request
+	 * Method to manage drop table xml script request
 	 */
 	@PostMapping("/dropTableScript/")
 	@ResponseStatus(HttpStatus.OK)
@@ -37,11 +39,20 @@ public class ScriptGeneratorController {
 	}
 	
 	/*
-	 * Method for generate drop column xml script request
+	 * Method to manage drop column xml script request
 	 */
 	@PostMapping("/dropColumnScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropColumnScriptRequest(@RequestBody DropColumnScriptDTO dropColumnScriptDTO) {
 		return scriptGeneratorService.generateDropColumnLiquibaseXMLScript(dropColumnScriptDTO);
+	}
+	
+	/*
+	 * Method to manage create table xml script request
+	 */
+	@PostMapping("/createTableScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateCreateTableScriptRequest(@RequestBody CreateTableScriptDTO createTableScriptDTO) {
+		return scriptGeneratorService.generateCreateTableLiquibaseXMLScript(createTableScriptDTO);
 	}
 }

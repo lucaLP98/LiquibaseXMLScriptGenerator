@@ -1,12 +1,11 @@
 
-<form class="form-horizontal" id="schemaForm">
- 
+<form class="form-horizontal" id="dropNotNullConstraintForm">
   <div class="form-group">
     <div class="col-sm-10">
-      <h1>Create Schema</h1>
+      <h1>Drop Not Null Constraint</h1>
     </div>
   </div>
- 
+
 	<!-- ID CHANGESET -->
   <div class="form-group">
     <label for="id_changeset" class="col-sm-2 control-label">ID ChangeSet</label>
@@ -27,19 +26,52 @@
 
   <!-- SCHEMA NAME -->
   <div class="form-group">
-    <label for="schema_name" class="col-sm-2 control-label">Schema Name</label>
+    <label for="table_schema" class="col-sm-2 control-label">Schema Name</label>
     <div class="col-sm-10">
-    	<input type="text" class="form-control" name="schema_name" id="schema_name" placeholder="DB schema name">
+      <select class="form-control" id="table_schema" name="table_schema" onchange="loadTableOption('table_schema', 'table_name', 'column_name');">
+      	<option value=""  selected > -- select an option -- </option>
+	  </select>
     </div>
   </div>
   <!-- END SCHEMA NAME -->
+  
+  <!-- TABLE NAME-->
+  <div class="form-group">
+    <label for="table_name" class="col-sm-2 control-label">Table Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="table_name" name="table_name" onchange="loadColumnOption('table_schema', 'table_name', 'column_name', COLUMN_NOT_NULL)">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END TABLE NAME -->
+  
+  <!-- COLUMN NAME-->
+  <div class="form-group">
+    <label for="column_name" class="col-sm-2 control-label">Column Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="column_name" name="column_name" onchange="loadColumnType('column_type', 'column_name', 'table_name', 'table_schema')">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END COLUMN NAME -->
+  
+  <!-- COLUMN TYPE -->
+  <div class="form-group">
+    <label for="column_type" class="col-sm-2 control-label">Column Type</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="column_type" id="column_type" placeholder="column type" readonly>
+    </div>
+  </div>
+  <!-- END COLUMN TYPE -->
   
   <!-- ON ERROR -->
   <div class="form-group">
     <label for="on_error" class="col-sm-2 control-label">On Error Condition</label>
     <div class="col-sm-10">
       <select class="form-control" id="on_error" name="on_error">
-      	<option disabled selected value> -- select an option -- </option>
+      	<option disabled selected value=""> -- select an option -- </option>
       	<option value="HALT">HALT</option>
       	<option value="CONTINUE">CONTINUE</option>
       	<option value="MARK_RAN">MARK_RAN</option>
@@ -63,10 +95,10 @@
     </div>
   </div>
   <!-- END ON FAIL -->
-  
+ 
   <div class="form-group">
   	<div class="col-sm-offset-2 col-sm-10">
-      <button type="button" class="btn btn-success" onclick="sendGeneratorScriptCreateSchemaRequest()" >Generate Script</button>
+      <button type="button" class="btn btn-success" onclick="sendGenerateScriptDropNotNullConstraintRequest()" >Generate Script</button>
   	</div>
   </div>
 </form>

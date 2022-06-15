@@ -13,14 +13,23 @@ import it.alten.tirocinio.repository.ColumnMetadataRepository;
 import it.alten.tirocinio.services.ColumnMetadataService;
 import it.alten.tirocinio.model.ColumnMetadata;
 
+/*
+ * Service implementation of ColumnMetadataService interface
+ */
 @Service
 public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	private ColumnMetadataRepository columnMetadataRepository;
 
+	/* 
+	 * Constructors
+	 */
 	public ColumnMetadataServiceConcrete(ColumnMetadataRepository columnMetadataRepository) {
 		this.columnMetadataRepository = columnMetadataRepository;
 	}
 	
+	/*
+	 * Converter between Set of ColumnMetadata and ColumnMetadataListDTO
+	 */
 	private ColumnMetadataListDTO ColumnMetadataSetToListDTO(Set<ColumnMetadata> columnsMetadata) {
 		List<ColumnMetadataDTO> columnsDTO = new ArrayList<>();
 		
@@ -31,19 +40,43 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 		return new ColumnMetadataListDTO(columnsDTO);
 	}
 	
+	/*
+	 * Get all columns which are present in database
+	 */
 	@Override
 	public ColumnMetadataListDTO getAllColumns() {		
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumns());
 	}
 
+	/*
+	 * Get all column which are present in DB by theirs membership table (schema required)
+	 */
 	@Override
 	public ColumnMetadataListDTO getAllColumnsByTable(String schemaName, String tableName) {
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsByTableAndSchema(schemaName, tableName));
 	}
 
+	/*
+	 * Get only one column by its Name and membership table (schema required)
+	 */
 	@Override
 	public ColumnMetadataDTO getColumnByNameAndTable(String schemaName, String tableName, String columnName) {
 		return ColumnMetadataMapper.INSTANCE.ColumnMetadataToColumnMetadataDTO(columnMetadataRepository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName));
 	}
 
+	/*
+	 * Get all columns with not null constraint by theirs membership table (schema required)
+	 */
+	@Override
+	public ColumnMetadataListDTO getColumnNotNullByNameAndTable(String schemaName, String tableName) {
+		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBNotNullColumnsByTableAndSchema(schemaName, tableName));
+	}
+	
+	/*
+	 * Get all columns without not null constraint by theirs membership table (schema required)
+	 */
+	@Override
+	public ColumnMetadataListDTO getColumnNullableByNameAndTable(String schemaName, String tableName) {
+		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBNullableColumnsByTableAndSchema(schemaName, tableName));
+	}
 }

@@ -20,8 +20,10 @@ import org.w3c.dom.Element;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
 
@@ -33,6 +35,9 @@ import it.alten.tirocinio.repository.TableMetadataRepository;
 
 import it.alten.tirocinio.services.ScriptGeneratorService;
 
+/*
+ * Service implementation of ScriptGeneratorService interface
+ */
 @Service
 public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	
@@ -583,20 +588,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	//add preCondition element to changeSet
         	changeSet.appendChild(preConditionElement);
         	
-        	//add preCondition child
-        	//table exists
-        	Element tableExistsElement = document.createElement("tableExists");
-        	preConditionElement.appendChild(tableExistsElement);
-        	
-        	Attr schemaNameTablePreCond = document.createAttribute("schemaName");
-        	schemaNameTablePreCond.setValue(addColumnScriptDTO.getSchemaName());
-        	tableExistsElement.setAttributeNode(schemaNameTablePreCond);
-        	
-        	Attr tableNameTablePreCond = document.createAttribute("tableName");
-        	tableNameTablePreCond.setValue(addColumnScriptDTO.getTableName());
-        	tableExistsElement.setAttributeNode(tableNameTablePreCond); 
-        	
-        	//column not exists
+        	//add preCondition child        	
         	Element notExists = document.createElement("not");
         	preConditionElement.appendChild(notExists);
         	
@@ -700,5 +692,218 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         }
 		
 		return addColumnXMLScript;
+	}
+	
+	/*
+	 * Method for generate a Drop Not Null Constraint Script
+	 */
+	@Override
+	public String generateDropNotNullConstraintLiquibaseXMLScript(DropNotNullConstraintScriptDTO dropNotNullConstraintScriptDTO) {
+		String dropNotNullConstraintXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, dropNotNullConstraintScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * add preCondition element
+	         */
+        	Element preConditionElement = createPreConditionElement(document, dropNotNullConstraintScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+			
+        	//add preCondition child
+        	Element columnExistsElement = document.createElement("columnExists");
+        	preConditionElement.appendChild(columnExistsElement);
+       	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(dropNotNullConstraintScriptDTO.getTableSchema());
+        	columnExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(dropNotNullConstraintScriptDTO.getTableName());
+        	columnExistsElement.setAttributeNode(tableNamePreCond); 
+        	
+        	Attr columnNamePreCond = document.createAttribute("columnName");
+        	columnNamePreCond.setValue(dropNotNullConstraintScriptDTO.getColumnName());
+        	columnExistsElement.setAttributeNode(columnNamePreCond); 
+        	
+        	/*
+        	 * Add DropNotNullConstraint element
+        	 */
+        	Element dropNotNullConstraintElement = document.createElement("dropNotNullConstraint");
+        	//append dropNotNullConstraint Element to changeSet
+    		changeSet.appendChild(dropNotNullConstraintElement);
+    		
+    		//append dropNotNullConstraintElement's attributes
+    		Attr tableSchemaDropNotNullConstraint = document.createAttribute("schemaName");
+    		tableSchemaDropNotNullConstraint.setValue(dropNotNullConstraintScriptDTO.getTableSchema());
+    		dropNotNullConstraintElement.setAttributeNode(tableSchemaDropNotNullConstraint);
+    		
+    		Attr tableNameDropNotNullConstraint = document.createAttribute("tableName");
+    		tableNameDropNotNullConstraint.setValue(dropNotNullConstraintScriptDTO.getTableName());
+    		dropNotNullConstraintElement.setAttributeNode(tableNameDropNotNullConstraint);
+    		
+    		Attr columnNameDropNotNullConstraint = document.createAttribute("columnName");
+    		columnNameDropNotNullConstraint.setValue(dropNotNullConstraintScriptDTO.getColumnName());
+    		dropNotNullConstraintElement.setAttributeNode(columnNameDropNotNullConstraint);
+    		
+    		Attr columnDataTypeDropNotNullConstraint = document.createAttribute("columnDataType");
+    		columnDataTypeDropNotNullConstraint.setValue(dropNotNullConstraintScriptDTO.getColumnDataType());
+    		dropNotNullConstraintElement.setAttributeNode(columnDataTypeDropNotNullConstraint);
+        	
+        	/*
+        	 * add rollback element
+        	 */
+    		Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element addNotNullConstraintRollbackElement = document.createElement("addNotNullConstraint");
+    		rollbackElement.appendChild(addNotNullConstraintRollbackElement);
+    		
+    		Attr tableSchemaAddNotNullConstraintRollback = document.createAttribute("schemaName");
+    		tableSchemaAddNotNullConstraintRollback.setValue(dropNotNullConstraintScriptDTO.getTableSchema());
+    		addNotNullConstraintRollbackElement.setAttributeNode(tableSchemaAddNotNullConstraintRollback);
+    		
+    		Attr tableNameAddNotNullConstraintRollback = document.createAttribute("tableName");
+    		tableNameAddNotNullConstraintRollback.setValue(dropNotNullConstraintScriptDTO.getTableName());
+    		addNotNullConstraintRollbackElement.setAttributeNode(tableNameAddNotNullConstraintRollback);
+    		
+    		Attr columnNameAddNotNullConstraintRollback = document.createAttribute("columnName");
+    		columnNameAddNotNullConstraintRollback.setValue(dropNotNullConstraintScriptDTO.getColumnName());
+    		addNotNullConstraintRollbackElement.setAttributeNode(columnNameAddNotNullConstraintRollback);
+    		
+    		Attr columnDataTypeAddNotNullConstraintRollback = document.createAttribute("columnDataType");
+    		columnDataTypeAddNotNullConstraintRollback.setValue(dropNotNullConstraintScriptDTO.getColumnDataType());
+    		addNotNullConstraintRollbackElement.setAttributeNode(columnDataTypeAddNotNullConstraintRollback);
+    		
+    		Attr validateAddNotNullConstraintRollback = document.createAttribute("validate");
+    		validateAddNotNullConstraintRollback.setValue("true");
+    		addNotNullConstraintRollbackElement.setAttributeNode(validateAddNotNullConstraintRollback);
+        	
+        	/*
+	         * generate XML script
+	         */
+        	dropNotNullConstraintXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+		
+		return dropNotNullConstraintXMLScript;
+	}
+
+	/*
+	 * Method for generate a Add Not Null Constraint Script
+	 */
+	@Override
+	public String generateAddNotNullConstraintLiquibaseXMLScript(AddNotNullConstraintScriptDTO addNotNullConstraintScriptDTO) {
+		String addNotNullConstraintXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, addNotNullConstraintScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * add preCondition element
+	         */
+        	Element preConditionElement = createPreConditionElement(document, addNotNullConstraintScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+			
+        	//add preCondition child
+        	Element columnExistsElement = document.createElement("columnExists");
+        	preConditionElement.appendChild(columnExistsElement);
+       	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(addNotNullConstraintScriptDTO.getTableSchema());
+        	columnExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(addNotNullConstraintScriptDTO.getTableName());
+        	columnExistsElement.setAttributeNode(tableNamePreCond); 
+        	
+        	Attr columnNamePreCond = document.createAttribute("columnName");
+        	columnNamePreCond.setValue(addNotNullConstraintScriptDTO.getColumnName());
+        	columnExistsElement.setAttributeNode(columnNamePreCond); 
+        	
+        	/*
+        	 * Add addNotNullConstraint element
+        	 */
+        	Element addNotNullConstraintElement = document.createElement("addNotNullConstraint");
+        	//append addNotNullConstraint to changeSet
+    		changeSet.appendChild(addNotNullConstraintElement);
+    		
+    		//append addNotNullConstraintElement's attributes
+    		Attr tableSchemaAddNotNullConstraint = document.createAttribute("schemaName");
+    		tableSchemaAddNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getTableSchema());
+    		addNotNullConstraintElement.setAttributeNode(tableSchemaAddNotNullConstraint);
+    		
+    		Attr tableNameAddNotNullConstraint = document.createAttribute("tableName");
+    		tableNameAddNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getTableName());
+    		addNotNullConstraintElement.setAttributeNode(tableNameAddNotNullConstraint);
+    		
+    		Attr columnNameAddNotNullConstraint = document.createAttribute("columnName");
+    		columnNameAddNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getColumnName());
+    		addNotNullConstraintElement.setAttributeNode(columnNameAddNotNullConstraint);
+    		
+    		Attr columnDataTypeAddNotNullConstraint = document.createAttribute("columnDataType");
+    		columnDataTypeAddNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getColumnDataType());
+    		addNotNullConstraintElement.setAttributeNode(columnDataTypeAddNotNullConstraint);
+    		
+    		Attr validateAddNotNullConstraint = document.createAttribute("validate");
+    		validateAddNotNullConstraint.setValue("true");
+    		addNotNullConstraintElement.setAttributeNode(validateAddNotNullConstraint);
+    		
+    		Attr defaultNullValueAddNotNullConstraint = document.createAttribute("defaultNullValue");
+    		defaultNullValueAddNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getDefaultNullValue());
+    		addNotNullConstraintElement.setAttributeNode(defaultNullValueAddNotNullConstraint);
+        	
+    		/*
+        	 * add rollback element
+        	 */
+    		Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element dropNotNullConstraintElementRollback = document.createElement("dropNotNullConstraint");
+    		rollbackElement.appendChild(dropNotNullConstraintElementRollback);
+    		
+    		//append dropNotNullConstraintElement's attributes
+    		Attr tableSchemaDropNotNullConstraint = document.createAttribute("schemaName");
+    		tableSchemaDropNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getTableSchema());
+    		dropNotNullConstraintElementRollback.setAttributeNode(tableSchemaDropNotNullConstraint);
+    		
+    		Attr tableNameDropNotNullConstraint = document.createAttribute("tableName");
+    		tableNameDropNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getTableName());
+    		dropNotNullConstraintElementRollback.setAttributeNode(tableNameDropNotNullConstraint);
+    		
+    		Attr columnNameDropNotNullConstraint = document.createAttribute("columnName");
+    		columnNameDropNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getColumnName());
+    		dropNotNullConstraintElementRollback.setAttributeNode(columnNameDropNotNullConstraint);
+    		
+    		Attr columnDataTypeDropNotNullConstraint = document.createAttribute("columnDataType");
+    		columnDataTypeDropNotNullConstraint.setValue(addNotNullConstraintScriptDTO.getColumnDataType());
+    		dropNotNullConstraintElementRollback.setAttributeNode(columnDataTypeDropNotNullConstraint);
+    		
+        	/*
+	         * generate XML script
+	         */
+        	addNotNullConstraintXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+		
+		return addNotNullConstraintXMLScript;
 	}
 }

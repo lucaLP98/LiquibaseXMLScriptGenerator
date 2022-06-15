@@ -1,9 +1,8 @@
 
-<form class="form-horizontal" id="dropColumnForm">
-
+<form class="form-horizontal" id="addNotNullConstraintForm">
   <div class="form-group">
     <div class="col-sm-10">
-      <h1>Drop Column</h1>
+      <h1>Add Not Null Constraint</h1>
     </div>
   </div>
 
@@ -40,7 +39,7 @@
   <div class="form-group">
     <label for="table_name" class="col-sm-2 control-label">Table Name</label>
     <div class="col-sm-10">
-      <select disabled class="form-control" id="table_name" name="table_name" onchange="loadColumnOption('table_schema', 'table_name', 'column_name', COLUMN_ALL)">
+      <select disabled class="form-control" id="table_name" name="table_name" onchange="loadColumnOption('table_schema', 'table_name', 'column_name', COLUMN_NULL)">
       	<option value=""  selected> -- select an option -- </option>
 	  </select>
     </div>
@@ -51,12 +50,30 @@
   <div class="form-group">
     <label for="column_name" class="col-sm-2 control-label">Column Name</label>
     <div class="col-sm-10">
-      <select disabled class="form-control" id="column_name" name="column_name">
+      <select disabled class="form-control" id="column_name" name="column_name" onchange="loadColumnType('column_type', 'column_name', 'table_name', 'table_schema')">
       	<option value=""  selected> -- select an option -- </option>
 	  </select>
     </div>
   </div>
   <!-- END COLUMN NAME -->
+  
+  <!-- COLUMN TYPE -->
+  <div class="form-group">
+    <label for="column_type" class="col-sm-2 control-label">Column Type</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="column_type" id="column_type" placeholder="column type" readonly>
+    </div>
+  </div>
+  <!-- END COLUMN TYPE -->
+  
+  <!-- DEFAULT NULL VALUE -->
+  <div class="form-group">
+    <label for="default_null_value" class="col-sm-2 control-label">Default Null Value</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="default_null_value" id="default_null_value" value="null" >
+    </div>
+  </div>
+  <!-- END DEFAULT NULL VALUE -->
   
   <!-- ON ERROR -->
   <div class="form-group">
@@ -90,7 +107,7 @@
  
   <div class="form-group">
   	<div class="col-sm-offset-2 col-sm-10">
-      <button type="button" class="btn btn-success" onclick="sendGenerateScriptDropColumnRequest()" >Generate Script</button>
+      <button type="button" class="btn btn-success" onclick="sendGenerateScriptAddNotNullConstraintRequest()" >Generate Script</button>
   	</div>
   </div>
 </form>

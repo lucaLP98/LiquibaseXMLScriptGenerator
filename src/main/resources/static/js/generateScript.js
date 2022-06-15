@@ -1,8 +1,8 @@
- /*
+/*
  * Set of function for send request to generate XML script and view it 
  */
  
- /*
+/*
  * AJAX function for send asynch request to generate a Create Schema XML Script and view it into text area
  */
 function sendGeneratorScriptCreateSchemaRequest(){
@@ -212,6 +212,69 @@ function sendGeneratorScriptAddColumnRequest(){
    		}
    		
   		xhttp.open("POST", "/api/scriptGenerator/addColumnScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate a Drop Not Null Constraint XML Script and view it into text area
+ */
+function sendGenerateScriptDropNotNullConstraintRequest(){
+	let formData = new FormData(document.getElementById("dropNotNullConstraintForm"));
+	
+	let notEmpty = checkNotEmptyField("dropNotNullConstraintForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.table_schema = formData.get("table_schema");
+		object.table_name = formData.get("table_name");
+		object.column_name = formData.get("column_name");
+		object.column_type = formData.get("column_type");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/dropNotNullConstraintScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate a Add Not Null Constraint XML Script and view it into text area
+ */
+ function sendGenerateScriptAddNotNullConstraintRequest(){
+	let formData = new FormData(document.getElementById("addNotNullConstraintForm"));
+	
+	let notEmpty = checkNotEmptyField("addNotNullConstraintForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.table_schema = formData.get("table_schema");
+		object.table_name = formData.get("table_name");
+		object.column_name = formData.get("column_name");
+		object.column_type = formData.get("column_type");
+		object.default_null_value = formData.get("default_null_value");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/addNotNullConstraintScript/", true);
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{

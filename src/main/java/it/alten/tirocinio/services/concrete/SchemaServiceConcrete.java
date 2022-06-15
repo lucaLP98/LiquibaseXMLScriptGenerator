@@ -13,14 +13,23 @@ import it.alten.tirocinio.model.Schema;
 import it.alten.tirocinio.repository.SchemaRepository;
 import it.alten.tirocinio.services.SchemaService;
 
+/*
+ * Service implementation of SchemaService interface
+ */
 @Service
 public class SchemaServiceConcrete implements SchemaService {
 	private final SchemaRepository schemaRepository;
 	
+	/* 
+	 * Constructors
+	 */
 	public SchemaServiceConcrete(SchemaRepository schemaRepository) {
 		this.schemaRepository = schemaRepository;
 	}
 	
+	/*
+	 * Converter between set of Schema and SchemaListDTO
+	 */
 	private SchemaListDTO SchemaSetToListDTO(Set<Schema> schemas) {
 		List<SchemaDTO> schemasDTO = new ArrayList<>();
 		
@@ -31,6 +40,9 @@ public class SchemaServiceConcrete implements SchemaService {
 		return new SchemaListDTO(schemasDTO);
 	}
 
+	/*
+	 * Get all schema which are present in DB 
+	 */
 	@Override
 	public SchemaListDTO getAllDatabaseSchema() {				
 		return SchemaSetToListDTO(schemaRepository.getAllDBSchema());

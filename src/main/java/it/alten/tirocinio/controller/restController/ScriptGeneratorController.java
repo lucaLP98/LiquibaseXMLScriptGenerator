@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 
 import it.alten.tirocinio.services.ScriptGeneratorService;
@@ -74,5 +76,23 @@ public class ScriptGeneratorController {
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddColumnScriptRequest(@RequestBody AddColumnScriptDTO addColumnScriptDTO) {
 		return scriptGeneratorService.generateAddColumnLiquibaseXMLScript(addColumnScriptDTO);
+	}
+	
+	/*
+	 * Method to manage drop not null constraint xml script request
+	 */
+	@PostMapping("/dropNotNullConstraintScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateDropNotNullConstraintScriptRequest(@RequestBody DropNotNullConstraintScriptDTO dropNotNullConstraintScriptDTO) {
+		return scriptGeneratorService.generateDropNotNullConstraintLiquibaseXMLScript(dropNotNullConstraintScriptDTO);
+	}
+	
+	/*
+	 * Method to manage drop not null constraint xml script request
+	 */
+	@PostMapping("/addNotNullConstraintScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateAddNotNullConstraintScriptRequest(@RequestBody AddNotNullConstraintScriptDTO addNotNullConstraintScriptDTO) {
+		return scriptGeneratorService.generateAddNotNullConstraintLiquibaseXMLScript(addNotNullConstraintScriptDTO);
 	}
 }

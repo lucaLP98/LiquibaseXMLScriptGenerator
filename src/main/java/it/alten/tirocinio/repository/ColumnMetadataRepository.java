@@ -29,4 +29,19 @@ public interface ColumnMetadataRepository extends CrudRepository<ColumnMetadata,
 	 */
 	@Query(value = "SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key FROM information_schema.columns where (table_schema = :table_schema AND table_name = :table_name AND column_name = :column_name)", nativeQuery = true)
 	ColumnMetadata getDBColumnByNameAndTableAndSchema(@Param("table_schema") String tableSchema, @Param("table_name") String tableName, @Param("column_name") String columnName);
+	
+
+	/*
+	 * Query for retrieve metadata of column with not null constraint by their membership table and schema 
+	 * (primary key columns are excluded)
+	 */
+	@Query(value = "SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key FROM information_schema.columns WHERE (table_schema = :table_schema AND table_name = :table_name AND is_nullable = \"NO\" AND column_key <> \"PRI\")", nativeQuery = true)
+	Set<ColumnMetadata> getAllDBNotNullColumnsByTableAndSchema(@Param("table_schema") String tableSchema, @Param("table_name") String tableName);
+	
+	/*
+	 * Query for retrieve metadata of nullable column (without not null) constraint by their membership table and schema 
+	 * (primary key columns are excluded)
+	 */
+	@Query(value = "SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key FROM information_schema.columns WHERE (table_schema = :table_schema AND table_name = :table_name AND is_nullable = \"YES\")", nativeQuery = true)
+	Set<ColumnMetadata> getAllDBNullableColumnsByTableAndSchema(@Param("table_schema") String tableSchema, @Param("table_name") String tableName);
 }

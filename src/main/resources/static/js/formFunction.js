@@ -2,6 +2,10 @@
  * Set of function for load form for various types of scripts
  */
 
+const COLUMN_ALL = 0;
+const COLUMN_NULL = 1;
+const COLUMN_NOT_NULL = 2;
+
 /*
  * Function that fills the schema select whith all schema present in database - for each schema will create an option
  *
@@ -82,6 +86,24 @@ function loadAddColumnForm(){
 };
 
 /*
+ * load the page dropNotNullConstraintForm.html in Homepage for the creation of "Add Column" Script
+ */
+function loadDropNotNullConstraintForm(){
+	$('#formContainer').load('forms/dropNotNullConstraintForm.html');
+	let schemaSelectId = "table_schema";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page addNotNullConstraintForm.html in Homepage for the creation of "Add Column" Script
+ */
+function loadAddNotNullConstraintForm(){
+	$('#formContainer').load('forms/addNotNullConstraintForm.html');
+	let schemaSelectId = "table_schema";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
  * Function that fills the table select whith all DB table present in a specific database schema - for each table will create an option
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
@@ -131,8 +153,9 @@ function loadTableOption(schemaSelectId, tableSelectId, columnSelectId){
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
  * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
  * param columnSelectId : is the ID of select which will contain the list of Columns for the selected DB Table (and Schema)
+ * param nullType : type of column to retrive. Possible value = {COLUMN_ALL, COLUMN_NULL, COLUMN_NOT_NULL}
  */
-function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId){
+function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, nullType){
 	let schemaSelected = document.getElementById(schemaSelectId).value;
 	let tableSelected = document.getElementById(tableSelectId).value;
 
@@ -157,8 +180,41 @@ function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId){
 			columnSelect.appendChild(option); 
 		}
    	}
-   	
-  	xhttp.open("GET", "/api/columns/byTable/" + schemaSelected + "&" + tableSelected, true);
+   
+   	let requestUri = "";
+   	switch(nullType){
+		case COLUMN_ALL: requestUri = "/api/columns/byTable/"; break;
+		case COLUMN_NULL: requestUri = "/api/columns/Null/"; break;
+		case COLUMN_NOT_NULL: requestUri = "/api/columns/NotNull/"; break;
+		default: requestUri = "/api/columns/byTable/"; break;
+	}
+	
+  	xhttp.open("GET", requestUri + schemaSelected + "&" + tableSelected, true);
+  	xhttp.send();
+}
+
+/*
+ * Function that find the data type of selected column
+ *
+ * param columnTypeInputFieldId : the ID of column data type input text field
+ * param columnSelectId : the ID of select that contains the selected column
+ * param tableSelectId : the ID of select that contains the selected table's colum
+ * param schemaSelectId : the ID of select that contains the selected schema that contain table's colum
+ */
+function loadColumnType(columnTypeInputFieldId, columnSelectId, tableSelectId, schemaSelectId){
+	let selectedColumn = document.getElementById(columnSelectId).value;
+	let selectedTable = document.getElementById(tableSelectId).value;
+	let selectedSchema = document.getElementById(schemaSelectId).value;
+	
+	let columnTypeInputField = document.getElementById(columnTypeInputFieldId);
+	columnTypeInputField.value = "";
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function(){
+		let jsonResponse = JSON.parse(this.response);
+		columnTypeInputField.value = jsonResponse.column_type;
+	}
+	xhttp.open("GET", "/api/columns/byName/" + selectedSchema + "&" + selectedTable + "&" + selectedColumn, true);
   	xhttp.send();
 }
 

@@ -39,6 +39,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	private final TableMetadataRepository tableMetadataRepository;
 	private final ColumnMetadataRepository columnMetadataRepository;
 	
+	/* 
+	 * Contructors
+	 */
 	public ScriptGeneratorServiceConcrete(TableMetadataRepository tableMetadataRepository, ColumnMetadataRepository columnMetadataRepository) {
 		this.tableMetadataRepository = tableMetadataRepository;
 		this.columnMetadataRepository = columnMetadataRepository;
@@ -164,6 +167,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	return columnRollback;
 	}
 	
+	/*
+	 * Method for generate a Drop Table Script
+	 */
 	@Override
 	public String generateDropTableLiquibaseXMLScript(DropTableScriptDTO dropTableScriptDTO) {
 		String dropTableXMLScript = "";
@@ -178,7 +184,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
         	
-        	//add preCondition element
+	        /*
+	         * add preCondition element
+	         */
         	Element preConditionElement = createPreConditionElement(document, dropTableScriptDTO);
         	//add preCondition element to changeSet
         	changeSet.appendChild(preConditionElement);
@@ -196,7 +204,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	tableNamePreCOnd.setValue(dropTableScriptDTO.getTableName());
         	tableExistsElement.setAttributeNode(tableNamePreCOnd);    	
         	
-        	//add dropTable element
+        	/*
+        	 * add dropTable element
+        	 */
         	Element dropTableElement = document.createElement("dropTable");
         	//add DropTable element to changeSet element
         	changeSet.appendChild(dropTableElement);
@@ -240,7 +250,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         		createTableRollBack.appendChild(newColumnScript(document, c));
         	}
         	
-        	//generate XML script
+        	/*
+        	 * generate XML script
+        	 */
         	dropTableXMLScript = generateXMLScriptToString(document);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -249,6 +261,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		return dropTableXMLScript;
 	}
 	
+	/*
+	 * Method for generate a Drop Column Script
+	 */
 	@Override
 	public String generateDropColumnLiquibaseXMLScript(DropColumnScriptDTO dropColumnScriptDTO) {
 		String dropColumnXMLScript = "";
@@ -263,7 +278,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
         	
-        	//add preCondition element
+	        /*
+	         * add preCondition element
+	         */
         	Element preConditionElement = createPreConditionElement(document, dropColumnScriptDTO);
         	//add preCondition element to changeSet
         	changeSet.appendChild(preConditionElement);
@@ -284,7 +301,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	columnNamePreCond.setValue(dropColumnScriptDTO.getColumnName());
         	columnExistsElement.setAttributeNode(columnNamePreCond); 
        	
-        	//add dropColumn element
+        	/*
+        	 * add dropColumn element
+        	 */
         	Element dropColumnElement = document.createElement("dropTable");
         	//add dropColumn element to changeSet element
         	changeSet.appendChild(dropColumnElement);
@@ -326,7 +345,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	//add column element to addColumn;
         	addColumnRollback.appendChild(newColumnScript(document, column));
   
-        	//generate XML script
+        	/*
+        	 * generate XML script
+        	 */
         	dropColumnXMLScript = generateXMLScriptToString(document);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -335,6 +356,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		return dropColumnXMLScript;
 	}
 	
+	/*
+	 * Method for generate a Create Table Script
+	 */
 	@Override
 	public String generateCreateTableLiquibaseXMLScript(CreateTableScriptDTO createTableScriptDTO) {
 		String createTableXMLScript = "";
@@ -349,7 +373,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
         	
-        	//add preCondition element
+	        /*
+	         * add preCondition element
+	         */
         	Element preConditionElement = createPreConditionElement(document, createTableScriptDTO);
         	//add preCondition element to changeSet
         	changeSet.appendChild(preConditionElement);
@@ -369,7 +395,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	tableNamePreCond.setValue(createTableScriptDTO.getTableName());
         	tableExistsElement.setAttributeNode(tableNamePreCond); 
         	
-        	//generate CreateTable element
+        	/*
+        	 * generate CreateTable element
+        	 */
         	Element createTableElement = document.createElement("createTable");
 	        //add createTable element element to changeSet
 	        changeSet.appendChild(createTableElement);
@@ -435,19 +463,11 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         		columnElement.appendChild(constraintElement);
         		
         		Attr nullableAttributeConstraint = document.createAttribute("nullable");
-        		if(c.getIsNullable().equals("YES")) {        			
-        			nullableAttributeConstraint.setValue("true");
-        		}else {
-        			nullableAttributeConstraint.setValue("false");
-        		}
+        		nullableAttributeConstraint.setValue(c.getIsNullable());
         		constraintElement.setAttributeNode(nullableAttributeConstraint);
         		
         		Attr uniqueAttributeConstraint = document.createAttribute("unique");
-        		if(c.getUnique().equals("YES")) {        			
-        			uniqueAttributeConstraint.setValue("true");
-        		}else {
-        			uniqueAttributeConstraint.setValue("false");
-        		}
+        		uniqueAttributeConstraint.setValue(c.getUnique());
         		constraintElement.setAttributeNode(uniqueAttributeConstraint);
         		
         		Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
@@ -473,7 +493,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     		tableNameDropTableRollback.setValue(createTableScriptDTO.getTableName());
     		dropTableRollbackElement.setAttributeNode(tableNameDropTableRollback);
         	
-        	//generate XML script
+        	/*
+        	 * generate XML script
+        	 */
         	createTableXMLScript = generateXMLScriptToString(document);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -482,6 +504,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		return createTableXMLScript;
 	}
 	
+	/*
+	 * Method for generate a Create Schema Script
+	 */
 	@Override
 	public String generateCreateSchemaLiquibaseXMLScript(CreateSchemaScriptDTO createSchemaScriptDTO){
 		String createSchemaXMLScript = "";
@@ -496,14 +521,18 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
 	        
-	        //create sql element
+	        /*
+	         * create sql element
+	         */
 	        Element sqlElement = document.createElement("sql");
     		changeSet.appendChild(sqlElement);
     		
+    		//add attributes to sql element
     		Attr sqlElementAttribute = document.createAttribute("endDelimiter");
     		sqlElementAttribute.setValue(";");
     		sqlElement.setAttributeNode(sqlElementAttribute);
     		
+    		//add sql script to sql element
     		sqlElement.appendChild(document.createTextNode("CREATE SCHEMA " + createSchemaScriptDTO.getSchemaName()));
 	        
     		/*
@@ -519,12 +548,157 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     		sqlElementRollback.setAttributeNode(sqlElementAttributeRollback);
     		sqlElementRollback.appendChild(document.createTextNode("DROP SCHEMA " + createSchemaScriptDTO.getSchemaName()));
     		
-	        //generate XML script
+	        /*
+	         * generate XML script
+	         */
 	        createSchemaXMLScript = generateXMLScriptToString(document);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
 		
 		return createSchemaXMLScript;
+	}
+	
+	/*
+	 * Method for generate a Add Column Script
+	 */
+	@Override
+	public String generateAddColumnLiquibaseXMLScript(AddColumnScriptDTO addColumnScriptDTO) {
+		String addColumnXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, addColumnScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * add preCondition element
+	         */
+        	Element preConditionElement = createPreConditionElement(document, addColumnScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+        	//add preCondition child
+        	//table exists
+        	Element tableExistsElement = document.createElement("tableExists");
+        	preConditionElement.appendChild(tableExistsElement);
+        	
+        	Attr schemaNameTablePreCond = document.createAttribute("schemaName");
+        	schemaNameTablePreCond.setValue(addColumnScriptDTO.getSchemaName());
+        	tableExistsElement.setAttributeNode(schemaNameTablePreCond);
+        	
+        	Attr tableNameTablePreCond = document.createAttribute("tableName");
+        	tableNameTablePreCond.setValue(addColumnScriptDTO.getTableName());
+        	tableExistsElement.setAttributeNode(tableNameTablePreCond); 
+        	
+        	//column not exists
+        	Element notExists = document.createElement("not");
+        	preConditionElement.appendChild(notExists);
+        	
+        	Element columnExists = document.createElement("columnExists");
+        	notExists.appendChild(columnExists);
+        	
+        	Attr schemaNameColumnPreCond = document.createAttribute("schemaName");
+        	schemaNameColumnPreCond.setValue(addColumnScriptDTO.getSchemaName());
+        	columnExists.setAttributeNode(schemaNameColumnPreCond);
+        	
+        	Attr tableNameColumnPreCond = document.createAttribute("tableName");
+        	tableNameColumnPreCond.setValue(addColumnScriptDTO.getTableName());
+        	columnExists.setAttributeNode(tableNameColumnPreCond); 
+        	
+        	Attr columnNamePreCond = document.createAttribute("columnName");
+        	columnNamePreCond.setValue(addColumnScriptDTO.getColumnName());
+        	columnExists.setAttributeNode(columnNamePreCond); 
+        	
+        	/*
+        	 * generate addColumn element
+        	 */
+        	Element addColumnElement = document.createElement("addColumn");
+        	//append addColumn element to changeset
+        	changeSet.appendChild(addColumnElement);
+        	
+        	//add addColumn element's attributes
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(addColumnScriptDTO.getSchemaName());
+        	addColumnElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(addColumnScriptDTO.getTableName());
+        	addColumnElement.setAttributeNode(tableName); 
+        	
+        	//append Column element to addColumn element (Column = new column to add)
+        	Element columnElement = document.createElement("column");
+        	addColumnElement.appendChild(columnElement);
+        	
+        	//add column element's attribute
+        	Attr columnName = document.createAttribute("name");
+        	columnName.setValue(addColumnScriptDTO.getColumnName());
+        	columnElement.setAttributeNode(columnName);
+        	
+        	Attr columnType = document.createAttribute("type");
+        	columnType.setValue(addColumnScriptDTO.getColumnType());
+        	columnElement.setAttributeNode(columnType);
+        	
+        	if(!addColumnScriptDTO.getColumnDefault().equals("")) {
+        		Attr columnDefaultValue = document.createAttribute("defaultValue");
+        		columnDefaultValue.setValue(addColumnScriptDTO.getColumnDefault());
+            	columnElement.setAttributeNode(columnDefaultValue);
+        	}
+        	
+        	//append constraint element to column element
+        	Element columnConstraintElement = document.createElement("constraints");
+        	columnElement.appendChild(columnConstraintElement);
+        	
+        	//add constraint element's attributes
+        	Attr nullable = document.createAttribute("nullable");
+        	nullable.setValue(addColumnScriptDTO.getIsNullable());
+        	columnConstraintElement.setAttributeNode(nullable);
+        	
+        	Attr unique = document.createAttribute("unique");
+        	unique.setValue(addColumnScriptDTO.getUnique());
+        	columnConstraintElement.setAttributeNode(unique);
+        	
+        	Attr uniqueName = document.createAttribute("uniqueConstraintName");
+        	uniqueName.setValue("Unique_constraint_"+addColumnScriptDTO.getSchemaName()+"_"+addColumnScriptDTO.getTableName()+"_"+addColumnScriptDTO.getColumnName());
+        	columnConstraintElement.setAttributeNode(uniqueName);
+        	
+        	/*
+        	 * add rollback element
+        	 */
+    		Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element dropColumnRollbackElement = document.createElement("dropColumn");
+    		rollbackElement.appendChild(dropColumnRollbackElement);
+    		
+    		Attr tableSchemaDropColumnRollback = document.createAttribute("schemaName");
+    		tableSchemaDropColumnRollback.setValue(addColumnScriptDTO.getSchemaName());
+    		dropColumnRollbackElement.setAttributeNode(tableSchemaDropColumnRollback);
+    		
+    		Attr tableNameDropColumnRollback = document.createAttribute("tableName");
+    		tableNameDropColumnRollback.setValue(addColumnScriptDTO.getTableName());
+    		dropColumnRollbackElement.setAttributeNode(tableNameDropColumnRollback);
+    		
+    		Element columnRollbackElement = document.createElement("column");
+    		dropColumnRollbackElement.appendChild(columnRollbackElement);
+    		
+    		Attr columnNameDropColumnRollback = document.createAttribute("name");
+    		columnNameDropColumnRollback.setValue(addColumnScriptDTO.getColumnName());
+    		columnRollbackElement.setAttributeNode(columnNameDropColumnRollback);
+			
+	        /*
+	         * generate XML script
+	         */
+	        addColumnXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+		
+		return addColumnXMLScript;
 	}
 }

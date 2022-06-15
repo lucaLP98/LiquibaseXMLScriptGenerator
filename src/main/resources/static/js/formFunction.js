@@ -73,6 +73,15 @@ function loadDropColumnForm(){
 };
 
 /*
+ * load the page addColumnForm.html in Homepage for the creation of "Add Column" Script
+ */
+function loadAddColumnForm(){
+	$('#formContainer').load('forms/addColumnForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
  * Function that fills the table select whith all DB table present in a specific database schema - for each table will create an option
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select

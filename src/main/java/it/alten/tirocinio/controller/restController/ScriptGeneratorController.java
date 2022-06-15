@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 
 import it.alten.tirocinio.services.ScriptGeneratorService;
@@ -64,5 +65,14 @@ public class ScriptGeneratorController {
 	@ResponseStatus(HttpStatus.OK)
 	public String generateCreateSchemaScriptRequest(@RequestBody CreateSchemaScriptDTO createSchemaScriptDTO) {
 		return scriptGeneratorService.generateCreateSchemaLiquibaseXMLScript(createSchemaScriptDTO);
+	}
+	
+	/*
+	 * Method to manage add column xml script request
+	 */
+	@PostMapping("/addColumnScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateAddColumnScriptRequest(@RequestBody AddColumnScriptDTO addColumnScriptDTO) {
+		return scriptGeneratorService.generateAddColumnLiquibaseXMLScript(addColumnScriptDTO);
 	}
 }

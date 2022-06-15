@@ -96,8 +96,8 @@ function checkNotEmptyField(formId){
 	let formData = new FormData(document.getElementById(formId));
 	let notEmpty = true;
 
-	for (let value of formData.values()) {
-  		if(notEmpty==true && value==""){
+	for (let pair of formData.entries()) {
+  		if(pair[0]!= "column_default" && notEmpty==true && pair[1]==""){
 			notEmpty = false;
 		}
 	}
@@ -156,9 +156,8 @@ function sendGenerateScriptDropTableRequest(){
 /*
  * AJAX function for send asynch request to generate a Drop Column XML Script and view it into text area
  */
- function sendGenerateScriptDropColumnRequest(){
-	let dropColumnForm = document.getElementById("dropColumnForm");
-	let formData = new FormData(dropColumnForm);
+function sendGenerateScriptDropColumnRequest(){
+	let formData = new FormData(document.getElementById("dropColumnForm"));
 	
 	let notEmpty = checkNotEmptyField("dropColumnForm");
 	if(notEmpty == true){
@@ -177,6 +176,42 @@ function sendGenerateScriptDropTableRequest(){
     		document.getElementById("scriptTextArea").innerHTML = this.responseText;
    		}
   		xhttp.open("POST", "/api/scriptGenerator/dropColumnScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate a Add Column XML Script and view it into text area
+ */
+function sendGeneratorScriptAddColumnRequest(){
+	let formData = new FormData(document.getElementById("addColumnForm"));
+	
+	let notEmpty = checkNotEmptyField("addColumnForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.column_name = formData.get("column_name");	
+		object.column_type = formData.get("column_type");
+		object.column_default = formData.get("column_default");
+		object.is_nullable = formData.get("is_nullable");
+		object.is_unique = formData.get("is_unique");
+			
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+   		
+  		xhttp.open("POST", "/api/scriptGenerator/addColumnScript/", true);
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{

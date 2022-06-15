@@ -3,6 +3,7 @@ package it.alten.tirocinio.services;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 
 /*
@@ -28,4 +29,9 @@ public interface ScriptGeneratorService {
 	 * Method for generate a Create Schema Script
 	 */
 	String generateCreateSchemaLiquibaseXMLScript(CreateSchemaScriptDTO createSchemaScriptDTO);
+	
+	/*
+	 * Method for generate a Add Column Script
+	 */
+	String generateAddColumnLiquibaseXMLScript(AddColumnScriptDTO addColumnScriptDTO);
 }

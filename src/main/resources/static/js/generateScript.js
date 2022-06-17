@@ -83,7 +83,6 @@ function sendGeneratorScriptCreateTableRequest(){
 	}else{
 		alert(" WARNING\n Fill in all fields to generate the script");
 	}
-	
 };
 
 /*
@@ -275,6 +274,144 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
     		document.getElementById("scriptTextArea").innerHTML = this.responseText;
    		}
   		xhttp.open("POST", "/api/scriptGenerator/addNotNullConstraintScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate a Add Unique Constraint XML Script and view it into text area
+ */
+function sendGenerateScriptAddUniqueConstraintRequest(){
+	let formData = new FormData(document.getElementById("addUniqueConstraintForm"));
+	
+	let notEmpty = checkNotEmptyField("addUniqueConstraintForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.table_schema = formData.get("table_schema");
+		object.table_name = formData.get("table_name");
+		object.constraint_name = formData.get("constraint_name");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		
+		let columnArray = [];
+		let columnRead = false;
+		for(let pair of formData.entries()) {
+			if(pair[0] == "column_name") {
+				if(columnRead == false){
+					columnRead = true;
+				} 
+				var column = {};
+				columnArray.push(column);			
+				column[pair[0]] = pair[1];	
+			}else if(columnRead == true){
+				column[pair[0]] = pair[1];
+			}
+		}
+		object.columns = columnArray;
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/addUniqueConstraintScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate a Drop Unique Constraint XML Script and view it into text area
+ */
+function sendGenerateScriptDropUniqueConstraintRequest(){
+	let formData = new FormData(document.getElementById("dropUniqueConstraintForm"));
+	
+	let notEmpty = checkNotEmptyField("dropUniqueConstraintForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.table_schema = formData.get("table_schema");
+		object.table_name = formData.get("table_name");
+		object.constraint_name = formData.get("constraint_name");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/dropUniqueConstraintScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate a Rename Table XML Script and view it into text area
+ */
+function sendGeneratorScriptRenameTableRequest(){
+	let formData = new FormData(document.getElementById("renameTableForm"));
+	
+	let notEmpty = checkNotEmptyField("renameTableForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.old_table_name = formData.get("old_table_name");
+		object.new_table_name = formData.get("new_table_name");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/renameTableScript/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate a Rename Column XML Script and view it into text area
+ */
+function sendGenerateScriptRenameColumnRequest(){
+	let formData = new FormData(document.getElementById("renameColumnForm"));
+	
+	let notEmpty = checkNotEmptyField("renameColumnForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.old_column_name = formData.get("old_column_name");
+		object.new_column_name = formData.get("new_column_name");
+		object.column_type = formData.get("column_type");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/renameColumnScript/", true);
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{

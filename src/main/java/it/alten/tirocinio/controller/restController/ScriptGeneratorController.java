@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 
 import it.alten.tirocinio.services.ScriptGeneratorService;
@@ -88,11 +92,47 @@ public class ScriptGeneratorController {
 	}
 	
 	/*
-	 * Method to manage drop not null constraint xml script request
+	 * Method to manage add not null constraint xml script request
 	 */
 	@PostMapping("/addNotNullConstraintScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddNotNullConstraintScriptRequest(@RequestBody AddNotNullConstraintScriptDTO addNotNullConstraintScriptDTO) {
 		return scriptGeneratorService.generateAddNotNullConstraintLiquibaseXMLScript(addNotNullConstraintScriptDTO);
+	}
+	
+	/*
+	 * Method to manage add unique constraint xml script request
+	 */
+	@PostMapping("/addUniqueConstraintScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateAddUniqueConstraintScriptRequest(@RequestBody AddUniqueConstraintScriptDTO addUniqueConstraintScriptDTO) {
+		return scriptGeneratorService.generateAddUniqueConstraintLiquibaseXMLScript(addUniqueConstraintScriptDTO);
+	}
+	
+	/*
+	 * Method to manage add unique constraint xml script request
+	 */
+	@PostMapping("/dropUniqueConstraintScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateDropUniqueConstraintScriptRequest(@RequestBody DropUniqueConstraintScriptDTO dropUniqueConstraintScriptDTO) {
+		return scriptGeneratorService.generateDropUniqueConstraintLiquibaseXMLScript(dropUniqueConstraintScriptDTO);
+	}
+	
+	/*
+	 * Method to manage rename table xml script request
+	 */
+	@PostMapping("/renameTableScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateRenameTableScriptRequest(@RequestBody RenameTableScriptDTO renameTableScriptDTO) {
+		return scriptGeneratorService.generateRenameTableLiquibaseXMLScript(renameTableScriptDTO);
+	}
+	
+	/*
+	 * Method to manage rename column xml script request
+	 */
+	@PostMapping("/renameColumnScript/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateRenameColumnScriptRequest(@RequestBody RenameColumnScriptDTO renameColumnScriptDTO) {
+		return scriptGeneratorService.generateRenameColumnLiquibaseXMLScript(renameColumnScriptDTO);
 	}
 }

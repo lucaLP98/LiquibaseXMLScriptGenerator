@@ -22,8 +22,12 @@ import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
 
@@ -40,7 +44,6 @@ import it.alten.tirocinio.services.ScriptGeneratorService;
  */
 @Service
 public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
-	
 	private final TableMetadataRepository tableMetadataRepository;
 	private final ColumnMetadataRepository columnMetadataRepository;
 	
@@ -197,7 +200,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	changeSet.appendChild(preConditionElement);
         	
         	//add preCondition child
-        	
         	Element tableExistsElement = document.createElement("tableExists");
         	preConditionElement.appendChild(tableExistsElement);
         	
@@ -374,7 +376,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        Document document = documentBuilder.newDocument();
 	        
 	        //changeSet element
-	        Element changeSet = createPreConditionElement(document, createTableScriptDTO);
+	        Element changeSet = createChangeSetElement(document, createTableScriptDTO);
 	        //add changeSet element to document
 	        document.appendChild(changeSet);
         	
@@ -905,5 +907,437 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         }
 		
 		return addNotNullConstraintXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Add Unique Constraint Script
+	 */
+	@Override
+	public String generateAddUniqueConstraintLiquibaseXMLScript(AddUniqueConstraintScriptDTO addUniqueConstraintScriptDTO) {
+		String addUniqueConstraintXMLScript = "ciao";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, addUniqueConstraintScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * add preCondition element
+	         */
+        	Element preConditionElement = createPreConditionElement(document, addUniqueConstraintScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+			
+        	//add preCondition child
+        	Element notElement = document.createElement("not");
+        	preConditionElement.appendChild(notElement);
+        	
+        	Element uniqueConstraintExistsElement = document.createElement("uniqueConstraintExists");
+        	notElement.appendChild(uniqueConstraintExistsElement);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(addUniqueConstraintScriptDTO.getTableName());
+        	uniqueConstraintExistsElement.setAttributeNode(tableNamePreCond); 
+        	
+        	Attr columnNamePreCond = document.createAttribute("columnNames");
+        	String columnsStr = "";
+        	for(AddUniqueConstraintScriptDTO.ColumnUnique s : addUniqueConstraintScriptDTO.getColumns()) {
+        		columnsStr += s.getColumnName() + ", ";
+        	}
+        	columnsStr = columnsStr.substring(0, columnsStr.length() - 2);
+        	columnNamePreCond.setValue(columnsStr);
+        	uniqueConstraintExistsElement.setAttributeNode(columnNamePreCond); 
+        	
+        	Attr constraintNamePreCond = document.createAttribute("constraintName");
+        	constraintNamePreCond.setValue(addUniqueConstraintScriptDTO.getConstrainName());
+        	uniqueConstraintExistsElement.setAttributeNode(constraintNamePreCond); 
+        	
+        	for(AddUniqueConstraintScriptDTO.ColumnUnique s : addUniqueConstraintScriptDTO.getColumns()) {
+        		Element columnExistsElement = document.createElement("columnExists");
+        		preConditionElement.appendChild(columnExistsElement);
+        		
+        		Attr tableColumnSchemaPreCond = document.createAttribute("schemaName");
+        		tableColumnSchemaPreCond.setValue(addUniqueConstraintScriptDTO.getTableSchema());
+        		columnExistsElement.setAttributeNode(tableColumnSchemaPreCond); 
+        		
+        		Attr tableColumnPreCond = document.createAttribute("tableName");
+        		tableColumnPreCond.setValue(addUniqueConstraintScriptDTO.getTableName());
+        		columnExistsElement.setAttributeNode(tableColumnPreCond); 
+        		
+        		Attr columnNameExistsPreCond = document.createAttribute("columnName");
+        		columnNameExistsPreCond.setValue(s.getColumnName());
+        		columnExistsElement.setAttributeNode(columnNameExistsPreCond);
+        	}
+        	
+        	/*
+        	 * Add Unique Constraint element
+        	 */
+        	Element addUniqueConstraintElement = document.createElement("addUniqueConstraint");
+        	//append addUniqueConstraint element to changeset
+        	changeSet.appendChild(addUniqueConstraintElement);
+        	
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(addUniqueConstraintScriptDTO.getTableSchema());
+        	addUniqueConstraintElement.setAttributeNode(schemaName); 
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(addUniqueConstraintScriptDTO.getTableName());
+        	addUniqueConstraintElement.setAttributeNode(tableName); 
+
+        	Attr columnName = document.createAttribute("columnNames");
+        	columnName.setValue(columnsStr);
+        	addUniqueConstraintElement.setAttributeNode(columnName); 
+        	
+        	Attr constraintName = document.createAttribute("constraintName");
+        	constraintName.setValue(addUniqueConstraintScriptDTO.getConstrainName());
+        	addUniqueConstraintElement.setAttributeNode(constraintName); 
+        	
+        	Attr validate = document.createAttribute("validate");
+        	validate.setValue("true");
+        	addUniqueConstraintElement.setAttributeNode(validate); 
+        	
+        	Attr disabled = document.createAttribute("disabled");
+        	disabled.setValue("false");
+        	addUniqueConstraintElement.setAttributeNode(disabled); 
+        	
+        	/*
+        	 * add rollback element
+        	 */
+    		Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element dropUniqueConstraintElement = document.createElement("dropUniqueConstraint");
+        	//append addUniqueConstraint element to rolback
+        	rollbackElement.appendChild(dropUniqueConstraintElement);
+    		
+        	Attr schemaNameRolback = document.createAttribute("schemaName");
+        	schemaNameRolback.setValue(addUniqueConstraintScriptDTO.getTableSchema());
+        	dropUniqueConstraintElement.setAttributeNode(schemaNameRolback); 
+        	
+        	Attr tableNameRolback = document.createAttribute("tableName");
+        	tableNameRolback.setValue(addUniqueConstraintScriptDTO.getTableName());
+        	dropUniqueConstraintElement.setAttributeNode(tableNameRolback); 
+			
+        	Attr columnNamesRolback = document.createAttribute("columnNames");
+        	columnNamesRolback.setValue(columnsStr);
+        	dropUniqueConstraintElement.setAttributeNode(columnNamesRolback); 
+        	
+        	Attr constraintNameRolback = document.createAttribute("constraintName");
+        	constraintNameRolback.setValue(addUniqueConstraintScriptDTO.getConstrainName());
+        	dropUniqueConstraintElement.setAttributeNode(constraintNameRolback); 
+        	
+			/*
+	         * generate XML script
+	         */
+			addUniqueConstraintXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+		
+		return addUniqueConstraintXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Drop Unique Constraint Script
+	 */
+	@Override
+	public String generateDropUniqueConstraintLiquibaseXMLScript(DropUniqueConstraintScriptDTO dropUniqueConstraintScriptDTO) {
+		String dropUniqueConstraintXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, dropUniqueConstraintScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * add preCondition element
+	         */
+        	Element preConditionElement = createPreConditionElement(document, dropUniqueConstraintScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+			
+        	//add preCondition child
+        	Element uniqueConstraintExistsElement = document.createElement("uniqueConstraintExists");
+        	preConditionElement.appendChild(uniqueConstraintExistsElement);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(dropUniqueConstraintScriptDTO.getTableName());
+        	uniqueConstraintExistsElement.setAttributeNode(tableNamePreCond); 
+        	
+        	Attr constraintNamePreCond = document.createAttribute("constraintName");
+        	constraintNamePreCond.setValue(dropUniqueConstraintScriptDTO.getConstrainName());
+        	uniqueConstraintExistsElement.setAttributeNode(constraintNamePreCond);
+		
+        	/*
+        	 * Add DropUniqueConstraint element
+        	 */
+    		Element dropUniqueConstraintElement = document.createElement("dropUniqueConstraint");
+        	//append addUniqueConstraint element to rolback
+    		changeSet.appendChild(dropUniqueConstraintElement);
+    		
+        	Attr schemaNameRolback = document.createAttribute("schemaName");
+        	schemaNameRolback.setValue(dropUniqueConstraintScriptDTO.getTableSchema());
+        	dropUniqueConstraintElement.setAttributeNode(schemaNameRolback); 
+        	
+        	Attr tableNameRolback = document.createAttribute("tableName");
+        	tableNameRolback.setValue(dropUniqueConstraintScriptDTO.getTableName());
+        	dropUniqueConstraintElement.setAttributeNode(tableNameRolback); 
+        	
+        	Attr constraintNameRolback = document.createAttribute("constraintName");
+        	constraintNameRolback.setValue(dropUniqueConstraintScriptDTO.getConstrainName());
+        	dropUniqueConstraintElement.setAttributeNode(constraintNameRolback); 
+        	
+        	
+        	/*
+	         * generate XML script
+	         */
+        	dropUniqueConstraintXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+        	
+		return dropUniqueConstraintXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Rename Table Script
+	 */
+	@Override
+	public String generateRenameTableLiquibaseXMLScript(RenameTableScriptDTO renameTableScriptDTO) {
+		String renameTableXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, renameTableScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * add preCondition element
+	         */
+        	Element preConditionElement = createPreConditionElement(document, renameTableScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+	        
+	        //add preCondition child
+        	//old table exists
+        	Element oldTtableExistsElement = document.createElement("tableExists");
+        	preConditionElement.appendChild(oldTtableExistsElement);
+        	
+        	Attr schemaOldNamePreCond = document.createAttribute("schemaName");
+        	schemaOldNamePreCond.setValue(renameTableScriptDTO.getSchemaName());
+        	oldTtableExistsElement.setAttributeNode(schemaOldNamePreCond);
+        	
+        	Attr oldTableNamePreCOnd = document.createAttribute("tableName");
+        	oldTableNamePreCOnd.setValue(renameTableScriptDTO.getOldTableName());
+        	oldTtableExistsElement.setAttributeNode(oldTableNamePreCOnd);
+        	
+        	//new table not exists
+        	Element not = document.createElement("not");
+        	preConditionElement.appendChild(not);
+	        
+        	Element newTtableExistsElement = document.createElement("tableExists");
+        	not.appendChild(newTtableExistsElement);
+        	
+        	Attr schemaNewNamePreCond = document.createAttribute("schemaName");
+        	schemaNewNamePreCond.setValue(renameTableScriptDTO.getSchemaName());
+        	newTtableExistsElement.setAttributeNode(schemaNewNamePreCond);
+        	
+        	Attr newTableNamePreCOnd = document.createAttribute("tableName");
+        	newTableNamePreCOnd.setValue(renameTableScriptDTO.getNewTableName());
+        	newTtableExistsElement.setAttributeNode(newTableNamePreCOnd);
+        	
+        	/*
+        	 * add Rename Table Element
+        	 */
+        	Element renameTableElement = document.createElement("renameTable");
+        	//add rename table element element to changeSet
+        	changeSet.appendChild(renameTableElement);
+        	
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(renameTableScriptDTO.getSchemaName());
+        	renameTableElement.setAttributeNode(schemaName);
+        	
+        	Attr oldTableName = document.createAttribute("oldTableName");
+        	oldTableName.setValue(renameTableScriptDTO.getOldTableName());
+        	renameTableElement.setAttributeNode(oldTableName);
+        	
+        	Attr newTableName = document.createAttribute("newTableName");
+        	newTableName.setValue(renameTableScriptDTO.getNewTableName());
+        	renameTableElement.setAttributeNode(newTableName);
+	        
+        	/*
+        	 * Add rollback element
+        	 */
+        	Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element renameTableRollback = document.createElement("renameTable");
+        	//add rename table element element to changeSet
+    		rollbackElement.appendChild(renameTableRollback);
+        	
+        	Attr schemaNameRolback = document.createAttribute("schemaName");
+        	schemaNameRolback.setValue(renameTableScriptDTO.getSchemaName());
+        	renameTableRollback.setAttributeNode(schemaNameRolback);
+        	
+        	Attr oldTableNameRollback = document.createAttribute("oldTableName");
+        	oldTableNameRollback.setValue(renameTableScriptDTO.getNewTableName());
+        	renameTableRollback.setAttributeNode(oldTableNameRollback);
+        	
+        	Attr newTableNameRollback = document.createAttribute("newTableName");
+        	newTableNameRollback.setValue(renameTableScriptDTO.getOldTableName());
+        	renameTableRollback.setAttributeNode(newTableNameRollback);
+        	
+			/*
+			 * generate XML script
+			 */
+			renameTableXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+		
+		return renameTableXMLScript;
+	}
+
+	/*
+	 * Method for generate an Rename Table Script
+	 */
+	@Override
+	public String generateRenameColumnLiquibaseXMLScript(RenameColumnScriptDTO renameColumnScriptDTO) {
+		String renameColumnXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, renameColumnScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * add preCondition element
+	         */
+        	Element preConditionElement = createPreConditionElement(document, renameColumnScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+	        
+	        //add preCondition child
+        	//old column exists
+        	Element oldColumnExistsElement = document.createElement("columnExists");
+        	preConditionElement.appendChild(oldColumnExistsElement);
+        	
+        	Attr schemaOldNamePreCond = document.createAttribute("schemaName");
+        	schemaOldNamePreCond.setValue(renameColumnScriptDTO.getSchemaName());
+        	oldColumnExistsElement.setAttributeNode(schemaOldNamePreCond);
+        	
+        	Attr oldTableNamePreCOnd = document.createAttribute("tableName");
+        	oldTableNamePreCOnd.setValue(renameColumnScriptDTO.getTableName());
+        	oldColumnExistsElement.setAttributeNode(oldTableNamePreCOnd);
+        	
+        	Attr oldColumnNamePreCOnd = document.createAttribute("columnName");
+        	oldColumnNamePreCOnd.setValue(renameColumnScriptDTO.getOldColumnName());
+        	oldColumnExistsElement.setAttributeNode(oldColumnNamePreCOnd);
+        	
+        	//new column not exists
+        	Element not = document.createElement("not");
+        	preConditionElement.appendChild(not);
+	        
+        	Element newColumnExistsElement = document.createElement("columnExists");
+        	not.appendChild(newColumnExistsElement);
+        	
+        	Attr schemaNewNamePreCond = document.createAttribute("schemaName");
+        	schemaNewNamePreCond.setValue(renameColumnScriptDTO.getSchemaName());
+        	newColumnExistsElement.setAttributeNode(schemaNewNamePreCond);
+        	
+        	Attr newTableNamePreCOnd = document.createAttribute("tableName");
+        	newTableNamePreCOnd.setValue(renameColumnScriptDTO.getTableName());
+        	newColumnExistsElement.setAttributeNode(newTableNamePreCOnd);
+        	
+        	Attr newColumnNamePreCOnd = document.createAttribute("columnName");
+        	newColumnNamePreCOnd.setValue(renameColumnScriptDTO.getNewColumnName());
+        	newColumnExistsElement.setAttributeNode(newColumnNamePreCOnd);
+	        
+        	/*
+        	 * Add RenameColumn element
+        	 */
+    		Element renameColumn = document.createElement("renameColumn");
+        	//add rename column element element to changeSet
+    		changeSet.appendChild(renameColumn);
+        	
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(renameColumnScriptDTO.getSchemaName());
+        	renameColumn.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(renameColumnScriptDTO.getTableName());
+        	renameColumn.setAttributeNode(tableName);        	
+        	
+        	Attr newColumnName = document.createAttribute("newColumnName");
+        	newColumnName.setValue(renameColumnScriptDTO.getNewColumnName());
+        	renameColumn.setAttributeNode(newColumnName);
+        	
+        	Attr oldColumnName = document.createAttribute("oldColumnName");
+        	oldColumnName.setValue(renameColumnScriptDTO.getOldColumnName());
+        	renameColumn.setAttributeNode(oldColumnName);
+        	
+        	Attr columnType = document.createAttribute("columnDataType");
+        	columnType.setValue(renameColumnScriptDTO.getColumnType());
+        	renameColumn.setAttributeNode(columnType);
+        	
+        	/*
+        	 * Add rollback element
+        	 */
+        	Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element renameColumnRollback = document.createElement("renameColumn");
+        	//add rename column element element to rollback
+    		rollbackElement.appendChild(renameColumnRollback);
+        	
+        	Attr schemaNameRolback = document.createAttribute("schemaName");
+        	schemaNameRolback.setValue(renameColumnScriptDTO.getSchemaName());
+        	renameColumnRollback.setAttributeNode(schemaNameRolback);
+        	
+        	Attr tableNameRollback = document.createAttribute("tableName");
+        	tableNameRollback.setValue(renameColumnScriptDTO.getTableName());
+        	renameColumnRollback.setAttributeNode(tableNameRollback);        	
+        	
+        	Attr newColumnNameRollback = document.createAttribute("newColumnName");
+        	newColumnNameRollback.setValue(renameColumnScriptDTO.getOldColumnName());
+        	renameColumnRollback.setAttributeNode(newColumnNameRollback);
+        	
+        	Attr oldColumnNameRollback = document.createAttribute("oldColumnName");
+        	oldColumnNameRollback.setValue(renameColumnScriptDTO.getNewColumnName());
+        	renameColumnRollback.setAttributeNode(oldColumnNameRollback);
+        	
+        	Attr columnTypeRollback = document.createAttribute("columnDataType");
+        	columnTypeRollback.setValue(renameColumnScriptDTO.getColumnType());
+        	renameColumnRollback.setAttributeNode(columnTypeRollback);
+        	
+	        /*
+			 * generate XML script
+			 */
+	        renameColumnXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}  
+	        
+	    return renameColumnXMLScript;
 	}
 }

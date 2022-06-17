@@ -1,0 +1,116 @@
+
+<form class="form-horizontal" id="addUniqueConstraintForm">
+  <div class="form-group">
+    <div class="col-sm-10">
+      <h1>Add Unique Constraint</h1>
+    </div>
+  </div>
+
+	<!-- ID CHANGESET -->
+  <div class="form-group">
+    <label for="id_changeset" class="col-sm-2 control-label">ID ChangeSet</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="id_changeset" id="id_changeset" placeholder="id changeset">
+    </div>
+  </div>
+  <!-- END ID CHANGESET -->
+  
+  <!-- AUTHOR -->
+  <div class="form-group">
+    <label for="author" class="col-sm-2 control-label">Author</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="author" id="author" placeholder="Author">
+    </div>
+  </div>
+  <!-- END AUTHOR -->
+  
+  <!-- CONSTRAINT NAME -->
+  <div class="form-group">
+    <label for="constraint_name" class="col-sm-2 control-label">Constraint Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="constraint_name" id="constraint_name" placeholder="constraint name">
+    </div>
+  </div>
+  <!-- END CONSTRAINT NAME -->
+  
+  <!-- ON ERROR -->
+  <div class="form-group">
+    <label for="on_error" class="col-sm-2 control-label">On Error Condition</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_error" name="on_error">
+      	<option disabled selected value=""> -- select an option -- </option>
+      	<option value="HALT">HALT</option>
+      	<option value="CONTINUE">CONTINUE</option>
+      	<option value="MARK_RAN">MARK_RAN</option>
+      	<option value="WARN">WARN</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END ON ERROR -->
+  
+  <!-- ON FAIL -->
+  <div class="form-group">
+    <label for="on_fail" class="col-sm-2 control-label">On Fail Condition</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_fail" name="on_fail">
+      	<option disabled selected value=""> -- select an option -- </option>
+      	<option value="HALT">HALT</option>
+      	<option value="CONTINUE">CONTINUE</option>
+      	<option value="MARK_RAN">MARK_RAN</option>
+      	<option value="WARN">WARN</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END ON FAIL -->
+
+  <!-- SCHEMA NAME -->
+  <div class="form-group">
+    <label for="table_schema" class="col-sm-2 control-label">Schema Name</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="table_schema" name="table_schema" onchange="loadTableOption('table_schema', 'table_name', 'column_name');">
+      	<option value=""  selected > -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END SCHEMA NAME -->
+  
+  <!-- TABLE NAME-->
+  <div class="form-group">
+    <label for="table_name" class="col-sm-2 control-label">Table Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="table_name" name="table_name">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END TABLE NAME -->
+  
+  <!-- COLUMN NAME-->
+  <div class="form-group">
+    <label for="column_name" class="col-sm-2 control-label">Column Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="column_name" name="column_name" placeholder="column to add at unique constraint">
+    </div>
+  </div>
+   <!-- END COLUMN NAME -->
+  
+   <!-- BUTTON ADD NEW COLUMN -->
+  <div id="newUniqueCoulmnForm">
+  	<div class="form-group">
+  		<div class="col-sm-offset-2 col-sm-10">
+  			<button id="addColumnButton" type="button" class="btn btn-default" onclick="addColumnToUniqueConstraint()">
+     			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      			Add Column to Unique Constraint
+     		</button>
+  		</div>
+  	</div>
+  </div>
+  <!-- END BUTTON ADD NEW COLUMN -->
+ 
+ 
+  <div class="form-group">
+  	<div class="col-sm-offset-2 col-sm-10">
+      <button type="button" class="btn btn-success" onclick="sendGenerateScriptAddUniqueConstraintRequest()" >Generate Script</button>
+  	</div>
+  </div>
+</form>

@@ -6,28 +6,8 @@ const COLUMN_ALL = 0;
 const COLUMN_NULL = 1;
 const COLUMN_NOT_NULL = 2;
 
-/*
- * Function that fills the schema select whith all schema present in database - for each schema will create an option
- *
- * param selectId is the ID of the select element to which we want to add options
- */
-function createOptionForSchemaSelect(selectId){
-	const xhttp = new XMLHttpRequest();
-	
-	xhttp.onload = function() {
-    	let select = document.getElementById(selectId);
-    	let jsonResponse = JSON.parse(this.response);
-    	let schemaArray = jsonResponse.schema_list;
-    	for(let i=0; i<schemaArray.length; i++){
-			let option = document.createElement("option");
-			option.value = schemaArray[i].schema_name;
-			option.innerHTML = schemaArray[i].schema_name;
-			select.appendChild(option);
-		}
-   	}
-  	xhttp.open("GET", "/api/schema/", true);
-  	xhttp.send();
-};
+const UNIQUE_CONSTRAINT = 3;
+const ALL_CONSTRAINT = 4;
 
 /*
  * Function tha remove all option for the input Select element 
@@ -104,13 +84,89 @@ function loadAddNotNullConstraintForm(){
 };
 
 /*
+ * load the page addUniqueConstraintForm.html in Homepage for the creation of "Add Unique Constraint" Script
+ */
+function loadAddUniqueConstraintForm(){
+	$('#formContainer').load('forms/addUniqueConstraintForm.html');
+	let schemaSelectId = "table_schema";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page dropUniqueConstraintForm.html in Homepage for the creation of "Drop Unique Constraint" Script
+ */
+function loadDropUniqueConstraintForm(){
+	$('#formContainer').load('forms/dropUniqueConstraintForm.html');
+	let schemaSelectId = "table_schema";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page renameTableForm.html in Homepage for the creation of "Rename Table" Script
+ */
+function loadRenameTableForm(){
+	$('#formContainer').load('forms/renameTableForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page renameColumnForm.html in Homepage for the creation of "Rename Column" Script
+ */
+function loadRenameColumnForm(){
+	$('#formContainer').load('forms/renameColumnForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * Function for load in "createTableForm.html" the form for insert new column to add at table
+ */
+function addColumnToTable(){
+  	$('#newCoulmnForm').load('forms/columnTableForm.html');
+  	document.getElementById("newCoulmnForm").removeAttribute("id");
+}
+
+/*
+ * Function for load in "addUniqueConstraintForm.html" the form for insert new column to add at the cobstraint
+ */
+function addColumnToUniqueConstraint(){
+	$('#newUniqueCoulmnForm').load('forms/columnUniqueConstraintForm.html');
+	document.getElementById("newUniqueCoulmnForm").removeAttribute("id");
+}
+
+/*
+ * Function that fills the schema select whith all schema present in database - for each schema will create an option
+ *
+ * param selectId is the ID of the select element to which we want to add options
+ */
+function createOptionForSchemaSelect(selectId){
+	const xhttp = new XMLHttpRequest();
+	
+	xhttp.onload = function() {
+    	let select = document.getElementById(selectId);
+    	let jsonResponse = JSON.parse(this.response);
+    	let schemaArray = jsonResponse.schema_list;
+    	for(let i=0; i<schemaArray.length; i++){
+			let option = document.createElement("option");
+			option.value = schemaArray[i].schema_name;
+			option.innerHTML = schemaArray[i].schema_name;
+			select.appendChild(option);
+		}
+   	}
+  	xhttp.open("GET", "/api/schema/", true);
+  	xhttp.send();
+};
+
+/*
  * Function that fills the table select whith all DB table present in a specific database schema - for each table will create an option
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
  * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
  * param columnSelectId : is the ID of select which will contain the list of DB Columns for the selected DB Table (may by null if there isn't a columnSelect in page)
+ * param constraintTableSelectId : is the ID of select which will contain the list of constraint for the selecte table (may by null if there isn't a constraintSelect in page)
  */
-function loadTableOption(schemaSelectId, tableSelectId, columnSelectId){
+function loadTableOption(schemaSelectId, tableSelectId, columnSelectId, constraintTableSelectId){
 	let schemaSelected = document.getElementById(schemaSelectId).value;
 
 	const xhttp = new XMLHttpRequest();
@@ -131,6 +187,14 @@ function loadTableOption(schemaSelectId, tableSelectId, columnSelectId){
     		disabledOption2.innerHTML = " -- select an option -- "
     		let columnSelect = document.getElementById(columnSelectId);
     		columnSelect.appendChild(disabledOption2); 
+		}
+		if(constraintTableSelectId != null){
+			let disabledOption3 = document.createElement("option");
+    		disabledOption3.selected = true;
+    		disabledOption3.value = "";
+    		disabledOption3.innerHTML = " -- select an option -- "
+    		let constraintSelect = document.getElementById(constraintTableSelectId);
+    		constraintSelect.appendChild(disabledOption3); 
 		}
     	 	
     	let jsonResponse = JSON.parse(this.response);
@@ -194,6 +258,51 @@ function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, nullTyp
 }
 
 /*
+ * Function that fills the constraint select whith all DB constraint present in a specific database Table - for each constraint will create an option
+ *
+ * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
+ * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
+ * param constraintSelectId : is the ID of select which will contain the list of Constraints for the selected DB Table (and Schema)
+ * param constraintType : type of constraint to retrive. Possible value = {ALL_CONSTRAINT, UNIQUE_CONSTRAINT}
+ */
+function loadConstraintOption(schemaSelectId, tableSelectId, constraintSelectId, constraintType){
+	let schemaSelected = document.getElementById(schemaSelectId).value;
+	let tableSelected = document.getElementById(tableSelectId).value;
+
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		let constraintSelect = document.getElementById(constraintSelectId);
+		constraintSelect.disabled = false;
+    	removeOptions(constraintSelect);
+    	
+    	let disabledOption = document.createElement("option");
+    	disabledOption.selected = true;
+    	disabledOption.value = "";
+    	disabledOption.innerHTML = " -- select an option -- "
+    	constraintSelect.appendChild(disabledOption);
+    	
+    	let jsonResponse = JSON.parse(this.response);
+    	let constraintArray = jsonResponse.constraint_list;
+    	for(let i=0; i<constraintArray.length; i++){
+			let option = document.createElement("option");
+			option.value = constraintArray[i].constraint_name;
+			option.innerHTML = constraintArray[i].constraint_name;
+			constraintSelect.appendChild(option); 
+		}
+   	}
+   
+   	let requestUri = "";
+   	switch(constraintType){
+		case UNIQUE_CONSTRAINT: requestUri = "/api/constraint/unique/"; break;
+		case ALL_CONSTRAINT: requestUri = "/api/constraint/all/"; break;
+		default: requestUri = "/api/constraint/all/"; break;
+	}
+	
+  	xhttp.open("GET", requestUri + schemaSelected + "&" + tableSelected, true);
+  	xhttp.send();
+}
+
+/*
  * Function that find the data type of selected column
  *
  * param columnTypeInputFieldId : the ID of column data type input text field
@@ -216,12 +325,4 @@ function loadColumnType(columnTypeInputFieldId, columnSelectId, tableSelectId, s
 	}
 	xhttp.open("GET", "/api/columns/byName/" + selectedSchema + "&" + selectedTable + "&" + selectedColumn, true);
   	xhttp.send();
-}
-
-/*
- * Function for load in "createTableForm.html" the form for insert new column to add at table
- */
-function addColumnToTable(){
-  	$('#newCoulmnForm').load('forms/columnTableForm.html');
-  	document.getElementById("newCoulmnForm").removeAttribute("id");
 }

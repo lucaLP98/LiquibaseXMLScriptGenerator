@@ -3,6 +3,9 @@ package it.alten.tirocinio.api.DTO.scriptDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class ScriptDTO {
+	@JsonProperty("changeLog")
+	private Boolean changeLog;
+	
 	@JsonProperty("id_changeset")
 	private String idChangeset;
 	
@@ -18,6 +21,10 @@ public abstract class ScriptDTO {
 	/*
 	 * Getter methods
 	 */
+	public Boolean getChangeLog() {
+		return changeLog;
+	}
+	
 	public String getIdChangeset() {
 		return idChangeset;
 	}
@@ -37,6 +44,10 @@ public abstract class ScriptDTO {
 	/*
 	 * Setter methods
 	 */
+	public void setChangeLog(Boolean changeLog) {
+		this.changeLog = changeLog;
+	}
+	
 	public void setIdChangeset(String idChangeset) {
 		this.idChangeset = idChangeset;
 	}

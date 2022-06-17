@@ -56,6 +56,34 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		this.columnMetadataRepository = columnMetadataRepository;
 	}
 	
+	private Element createChangeLog(Document document) {
+		//create ChangeLog element
+		Element changeLog =  document.createElement("databaseChangeLog");
+		
+		//add changeLog's attributes
+		Attr xmlns = document.createAttribute("xmlns");
+		xmlns.setValue("http://www.liquibase.org/xml/ns/dbchangelog");
+		changeLog.setAttributeNode(xmlns);
+		
+		Attr ext = document.createAttribute("xmlns:ext");
+		ext.setValue("http://www.liquibase.org/xml/ns/dbchangelog-ext");
+		changeLog.setAttributeNode(ext);
+		
+		Attr pro = document.createAttribute("xmlns:pro");
+		pro.setValue("http://www.liquibase.org/xml/ns/pro");
+		changeLog.setAttributeNode(pro);
+		
+		Attr xsi = document.createAttribute("xmlns:xsi");
+		xsi.setValue("http://www.w3.org/2001/XMLSchema-instance");
+		changeLog.setAttributeNode(xsi);
+		
+		Attr schemaLocation = document.createAttribute("xmlns:schemaLocation");
+		schemaLocation.setValue("http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd");
+		changeLog.setAttributeNode(schemaLocation);
+		
+		return changeLog;
+	}
+	
 	/*
 	 * Create the preCondition Element with its attributes
 	 */
@@ -190,8 +218,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, dropTableScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+	        
+	        if(dropTableScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
         	
 	        /*
 	         * add preCondition element
@@ -283,8 +322,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, dropColumnScriptDTO);;
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(dropColumnScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
         	
 	        /*
 	         * add preCondition element
@@ -378,8 +428,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, createTableScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+	        
+	        if(createTableScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
         	
 	        /*
 	         * add preCondition element
@@ -526,8 +587,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, createSchemaScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(createSchemaScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * create sql element
@@ -581,8 +653,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, addColumnScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(addColumnScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * add preCondition element
@@ -711,8 +794,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, dropNotNullConstraintScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(dropNotNullConstraintScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * add preCondition element
@@ -815,8 +909,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, addNotNullConstraintScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(addNotNullConstraintScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * add preCondition element
@@ -924,8 +1029,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, addUniqueConstraintScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(addUniqueConstraintScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * add preCondition element
@@ -1057,8 +1173,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, dropUniqueConstraintScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(dropUniqueConstraintScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * add preCondition element
@@ -1124,8 +1251,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, renameTableScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(renameTableScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * add preCondition element
@@ -1228,8 +1366,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, renameColumnScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(renameColumnScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * add preCondition element
@@ -1356,8 +1505,19 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, modifyColumnDataTypeScriptDTO);
-	        //add changeSet element to document
-	        document.appendChild(changeSet);
+
+	        if(modifyColumnDataTypeScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
 	        
 	        /*
 	         * Pre-condition element

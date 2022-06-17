@@ -16,6 +16,7 @@ function sendGeneratorScriptCreateSchemaRequest(){
 		object.schema_name = formData.get("schema_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -65,6 +66,7 @@ function sendGeneratorScriptCreateTableRequest(){
 		object.table_name = formData.get("table_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 	
 		object.pk_name = formData.get("pk_name");
 		object.pk_type = formData.get("pk_type");
@@ -133,10 +135,12 @@ function sendGenerateScriptDropTableRequest(){
 		object.id_changeset = formData.get("id_changeset");
 		object.author = formData.get("author");
 		object.table_schema = formData.get("table_schema");
+		object.changeLog = formData.get("changeLog");
 		object.table_name = formData.get("table_name");
 		object.cascade_constraint = formData.get("cascade_constraint");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -168,6 +172,7 @@ function sendGenerateScriptDropColumnRequest(){
 		object.column_name = formData.get("column_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -200,7 +205,7 @@ function sendGeneratorScriptAddColumnRequest(){
 		object.column_default = formData.get("column_default");
 		object.is_nullable = formData.get("is_nullable");
 		object.is_unique = formData.get("is_unique");
-			
+		object.changeLog = formData.get("changeLog");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
 		let json = JSON.stringify(object);
@@ -235,6 +240,7 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
 		object.column_type = formData.get("column_type");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -267,6 +273,7 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
 		object.default_null_value = formData.get("default_null_value");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -297,6 +304,7 @@ function sendGenerateScriptAddUniqueConstraintRequest(){
 		object.constraint_name = formData.get("constraint_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		
 		let columnArray = [];
 		let columnRead = false;
@@ -343,6 +351,7 @@ function sendGenerateScriptDropUniqueConstraintRequest(){
 		object.constraint_name = formData.get("constraint_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -373,6 +382,7 @@ function sendGeneratorScriptRenameTableRequest(){
 		object.new_table_name = formData.get("new_table_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -405,6 +415,7 @@ function sendGenerateScriptRenameColumnRequest(){
 		object.column_type = formData.get("column_type");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -437,6 +448,7 @@ function sendGenerateScriptModifyDataTypeRequest(){
 		object.new_column_type = formData.get("new_column_type");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();

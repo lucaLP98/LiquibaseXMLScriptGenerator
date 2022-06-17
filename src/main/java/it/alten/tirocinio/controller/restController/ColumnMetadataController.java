@@ -49,13 +49,19 @@ public class ColumnMetadataController {
 	
 	@GetMapping("/NotNull/{schemaName}&{tableName}")
 	@ResponseStatus(HttpStatus.OK)
-	public ColumnMetadataListDTO getColumnsNotNullByNameAndTable(@PathVariable String schemaName, @PathVariable String tableName) {
-		return columnMetadataService.getColumnNotNullByNameAndTable(schemaName, tableName);
+	public ColumnMetadataListDTO getColumnsNotNullByTable(@PathVariable String schemaName, @PathVariable String tableName) {
+		return columnMetadataService.getColumnNotNullByTable(schemaName, tableName);
 	}
 	
 	@GetMapping("/Null/{schemaName}&{tableName}")
 	@ResponseStatus(HttpStatus.OK)
-	public ColumnMetadataListDTO getColumnsNullableByNameAndTable(@PathVariable String schemaName, @PathVariable String tableName) {
-		return columnMetadataService.getColumnNullableByNameAndTable(schemaName, tableName);
+	public ColumnMetadataListDTO getColumnsNullableByTable(@PathVariable String schemaName, @PathVariable String tableName) {
+		return columnMetadataService.getColumnNullableByTable(schemaName, tableName);
+	}
+	
+	@GetMapping("/Integer/{schemaName}&{tableName}")
+	@ResponseStatus(HttpStatus.OK)
+	public ColumnMetadataListDTO getIntegerColumnsByTable(@PathVariable String schemaName, @PathVariable String tableName) {
+		return columnMetadataService.getIntegerColumnByTable(schemaName, tableName);
 	}
 }

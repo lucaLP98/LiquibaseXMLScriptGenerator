@@ -68,7 +68,7 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 * Get all columns with not null constraint by theirs membership table (schema required)
 	 */
 	@Override
-	public ColumnMetadataListDTO getColumnNotNullByNameAndTable(String schemaName, String tableName) {
+	public ColumnMetadataListDTO getColumnNotNullByTable(String schemaName, String tableName) {
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBNotNullColumnsByTableAndSchema(schemaName, tableName));
 	}
 	
@@ -76,7 +76,15 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 * Get all columns without not null constraint by theirs membership table (schema required)
 	 */
 	@Override
-	public ColumnMetadataListDTO getColumnNullableByNameAndTable(String schemaName, String tableName) {
+	public ColumnMetadataListDTO getColumnNullableByTable(String schemaName, String tableName) {
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBNullableColumnsByTableAndSchema(schemaName, tableName));
+	}
+	
+	/*
+	 * Get all integer columns by theirs membership table (schema required)
+	 */
+	@Override
+	public ColumnMetadataListDTO getIntegerColumnByTable(String schemaName, String tableName) {
+		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBIntegerColumnsByTableAndSchema(schemaName, tableName));
 	}
 }

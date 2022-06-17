@@ -25,10 +25,15 @@ public interface ColumnMetadataService {
 	/*
 	 * Get all columns with not null constraint by theirs membership table (schema required)
 	 */
-	ColumnMetadataListDTO getColumnNotNullByNameAndTable(String schemaName, String tableName);
+	ColumnMetadataListDTO getColumnNotNullByTable(String schemaName, String tableName);
 	
 	/*
 	 * Get all columns without not null constraint by theirs membership table (schema required)
 	 */
-	ColumnMetadataListDTO getColumnNullableByNameAndTable(String schemaName, String tableName);
+	ColumnMetadataListDTO getColumnNullableByTable(String schemaName, String tableName);
+	
+	/*
+	 * Get all integer columns by theirs membership table (schema required)
+	 */
+	ColumnMetadataListDTO getIntegerColumnByTable(String schemaName, String tableName);
 }

@@ -26,6 +26,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
@@ -1602,5 +1603,94 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		}  
 	        
 	    return modifyColumnDataTypeXMLScript;
+	}
+	
+	/*
+	 * Method for generate anAdd Auto Increment Script
+	 */
+	@Override
+	public String generateAddAutoIncrementLiquibaseXMLScript(AddAutoIncrementScriptDTO addAutoIncrementScriptDTO) {
+		String addAutoIncrementXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, addAutoIncrementScriptDTO);
+
+	        if(addAutoIncrementScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
+	        
+	        /*
+	         * Pre-condition element
+	         */
+	        Element preConditionElement = createPreConditionElement(document, addAutoIncrementScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+	        //add preCondition child
+        	//column exists
+        	Element columnExistsElement = document.createElement("columnExists");
+        	preConditionElement.appendChild(columnExistsElement);
+        	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(addAutoIncrementScriptDTO.getSchemaName());
+        	columnExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(addAutoIncrementScriptDTO.getTableName());
+        	columnExistsElement.setAttributeNode(tableNamePreCond);
+        	
+        	Attr columnNamePreCond = document.createAttribute("columnName");
+        	columnNamePreCond.setValue(addAutoIncrementScriptDTO.getColumnName());
+        	columnExistsElement.setAttributeNode(columnNamePreCond);
+        	
+        	/*
+        	 * Add auto increment element
+        	 */
+        	Element addAutoIncrementElement = document.createElement("addAutoIncrement");
+        	changeSet.appendChild(addAutoIncrementElement);
+        	
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(addAutoIncrementScriptDTO.getSchemaName());
+        	addAutoIncrementElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(addAutoIncrementScriptDTO.getTableName());
+        	addAutoIncrementElement.setAttributeNode(tableName);
+        	
+        	Attr columnName = document.createAttribute("columnName");
+        	columnName.setValue(addAutoIncrementScriptDTO.getColumnName());
+        	addAutoIncrementElement.setAttributeNode(columnName);
+        	
+        	Attr startWith = document.createAttribute("startWith");
+        	startWith.setValue(addAutoIncrementScriptDTO.getStratWith().toString());
+        	addAutoIncrementElement.setAttributeNode(startWith);
+        	
+        	Attr incrementBy = document.createAttribute("incrementBy");
+        	incrementBy.setValue(addAutoIncrementScriptDTO.getIncrementBy().toString());
+        	addAutoIncrementElement.setAttributeNode(incrementBy);
+		
+        	/*
+			 * generate XML script
+			 */
+        	addAutoIncrementXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+        	
+		return addAutoIncrementXMLScript;
 	}
 }

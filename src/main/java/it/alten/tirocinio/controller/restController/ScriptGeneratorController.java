@@ -15,6 +15,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
@@ -144,5 +145,14 @@ public class ScriptGeneratorController {
 	@ResponseStatus(HttpStatus.OK)
 	public String generateModifyColumnDataTypeScriptRequest(@RequestBody ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO) {
 		return scriptGeneratorService.generateModifyColumnDataTypeLiquibaseXMLScript(modifyColumnDataTypeScriptDTO);
+	}
+	
+	/*
+	 * Method to manage add auto increment Script xml script request
+	 */
+	@PostMapping("/addAutoIncrement/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateAddAutoIncrementScriptRequest(@RequestBody AddAutoIncrementScriptDTO addAutoIncrementScriptDTO) {
+		return scriptGeneratorService.generateAddAutoIncrementLiquibaseXMLScript(addAutoIncrementScriptDTO);
 	}
 }

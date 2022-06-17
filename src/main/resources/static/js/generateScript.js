@@ -462,3 +462,36 @@ function sendGenerateScriptModifyDataTypeRequest(){
 		alert(" WARNING\n Fill in all fields to generate the script");
 	}
 }
+
+/*
+ * AJAX function for send asynch request to generate an Add Auto Increment to Column XML Script and view it into text area
+ */
+function sendGenerateScriptAddAutoIncrementRequest(){
+	let formData = new FormData(document.getElementById("addAutoIncrementForm"));
+	
+	let notEmpty = checkNotEmptyField("addAutoIncrementForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.column_name = formData.get("column_name");
+		object.start_with = formData.get("start_with");
+		object.increment_by = formData.get("increment_by");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/addAutoIncrement/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}

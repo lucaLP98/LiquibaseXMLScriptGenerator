@@ -5,9 +5,10 @@
 const COLUMN_ALL = 0;
 const COLUMN_NULL = 1;
 const COLUMN_NOT_NULL = 2;
+const COLUMN_INT = 3;
 
-const UNIQUE_CONSTRAINT = 3;
-const ALL_CONSTRAINT = 4;
+const UNIQUE_CONSTRAINT = 4;
+const ALL_CONSTRAINT = 5;
 
 /*
  * Function tha remove all option for the input Select element 
@@ -128,6 +129,14 @@ function loadModifyColumnDataTypeForm(){
 	createOptionForSchemaSelect(schemaSelectId);
 };
 
+/*
+ * load the page addAutoIncrementForm.html in Homepage for the creation of "Add auto increment to column" Script
+ */
+function loadAddAutoIncrementForm(){
+	$('#formContainer').load('forms/addAutoIncrementForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
 
 /*
  * Function for load in "createTableForm.html" the form for insert new column to add at table
@@ -260,6 +269,7 @@ function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, nullTyp
 		case COLUMN_ALL: requestUri = "/api/columns/byTable/"; break;
 		case COLUMN_NULL: requestUri = "/api/columns/Null/"; break;
 		case COLUMN_NOT_NULL: requestUri = "/api/columns/NotNull/"; break;
+		case COLUMN_INT: requestUri = "/api/columns/Integer/"; break;
 		default: requestUri = "/api/columns/byTable/"; break;
 	}
 	

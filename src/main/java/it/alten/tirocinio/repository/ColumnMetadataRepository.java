@@ -44,4 +44,10 @@ public interface ColumnMetadataRepository extends CrudRepository<ColumnMetadata,
 	 */
 	@Query(value = "SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key FROM information_schema.columns WHERE (table_schema = :table_schema AND table_name = :table_name AND is_nullable = \"YES\")", nativeQuery = true)
 	Set<ColumnMetadata> getAllDBNullableColumnsByTableAndSchema(@Param("table_schema") String tableSchema, @Param("table_name") String tableName);
+	
+	/*
+	 * Query for retrieve metadata of integer column by their membership table and schema 
+	 */
+	@Query(value = "SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key FROM information_schema.columns WHERE (table_schema = :table_schema AND table_name = :table_name AND ( column_type=\"int\" OR  column_type=\"mediumint\" OR column_type=\"tinyint\" OR column_type=\"bigint\"))", nativeQuery = true)
+	Set<ColumnMetadata> getAllDBIntegerColumnsByTableAndSchema(@Param("table_schema") String tableSchema, @Param("table_name") String tableName);
 }

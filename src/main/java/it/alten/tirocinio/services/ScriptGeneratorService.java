@@ -8,6 +8,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
@@ -76,4 +77,9 @@ public interface ScriptGeneratorService {
 	 * Method for generate an Modify Column Data Type Script
 	 */
 	String generateModifyColumnDataTypeLiquibaseXMLScript(ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO);
+
+	/*
+	 * Method for generate anAdd Auto Increment Script
+	 */
+	String generateAddAutoIncrementLiquibaseXMLScript(AddAutoIncrementScriptDTO addAutoIncrementScriptDTO);
 }

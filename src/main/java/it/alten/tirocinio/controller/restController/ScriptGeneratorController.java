@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
@@ -134,5 +135,14 @@ public class ScriptGeneratorController {
 	@ResponseStatus(HttpStatus.OK)
 	public String generateRenameColumnScriptRequest(@RequestBody RenameColumnScriptDTO renameColumnScriptDTO) {
 		return scriptGeneratorService.generateRenameColumnLiquibaseXMLScript(renameColumnScriptDTO);
+	}
+	
+	/*
+	 * Method to manage Modify Column Data Type Script xml script request
+	 */
+	@PostMapping("/modifyColumnDataType/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateModifyColumnDataTypeScriptRequest(@RequestBody ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO) {
+		return scriptGeneratorService.generateModifyColumnDataTypeLiquibaseXMLScript(modifyColumnDataTypeScriptDTO);
 	}
 }

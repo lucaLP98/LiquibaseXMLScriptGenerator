@@ -120,6 +120,16 @@ function loadRenameColumnForm(){
 };
 
 /*
+ * load the page modifyDataTypeForm.html in Homepage for the creation of "Modify Column Data Type" Script
+ */
+function loadModifyColumnDataTypeForm(){
+	$('#formContainer').load('forms/modifyDataTypeForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+
+/*
  * Function for load in "createTableForm.html" the form for insert new column to add at table
  */
 function addColumnToTable(){

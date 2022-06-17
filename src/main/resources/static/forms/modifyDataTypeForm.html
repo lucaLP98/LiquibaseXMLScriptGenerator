@@ -1,7 +1,7 @@
-<form class="form-horizontal" id="renameColumnForm">
+<form class="form-horizontal" id="modifyDataTypeForm">
   <div class="form-group">
     <div class="col-sm-10">
-      <h1>Rename Column</h1>
+      <h1>Modify Column Data Type</h1>
     </div>
   </div>
 
@@ -27,7 +27,7 @@
   <div class="form-group">
     <label for="schema_name" class="col-sm-2 control-label">Schema Name</label>
     <div class="col-sm-10">
-      <select class="form-control" id="schema_name" name="schema_name" onchange="loadTableOption('schema_name', 'table_name', 'old_column_name');">
+      <select class="form-control" id="schema_name" name="schema_name" onchange="loadTableOption('schema_name', 'table_name', 'column_name');">
       	<option value=""  selected > -- select an option -- </option>
 	  </select>
     </div>
@@ -38,41 +38,58 @@
   <div class="form-group">
     <label for="table_name" class="col-sm-2 control-label">Table Name</label>
     <div class="col-sm-10">
-      <select disabled class="form-control" id="table_name" name="table_name" onchange="loadColumnOption('schema_name', 'table_name', 'old_column_name', COLUMN_ALL)">
+      <select disabled class="form-control" id="table_name" name="table_name" onchange="loadColumnOption('schema_name', 'table_name', 'column_name', COLUMN_ALL)">
       	<option value=""  selected> -- select an option -- </option>
 	  </select>
     </div>
   </div>
   <!-- END TABLE NAME -->
   
-  <!-- OLD COLUMN NAME-->
+  <!-- COLUMN NAME-->
   <div class="form-group">
-    <label for="old_column_name" class="col-sm-2 control-label">Old Column Name</label>
+    <label for="column_name" class="col-sm-2 control-label">Column Name</label>
     <div class="col-sm-10">
-      <select disabled class="form-control" id="old_column_name" name="old_column_name" onchange="loadColumnType('column_type', 'old_column_name', 'table_name', 'schema_name')">
+      <select disabled class="form-control" id="column_name" name="column_name" onchange="loadColumnType('old_column_type', 'column_name', 'table_name', 'schema_name')">
       	<option value=""  selected> -- select an option -- </option>
 	  </select>
     </div>
   </div>
-  <!-- END OLD COLUMN NAME -->
+  <!-- END COLUMN NAME -->
   
-  <!-- COLUMN TYPE -->
+  <!-- OLD COLUMN TYPE -->
   <div class="form-group">
-    <label for="column_type" class="col-sm-2 control-label">Column Type</label>
+    <label for="old_column_type" class="col-sm-2 control-label">Old Column Type</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" name="column_type" id="column_type" placeholder="column type" readonly>
+      <input type="text" class="form-control" name="old_column_type" id="old_column_type" placeholder="old column type" readonly>
     </div>
   </div>
-  <!-- END COLUMN TYPE -->
+  <!-- END OLD COLUMN TYPE -->
   
-  <!-- NEW COLUMN NAME -->
+  <!-- NEW COLUMN TYPE -->
   <div class="form-group">
-    <label for="new_column_name" class="col-sm-2 control-label">New Column Name</label>
+    <label for="new_column_type" class="col-sm-2 control-label">New Column Type</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" name="new_column_name" id="new_column_name" placeholder="new column name">
+      <select class="form-control" name="new_column_type" id="new_column_type">
+      	<option value="BIT(1)">BIT(1)</option>
+      	<option value="TINYINT">TINYINT</option>
+  		<option value="INT">INT</option>
+  		<option value="MEDIUMINT">MEDIUMINT</option>
+  		<option value="BIGINT">BIGINT</option>
+  		<option value="FLOAT">FLOAT</option>
+  		<option value="DOUBLE">DOUBLE</option>
+  		<option value="DECIMAL">DECIMAL</option>
+  		<option value="NUMERIC">NUMERIC</option>
+  		<option value="LONGBLOB">LONGBLOB</option>
+  		<option value="DATETIME">DATETIME</option>
+  		<option value="TIME">TIME</option>
+  		<option value="TIMESTAMP">TIMESTAMP</option>
+  		<option value="DATE">DATE</option>
+  		<option value="CHAR">CHAR</option>
+  		<option value="VARCHAR(255)">VARCHAR(255)</option>
+	  </select>
     </div>
   </div>
-  <!-- END NEW COLUMN NAME -->
+  <!-- END NEW COLUMN TYPE -->
   
   <!-- ON ERROR -->
   <div class="form-group">
@@ -106,7 +123,7 @@
  
   <div class="form-group">
   	<div class="col-sm-offset-2 col-sm-10">
-      <button type="button" class="btn btn-success" onclick="sendGenerateScriptRenameColumnRequest()" >Generate Script</button>
+      <button type="button" class="btn btn-success" onclick="sendGenerateScriptModifyDataTypeRequest()" >Generate Script</button>
   	</div>
   </div>
 </form>

@@ -23,6 +23,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
@@ -1214,7 +1215,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	}
 
 	/*
-	 * Method for generate an Rename Table Script
+	 * Method for generate an Rename Column Script
 	 */
 	@Override
 	public String generateRenameColumnLiquibaseXMLScript(RenameColumnScriptDTO renameColumnScriptDTO) {
@@ -1277,7 +1278,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	 * Add RenameColumn element
         	 */
     		Element renameColumn = document.createElement("renameColumn");
-        	//add rename column element element to changeSet
+        	//add rename column element to changeSet
     		changeSet.appendChild(renameColumn);
         	
         	Attr schemaName = document.createAttribute("schemaName");
@@ -1339,5 +1340,107 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		}  
 	        
 	    return renameColumnXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Modify Column Data Type Script
+	 */
+	@Override
+	public String generateModifyColumnDataTypeLiquibaseXMLScript(ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO) {
+		String modifyColumnDataTypeXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, modifyColumnDataTypeScriptDTO);
+	        //add changeSet element to document
+	        document.appendChild(changeSet);
+	        
+	        /*
+	         * Pre-condition element
+	         */
+	        Element preConditionElement = createPreConditionElement(document, modifyColumnDataTypeScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+	        //add preCondition child
+        	//column exists
+        	Element columnExistsElement = document.createElement("columnExists");
+        	preConditionElement.appendChild(columnExistsElement);
+        	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(modifyColumnDataTypeScriptDTO.getSchemaName());
+        	columnExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(modifyColumnDataTypeScriptDTO.getTableName());
+        	columnExistsElement.setAttributeNode(tableNamePreCond);
+        	
+        	Attr columnNamePreCOnd = document.createAttribute("columnName");
+        	columnNamePreCOnd.setValue(modifyColumnDataTypeScriptDTO.getColumnName());
+        	columnExistsElement.setAttributeNode(columnNamePreCOnd);
+        	
+        	/*
+        	 * Modify column data type element
+        	 */
+        	Element modifyColumnDataType = document.createElement("modifyDataType");
+        	//add modify column data type element to changeSet
+    		changeSet.appendChild(modifyColumnDataType);
+        	
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(modifyColumnDataTypeScriptDTO.getSchemaName());
+        	modifyColumnDataType.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(modifyColumnDataTypeScriptDTO.getTableName());
+        	modifyColumnDataType.setAttributeNode(tableName);        	
+        	
+        	Attr columnName = document.createAttribute("columnName");
+        	columnName.setValue(modifyColumnDataTypeScriptDTO.getColumnName());
+        	modifyColumnDataType.setAttributeNode(columnName);
+        	
+        	Attr newDataType = document.createAttribute("newDataType");
+        	newDataType.setValue(modifyColumnDataTypeScriptDTO.getNewColumnType());
+        	modifyColumnDataType.setAttributeNode(newDataType);
+        	
+        	/*
+        	 * Add rollback element
+        	 */
+        	Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		//append rolback child
+    		Element modifyColumnDataTypeRollback = document.createElement("modifyDataType");
+        	//add modify column data type element to rollback
+    		rollbackElement.appendChild(modifyColumnDataTypeRollback);
+        	
+        	Attr schemaNameRollback = document.createAttribute("schemaName");
+        	schemaNameRollback.setValue(modifyColumnDataTypeScriptDTO.getSchemaName());
+        	modifyColumnDataTypeRollback.setAttributeNode(schemaNameRollback);
+        	
+        	Attr tableNameRollback = document.createAttribute("tableName");
+        	tableNameRollback.setValue(modifyColumnDataTypeScriptDTO.getTableName());
+        	modifyColumnDataTypeRollback.setAttributeNode(tableNameRollback);        	
+        	
+        	Attr columnNameRollback = document.createAttribute("columnName");
+        	columnNameRollback.setValue(modifyColumnDataTypeScriptDTO.getColumnName());
+        	modifyColumnDataTypeRollback.setAttributeNode(columnNameRollback);
+        	
+        	Attr newDataTypeRollback = document.createAttribute("newDataType");
+        	newDataTypeRollback.setValue(modifyColumnDataTypeScriptDTO.getOldColumnType());
+        	modifyColumnDataTypeRollback.setAttributeNode(newDataTypeRollback);
+        	
+	        /*
+			 * generate XML script
+			 */
+	        modifyColumnDataTypeXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}  
+	        
+	    return modifyColumnDataTypeXMLScript;
 	}
 }

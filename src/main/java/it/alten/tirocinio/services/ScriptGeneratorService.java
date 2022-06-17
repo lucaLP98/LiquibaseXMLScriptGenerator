@@ -2,6 +2,7 @@ package it.alten.tirocinio.services;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
@@ -67,7 +68,12 @@ public interface ScriptGeneratorService {
 	String generateRenameTableLiquibaseXMLScript(RenameTableScriptDTO renameTableScriptDTO);
 	
 	/*
-	 * Method for generate an Rename Table Script
+	 * Method for generate an Rename Column Script
 	 */
 	String generateRenameColumnLiquibaseXMLScript(RenameColumnScriptDTO renameColumnScriptDTO);
+	
+	/*
+	 * Method for generate an Modify Column Data Type Script
+	 */
+	String generateModifyColumnDataTypeLiquibaseXMLScript(ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO);
 }

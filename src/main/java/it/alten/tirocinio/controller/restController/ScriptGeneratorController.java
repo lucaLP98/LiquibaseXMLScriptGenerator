@@ -13,10 +13,12 @@ import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
@@ -154,5 +156,23 @@ public class ScriptGeneratorController {
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddAutoIncrementScriptRequest(@RequestBody AddAutoIncrementScriptDTO addAutoIncrementScriptDTO) {
 		return scriptGeneratorService.generateAddAutoIncrementLiquibaseXMLScript(addAutoIncrementScriptDTO);
+	}
+	
+	/*
+	 * Method to manage add default value Script xml script request
+	 */
+	@PostMapping("/addDefaultValue/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateAddDefaultValueScriptRequest(@RequestBody AddDefaultValueScriptDTO addDefaultValueScriptDTO) {
+		return scriptGeneratorService.generateAddDefaultValueLiquibaseXMLScript(addDefaultValueScriptDTO);
+	}
+	
+	/*
+	 * Method to manage drop default value Script xml script request
+	 */
+	@PostMapping("/dropDefaultValue/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateDropDefaultValueScriptRequest(@RequestBody DropDefaultValueScriptDTO dropDefaultValueScriptDTO) {
+		return scriptGeneratorService.generateDropDefaultValueLiquibaseXMLScript(dropDefaultValueScriptDTO);
 	}
 }

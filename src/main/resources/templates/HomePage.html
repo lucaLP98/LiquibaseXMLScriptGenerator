@@ -49,21 +49,22 @@
     		<div id="operationsMetadataDrop" class="w3-hide w3-white w3-card">
       			<a href="#" class="w3-bar-item w3-button" onclick="loadAddColumnForm()">Add Column</a>
       			<a href="#" class="w3-bar-item w3-button" onclick="loadDropColumnForm()">Delete Column</a>
-      			<a href="#" class="w3-bar-item w3-button">Add Foreign Key Constraint</a>
-      			<a href="#" class="w3-bar-item w3-button">Delete Foreign Key Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">Add Foreign Key Constraint</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">Delete Foreign Key Constraint</a>
       			<a href="#" class="w3-bar-item w3-button" onclick="loadAddNotNullConstraintForm()">Add NOT NULL Constraint</a>
       			<a href="#" class="w3-bar-item w3-button" onclick="loadDropNotNullConstraintForm()">Delete NOT NULL Constraint</a>
       			<a href="#" class="w3-bar-item w3-button" onclick="loadAddUniqueConstraintForm()">Add UNIQUE Constraint</a>
       			<a href="#" class="w3-bar-item w3-button" onclick="loadDropUniqueConstraintForm()">Delete UNIQUE Constraint</a>
-      			<a href="#" class="w3-bar-item w3-button">Add Default Value</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadAddDefaultValueForm()">Add Default Value</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadDropDefaultValueForm()">Delete Default Value</a>
     		</div>
   			
   			<!-- DATA OPERATION OPTIONS -->
     		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('operationsDataDrop')">Operations on Data <i class="fa fa-caret-down"></i></button>
     		<div id="operationsDataDrop" class="w3-hide w3-white w3-card">
-      			<a href="#" class="w3-bar-item w3-button">INSERT</a>
-      			<a href="#" class="w3-bar-item w3-button">UPDATE</a>
-      			<a href="#" class="w3-bar-item w3-button">DELETE</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">INSERT</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">UPDATE</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">DELETE</a>
     		</div>
     		
     		<!-- CHANGE DATA TYPE -->

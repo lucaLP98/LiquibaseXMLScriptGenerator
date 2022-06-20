@@ -64,4 +64,10 @@ public class ColumnMetadataController {
 	public ColumnMetadataListDTO getIntegerColumnsByTable(@PathVariable String schemaName, @PathVariable String tableName) {
 		return columnMetadataService.getIntegerColumnByTable(schemaName, tableName);
 	}
+	
+	@GetMapping("/WithDefaultValue/{schemaName}&{tableName}")
+	@ResponseStatus(HttpStatus.OK)
+	public ColumnMetadataListDTO getColumnsWithDefaultByTable(@PathVariable String schemaName, @PathVariable String tableName) {
+		return columnMetadataService.getColumnWithDefaultValueByTable(schemaName, tableName);
+	}
 }

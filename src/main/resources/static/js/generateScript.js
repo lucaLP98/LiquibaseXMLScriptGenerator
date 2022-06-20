@@ -495,3 +495,69 @@ function sendGenerateScriptAddAutoIncrementRequest(){
 		alert(" WARNING\n Fill in all fields to generate the script");
 	}
 }
+
+/*
+ * AJAX function for send asynch request to generate an Add Default Value XML Script and view it into text area
+ */
+function sendGenerateScriptAddDefaultValueRequest(){
+	let formData = new FormData(document.getElementById("addDefaultValueForm"));
+	
+	let notEmpty = checkNotEmptyField("addDefaultValueForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.column_name = formData.get("column_name");
+		object.default_value = formData.get("default_value");
+		object.column_type = formData.get("column_type");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/addDefaultValue/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate an Drop Default Value XML Script and view it into text area
+ */
+function sendGenerateScriptDropDefaultValueRequest(){
+	let formData = new FormData(document.getElementById("dropDefaultValueForm"));
+	
+	let notEmpty = checkNotEmptyField("dropDefaultValueForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.column_name = formData.get("column_name");
+		object.column_type = formData.get("column_type");
+		object.default_value = formData.get("default_value");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/dropDefaultValue/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}

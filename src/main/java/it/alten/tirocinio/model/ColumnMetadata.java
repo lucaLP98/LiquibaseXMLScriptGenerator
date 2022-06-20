@@ -27,6 +27,9 @@ public class ColumnMetadata {
 	@Column(name = "column_key", insertable=false, updatable=false)
 	private String columnKey;
 	
+	@Column(name = "column_default", insertable=false, updatable=false)
+	private String columnDefault;
+	
 	/*
 	 * Setter methods 
 	 */
@@ -54,6 +57,10 @@ public class ColumnMetadata {
 		this.columnKey = columnKey;
 	}
 	
+	public void setColumnDefault(String columnDefault) {
+		this.columnDefault = columnDefault;
+	}
+	
 	/*
 	 * Getter methods
 	 */
@@ -79,5 +86,9 @@ public class ColumnMetadata {
 	
 	public String getColumnKey() {
 		return columnKey;
+	}
+	
+	public String getColumnDefault() {
+		return columnDefault;
 	}
 }

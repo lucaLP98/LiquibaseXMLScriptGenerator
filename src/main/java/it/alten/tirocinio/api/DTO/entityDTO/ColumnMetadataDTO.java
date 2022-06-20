@@ -24,6 +24,9 @@ public class ColumnMetadataDTO {
 	@JsonProperty("column_key")
 	private String columnKey;
 	
+	@JsonProperty("column_default")
+	private String columnDefault;
+	
 	/*
 	 * Setter methods 
 	 */
@@ -51,6 +54,10 @@ public class ColumnMetadataDTO {
 		this.columnKey = columnKey;
 	}
 	
+	public void setColumnDefault(String columnDefault) {
+		this.columnDefault = columnDefault;
+	}
+	
 	/*
 	 * Getter methods
 	 */
@@ -76,5 +83,9 @@ public class ColumnMetadataDTO {
 	
 	public String getColumnKey() {
 		return columnKey;
+	}
+	
+	public String getColumnDefault() {
+		return columnDefault;
 	}
 }

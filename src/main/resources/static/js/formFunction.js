@@ -6,9 +6,10 @@ const COLUMN_ALL = 0;
 const COLUMN_NULL = 1;
 const COLUMN_NOT_NULL = 2;
 const COLUMN_INT = 3;
+const COLUMN_DEFAULT = 4;
 
-const UNIQUE_CONSTRAINT = 4;
-const ALL_CONSTRAINT = 5;
+const UNIQUE_CONSTRAINT = 5;
+const ALL_CONSTRAINT = 6;
 
 /*
  * Function tha remove all option for the input Select element 
@@ -139,6 +140,24 @@ function loadAddAutoIncrementForm(){
 };
 
 /*
+ * load the page addDefaultValue.html in Homepage for the creation of "Add default value" Script
+ */
+function loadAddDefaultValueForm(){
+	$('#formContainer').load('forms/addDefaultValueForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page dropDefaultValue.html in Homepage for the creation of "Drop default value" Script
+ */
+function loadDropDefaultValueForm(){
+	$('#formContainer').load('forms/dropDefaultValueForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
  * Function for load in "createTableForm.html" the form for insert new column to add at table
  */
 function addColumnToTable(){
@@ -264,13 +283,14 @@ function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, nullTyp
 		}
    	}
    
-   	let requestUri = "";
+   	let requestUri = "/api/columns/";
    	switch(nullType){
-		case COLUMN_ALL: requestUri = "/api/columns/byTable/"; break;
-		case COLUMN_NULL: requestUri = "/api/columns/Null/"; break;
-		case COLUMN_NOT_NULL: requestUri = "/api/columns/NotNull/"; break;
-		case COLUMN_INT: requestUri = "/api/columns/Integer/"; break;
-		default: requestUri = "/api/columns/byTable/"; break;
+		case COLUMN_ALL: requestUri += "byTable/"; break;
+		case COLUMN_NULL: requestUri += "Null/"; break;
+		case COLUMN_NOT_NULL: requestUri += "NotNull/"; break;
+		case COLUMN_INT: requestUri += "Integer/"; break;
+		case COLUMN_DEFAULT: requestUri += "WithDefaultValue/"; break;
+		default: requestUri += "byTable/"; break;
 	}
 	
   	xhttp.open("GET", requestUri + schemaSelected + "&" + tableSelected, true);
@@ -346,3 +366,78 @@ function loadColumnType(columnTypeInputFieldId, columnSelectId, tableSelectId, s
 	xhttp.open("GET", "/api/columns/byName/" + selectedSchema + "&" + selectedTable + "&" + selectedColumn, true);
   	xhttp.send();
 }
+
+/*
+ * Function that find the data type of selected column
+ *
+ * param columnTypeInputFieldId : the ID of column data type input text field
+ * param columnSelectId : the ID of select that contains the selected column
+ * param tableSelectId : the ID of select that contains the selected table's colum
+ * param schemaSelectId : the ID of select that contains the selected schema that contain table's colum
+ * param columnDefaultInputFieldId : the ID of column default value input text field
+ */
+function loadColumnTypeAndDefaultValue(columnTypeInputFieldId, columnDefaultInputFieldId, columnSelectId, tableSelectId, schemaSelectId){
+	let selectedColumn = document.getElementById(columnSelectId).value;
+	let selectedTable = document.getElementById(tableSelectId).value;
+	let selectedSchema = document.getElementById(schemaSelectId).value;
+	
+	let columnTypeInputField = document.getElementById(columnTypeInputFieldId);
+	columnTypeInputField.value = "";
+	let columnDefaultInputField = document.getElementById(columnDefaultInputFieldId);
+	columnDefaultInputField.value = "";
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function(){
+		let jsonResponse = JSON.parse(this.response);
+		columnTypeInputField.value = jsonResponse.column_type;
+		columnDefaultInputField.value = jsonResponse.column_default;
+	}
+	xhttp.open("GET", "/api/columns/byName/" + selectedSchema + "&" + selectedTable + "&" + selectedColumn, true);
+  	xhttp.send();
+}
+
+/*
+ * Function that find the data type of selected column and modify input field type 
+ *
+ * param columnTypeInputFieldId : the ID of column data type input text field
+ * param columnSelectId : the ID of select that contains the selected column
+ * param tableSelectId : the ID of select that contains the selected table's colum
+ * param schemaSelectId : the ID of select that contains the selected schema that contain table's colum
+ * param inputFieldId : the ID of the input to field to which we want to change the type
+ */
+function loadColumnTypeAndChangeInputFieldType(columnTypeInputFieldId, columnSelectId, tableSelectId, schemaSelectId, inputFieldId){
+	let selectedColumn = document.getElementById(columnSelectId).value;
+	let selectedTable = document.getElementById(tableSelectId).value;
+	let selectedSchema = document.getElementById(schemaSelectId).value;
+	let inputField = document.getElementById(inputFieldId);
+	
+	let columnTypeInputField = document.getElementById(columnTypeInputFieldId);
+	columnTypeInputField.value = "";
+	inputField.value="";
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function(){
+		let jsonResponse = JSON.parse(this.response);
+		columnTypeInputField.value = jsonResponse.column_type;
+		
+		switch(jsonResponse.column_type){
+			case "int": case  "bigint" : case "tinyint" : case "mediumint" : case "numeric" : case "float" : case "double" : case "decimal" :
+				inputField.type = "number";
+			break;
+			
+			case "date" :
+				inputField.type = "date"
+			break;
+			
+			case "time" : case "timestamp" :
+				inputField.type = "time"
+			break;
+			
+			default:
+				inputField.type = "text"
+			break;
+		}
+	}
+	xhttp.open("GET", "/api/columns/byName/" + selectedSchema + "&" + selectedTable + "&" + selectedColumn, true);
+  	xhttp.send();
+} 

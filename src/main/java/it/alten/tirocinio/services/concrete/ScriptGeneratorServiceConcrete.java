@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
@@ -28,6 +29,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
@@ -1692,5 +1694,237 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		}
         	
 		return addAutoIncrementXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Add Default Value Script
+	 */
+	@Override
+	public String generateAddDefaultValueLiquibaseXMLScript(AddDefaultValueScriptDTO addDefaultValueScriptDTO) {
+		String addDefaultValueXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, addDefaultValueScriptDTO);
+
+	        if(addDefaultValueScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
+	        
+	        /*
+	         * Pre-condition element
+	         */
+	        Element preConditionElement = createPreConditionElement(document, addDefaultValueScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+	        //add preCondition child
+        	//column exists
+        	Element columnExistsElement = document.createElement("columnExists");
+        	preConditionElement.appendChild(columnExistsElement);
+        	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(addDefaultValueScriptDTO.getSchemaName());
+        	columnExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(addDefaultValueScriptDTO.getTableName());
+        	columnExistsElement.setAttributeNode(tableNamePreCond);
+        	
+        	Attr columnNamePreCond = document.createAttribute("columnName");
+        	columnNamePreCond.setValue(addDefaultValueScriptDTO.getColumnName());
+        	columnExistsElement.setAttributeNode(columnNamePreCond);
+        	
+        	/*
+        	 * Add Default Value Element
+        	 */
+        	Element addDefaultValueElement = document.createElement("addDefaultValue");
+        	changeSet.appendChild(addDefaultValueElement);
+        	
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(addDefaultValueScriptDTO.getSchemaName());
+        	addDefaultValueElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(addDefaultValueScriptDTO.getTableName());
+        	addDefaultValueElement.setAttributeNode(tableName);
+        	
+        	Attr columnName = document.createAttribute("columnName");
+        	columnName.setValue(addDefaultValueScriptDTO.getColumnName());
+        	addDefaultValueElement.setAttributeNode(columnName);
+        	
+        	Attr columnDataType = document.createAttribute("columnDataType");
+        	columnDataType.setValue(addDefaultValueScriptDTO.getColumnType());
+        	addDefaultValueElement.setAttributeNode(columnDataType);
+        	
+        	Attr defaultValue = document.createAttribute("defaultValue");
+        	defaultValue.setValue(addDefaultValueScriptDTO.getDefaultValue());
+        	addDefaultValueElement.setAttributeNode(defaultValue);
+        	
+        	/*
+        	 * Rollback element
+        	 */
+        	Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		//append rolback child
+    		Element dropDefaultValueRollback = document.createElement("dropDefaultValue");
+        	//add modify column data type element to rollback
+    		rollbackElement.appendChild(dropDefaultValueRollback);
+        	
+        	Attr schemaNameRollback = document.createAttribute("schemaName");
+        	schemaNameRollback.setValue(addDefaultValueScriptDTO.getSchemaName());
+        	dropDefaultValueRollback.setAttributeNode(schemaNameRollback);
+        	
+        	Attr tableNameRollback = document.createAttribute("tableName");
+        	tableNameRollback.setValue(addDefaultValueScriptDTO.getTableName());
+        	dropDefaultValueRollback.setAttributeNode(tableNameRollback);        	
+        	
+        	Attr columnNameRollback = document.createAttribute("columnName");
+        	columnNameRollback.setValue(addDefaultValueScriptDTO.getColumnName());
+        	dropDefaultValueRollback.setAttributeNode(columnNameRollback);
+        	
+        	Attr columnDataTypeRollback = document.createAttribute("columnDataType");
+        	columnDataTypeRollback.setValue(addDefaultValueScriptDTO.getColumnType());
+        	dropDefaultValueRollback.setAttributeNode(columnDataTypeRollback);
+		
+        	/*
+			 * generate XML script
+			 */
+        	addDefaultValueXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+		
+		return addDefaultValueXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Drop Default Value Script
+	 */
+	@Override
+	public String generateDropDefaultValueLiquibaseXMLScript(DropDefaultValueScriptDTO dropDefaultValueScriptDTO) {
+		String dropDefaultValueXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, dropDefaultValueScriptDTO);
+
+	        if(dropDefaultValueScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
+	        
+	        /*
+	         * Pre-condition element
+	         */
+	        Element preConditionElement = createPreConditionElement(document, dropDefaultValueScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+	        //add preCondition child
+        	//column exists
+        	Element columnExistsElement = document.createElement("columnExists");
+        	preConditionElement.appendChild(columnExistsElement);
+        	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(dropDefaultValueScriptDTO.getSchemaName());
+        	columnExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr tableNamePreCond = document.createAttribute("tableName");
+        	tableNamePreCond.setValue(dropDefaultValueScriptDTO.getTableName());
+        	columnExistsElement.setAttributeNode(tableNamePreCond);
+        	
+        	Attr columnNamePreCond = document.createAttribute("columnName");
+        	columnNamePreCond.setValue(dropDefaultValueScriptDTO.getColumnName());
+        	columnExistsElement.setAttributeNode(columnNamePreCond);
+        	
+        	/*
+        	 * Drop Default Value Element
+        	 */
+        	Element addDefaultValueElement = document.createElement("dropDefaultValue");
+        	changeSet.appendChild(addDefaultValueElement);
+        	
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(dropDefaultValueScriptDTO.getSchemaName());
+        	addDefaultValueElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(dropDefaultValueScriptDTO.getTableName());
+        	addDefaultValueElement.setAttributeNode(tableName);
+        	
+        	Attr columnName = document.createAttribute("columnName");
+        	columnName.setValue(dropDefaultValueScriptDTO.getColumnName());
+        	addDefaultValueElement.setAttributeNode(columnName);
+        	
+        	Attr columnDataType = document.createAttribute("columnDataType");
+        	columnDataType.setValue(dropDefaultValueScriptDTO.getColumnType());
+        	addDefaultValueElement.setAttributeNode(columnDataType);
+        	
+        	/*
+        	 * Rollback element
+        	 */
+        	Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		//append rolback child
+    		Element addDefaultValueRollback = document.createElement("addDefaultValue");
+        	//add modify column data type element to rollback
+    		rollbackElement.appendChild(addDefaultValueRollback);
+        	
+        	Attr schemaNameRollback = document.createAttribute("schemaName");
+        	schemaNameRollback.setValue(dropDefaultValueScriptDTO.getSchemaName());
+        	addDefaultValueRollback.setAttributeNode(schemaNameRollback);
+        	
+        	Attr tableNameRollback = document.createAttribute("tableName");
+        	tableNameRollback.setValue(dropDefaultValueScriptDTO.getTableName());
+        	addDefaultValueRollback.setAttributeNode(tableNameRollback);        	
+        	
+        	Attr columnNameRollback = document.createAttribute("columnName");
+        	columnNameRollback.setValue(dropDefaultValueScriptDTO.getColumnName());
+        	addDefaultValueRollback.setAttributeNode(columnNameRollback);
+        	
+        	Attr columnDataTypeRollback = document.createAttribute("columnDataType");
+        	columnDataTypeRollback.setValue(dropDefaultValueScriptDTO.getColumnType());
+        	addDefaultValueRollback.setAttributeNode(columnDataTypeRollback);
+        	
+        	Attr defaultValueRollback = document.createAttribute("defaultValue");
+        	defaultValueRollback.setValue(dropDefaultValueScriptDTO.getDefaultValue());
+        	addDefaultValueRollback.setAttributeNode(defaultValueRollback);
+		
+        	/*
+			 * generate XML script
+			 */
+        	dropDefaultValueXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+		
+		return dropDefaultValueXMLScript;
 	}
 }

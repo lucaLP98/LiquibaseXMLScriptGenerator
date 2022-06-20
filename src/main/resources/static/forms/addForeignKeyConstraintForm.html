@@ -1,0 +1,185 @@
+<form class="form-horizontal" id="addForeignKeyConstraintForm">
+
+  <div class="form-group">
+    <div class="col-sm-10">
+      <h1>Add Foreign Key Constraint</h1>
+    </div>
+  </div>
+  
+  <!-- CHANGELOG REQUEST -->
+  <div class="form-group">
+    <label for="changeLog" class="col-sm-2 control-label">Generate ChangeLog</label>
+    <div class="col-sm-10">
+    	<label class="radio-inline">
+      		<input checked="checked" type="radio" name="changeLog" value="true"> YES
+    	</label>
+      	<label class="radio-inline">
+      		<input type="radio" name="changeLog" value="false"> NO
+      	</label>
+    </div>
+  </div>
+  <!-- END CHANGELOG REQUEST -->
+  
+	<!-- ID CHANGESET -->
+  <div class="form-group">
+    <label for="id_changeset" class="col-sm-2 control-label">ID ChangeSet</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="id_changeset" id="id_changeset" placeholder="id changeset">
+    </div>
+  </div>
+  <!-- END ID CHANGESET -->
+  
+  <!-- AUTHOR -->
+  <div class="form-group">
+    <label for="author" class="col-sm-2 control-label">Author</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="author" id="author" placeholder="Author">
+    </div>
+  </div>
+  <!-- END AUTHOR -->
+  
+  <!-- CONSTRAINT NAME -->
+  <div class="form-group">
+    <label for="constraint_name" class="col-sm-2 control-label">Constraint Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="constraint_name" name="constraint_name" placeholder="foreign key constraint name">
+    </div>
+  </div>
+  <!-- END CONSTRAINT NAME -->
+  
+  <!-- ON DELETE -->
+  <div class="form-group">
+    <label for="on_delete" class="col-sm-2 control-label">On Delete</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_delete" name="on_delete">
+        <option value="no action"  selected > NO ACTION </option>
+      	<option value="cascade"  > CASCADE </option>
+      	<option value="set null"  > SET NULL </option>
+      	<option value="set default"  > SET DEFAULT </option>
+      	<option value="restrict"  > RESTRICT </option>   	
+	  </select>
+    </div>
+  </div>
+  <!-- END ON DELETE -->
+  
+  <!-- ON UPDATE -->
+  <div class="form-group">
+    <label for="on_update" class="col-sm-2 control-label">On Update</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_update" name="on_update">
+        <option value="no action"  selected > NO ACTION </option>
+      	<option value="cascade"  > CASCADE </option>
+      	<option value="set null"  > SET NULL </option>
+      	<option value="set default"  > SET DEFAULT </option>
+      	<option value="restrict"  > RESTRICT </option>   	
+	  </select>
+    </div>
+  </div>
+  <!-- END ON UPDATE -->
+
+  <br><hr style="border-top: 2px dotted #bbb;"><br>
+
+  <!-- BASE TABLE SCHEMA NAME -->
+  <div class="form-group">
+    <label for="base_table_schema_name" class="col-sm-2 control-label">Base Schema Name</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="base_table_schema_name" name="base_table_schema_name" onchange="loadTableSelectsForAddForeignKey('base_table_schema_name', 'referenced_table_schema_name', 'base_table_name', 'referenced_table_name', 'base_column_name', 'referenced_column_name');">
+      	<option value=""  selected > -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END SCHEMA NAME -->
+  
+  <!-- BASE TABLE NAME-->
+  <div class="form-group">
+    <label for="base_table_name" class="col-sm-2 control-label">Base Table Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="base_table_name" name="base_table_name" onchange="loadColumnOption('base_table_schema_name', 'base_table_name', 'base_column_name', COLUMN_ALL)">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END BASE TABLE NAME -->
+  
+  <!-- BASE COLUMN NAME -->
+  <div class="form-group">
+    <label for="base_column_name" class="col-sm-2 control-label">Base Column Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="base_column_name" name="base_column_name">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END BASE COLUMN NAME -->
+  
+  <br><hr style="border-top: 2px dotted #bbb;"><br>
+  
+  <!-- REFERENCED TABLE SCHEMA NAME -->
+  <div class="form-group">
+    <label for="base_table_schema_name" class="col-sm-2 control-label">Referenced Schema Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="referenced_table_schema_name" id="referenced_table_schema_name" placeholder="referenced table schema name" readonly>
+    </div>
+  </div>
+  <!-- END REFERENCED SCHEMA NAME -->
+  
+  <!-- REFERENCED TABLE NAME-->
+  <div class="form-group">
+    <label for="referenced_table_name" class="col-sm-2 control-label">Referenced Table Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="referenced_table_name" name="referenced_table_name" onchange="loadColumnOption('base_table_schema_name', 'referenced_table_name', 'referenced_column_name', COLUMN_ALL)">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END REFERENCED TABLE NAME -->
+  
+  <!-- REFERENCED COLUMN NAME -->
+  <div class="form-group">
+    <label for="referenced_column_name" class="col-sm-2 control-label">Referenced Column Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="referenced_column_name" name="referenced_column_name">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END REFERENCED COLUMN NAME -->
+  
+  <br><hr style="border-top: 2px dotted #bbb;"><br>
+  
+  <!-- ON ERROR -->
+  <div class="form-group">
+    <label for="on_error" class="col-sm-2 control-label">On Error Condition</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_error" name="on_error">
+      	<option disabled selected value> -- select an option -- </option>
+      	<option value="HALT">HALT</option>
+      	<option value="CONTINUE">CONTINUE</option>
+      	<option value="MARK_RAN">MARK_RAN</option>
+      	<option value="WARN">WARN</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END ON ERROR -->
+  
+  <!-- ON FAIL -->
+  <div class="form-group">
+    <label for="on_fail" class="col-sm-2 control-label">On Fail Condition</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_fail" name="on_fail">
+      	<option disabled selected value=""> -- select an option -- </option>
+      	<option value="HALT">HALT</option>
+      	<option value="CONTINUE">CONTINUE</option>
+      	<option value="MARK_RAN">MARK_RAN</option>
+      	<option value="WARN">WARN</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END ON FAIL -->
+  
+  <div class="form-group">
+  	<div class="col-sm-offset-2 col-sm-10">
+      <button type="button" class="btn btn-success" onclick="sendGeneratorScriptAddForeignKeyConstraintRequest()" >Generate Script</button>
+  	</div>
+  </div>
+</form>

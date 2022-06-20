@@ -561,3 +561,43 @@ function sendGenerateScriptDropDefaultValueRequest(){
 		alert(" WARNING\n Fill in all fields to generate the script");
 	}
 }
+
+/*
+ * AJAX function for send asynch request to generate an Add Foreign Key Constraint XML Script and view it into text area
+ */
+function sendGeneratorScriptAddForeignKeyConstraintRequest(){
+	let formData = new FormData(document.getElementById("addForeignKeyConstraintForm"));
+	
+	let notEmpty = checkNotEmptyField("addForeignKeyConstraintForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.constraint_name = formData.get("constraint_name");
+		object.on_delete = formData.get("on_delete");
+		object.on_update = formData.get("on_update");
+		
+		object.base_table_schema_name = formData.get("base_table_schema_name");
+		object.base_table_name = formData.get("base_table_name");
+		object.base_column_name = formData.get("base_column_name");
+		
+		object.referenced_table_schema_name = formData.get("referenced_table_schema_name");
+		object.referenced_table_name = formData.get("referenced_table_name");
+		object.referenced_column_name = formData.get("referenced_column_name");
+		
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/addForeignKeyConstraint/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}

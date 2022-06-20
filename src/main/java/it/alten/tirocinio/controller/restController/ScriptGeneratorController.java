@@ -19,6 +19,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddDefaultValueScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddForeignKeyConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
@@ -174,5 +175,14 @@ public class ScriptGeneratorController {
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropDefaultValueScriptRequest(@RequestBody DropDefaultValueScriptDTO dropDefaultValueScriptDTO) {
 		return scriptGeneratorService.generateDropDefaultValueLiquibaseXMLScript(dropDefaultValueScriptDTO);
+	}
+	
+	/*
+	 * Method to manage add Foreign Key Constraint Script xml script request
+	 */
+	@PostMapping("/addForeignKeyConstraint/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateDddForeignKeyConstraintScriptRequest(@RequestBody AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO) {
+		return scriptGeneratorService.generateAddForeignKeyConstraintLiquibaseXMLScript(addForeignKeyConstraintScriptDTO);
 	}
 }

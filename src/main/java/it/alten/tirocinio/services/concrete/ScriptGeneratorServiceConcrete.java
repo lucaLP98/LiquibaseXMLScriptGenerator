@@ -30,6 +30,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddDefaultValueScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.AddForeignKeyConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
@@ -1894,7 +1895,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     		
     		//append rolback child
     		Element addDefaultValueRollback = document.createElement("addDefaultValue");
-        	//add modify column data type element to rollback
     		rollbackElement.appendChild(addDefaultValueRollback);
         	
         	Attr schemaNameRollback = document.createAttribute("schemaName");
@@ -1926,5 +1926,137 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		}
 		
 		return dropDefaultValueXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Add Foreign Key Constraint Script
+	 */
+	@Override
+	public String generateAddForeignKeyConstraintLiquibaseXMLScript(AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO) {
+		String addForeignKeyConstraintXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, addForeignKeyConstraintScriptDTO);
+
+	        if(addForeignKeyConstraintScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
+	        
+	        /*
+	         * Pre-condition element
+	         */
+	        Element preConditionElement = createPreConditionElement(document, addForeignKeyConstraintScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+        	//add preCondition child
+        	//foreign key constraint not exists
+        	Element notElement = document.createElement("not");
+        	preConditionElement.appendChild(notElement);
+        	
+        	Element foreignKeyConstraintExistsElement = document.createElement("foreignKeyConstraintExists");
+        	notElement.appendChild(foreignKeyConstraintExistsElement);
+        	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(addForeignKeyConstraintScriptDTO.getBaseSchemaName());
+        	foreignKeyConstraintExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr foreignKeyNamePreCond = document.createAttribute("foreignKeyName");
+        	foreignKeyNamePreCond.setValue(addForeignKeyConstraintScriptDTO.getConstraintName());
+        	foreignKeyConstraintExistsElement.setAttributeNode(foreignKeyNamePreCond);
+        	
+        	/*
+        	 * Add Foreign Key Constraint Element
+        	 */
+        	Element addForeignKeyConstraintElement = document.createElement("addForeignKeyConstraint");
+        	//append foreign key to changeSet
+        	changeSet.appendChild(addForeignKeyConstraintElement);
+        	
+        	//add foreign key attributes
+        	Attr baseSchemaName = document.createAttribute("baseTableSchemaName");
+        	baseSchemaName.setValue(addForeignKeyConstraintScriptDTO.getBaseSchemaName());
+        	addForeignKeyConstraintElement.setAttributeNode(baseSchemaName);
+        	
+        	Attr baseTableName = document.createAttribute("baseTableName");
+        	baseTableName.setValue(addForeignKeyConstraintScriptDTO.getBaseTableName());
+        	addForeignKeyConstraintElement.setAttributeNode(baseTableName);
+        	
+        	Attr baseColumnName = document.createAttribute("baseColumnNames");
+        	baseColumnName.setValue(addForeignKeyConstraintScriptDTO.getBaseColumnName());
+        	addForeignKeyConstraintElement.setAttributeNode(baseColumnName);
+        	
+        	Attr constraintName = document.createAttribute("constraintName");
+        	constraintName.setValue(addForeignKeyConstraintScriptDTO.getConstraintName());
+        	addForeignKeyConstraintElement.setAttributeNode(constraintName);
+        	
+        	Attr onDelete = document.createAttribute("onDelete");
+        	onDelete.setValue(addForeignKeyConstraintScriptDTO.getOnDelete());
+        	addForeignKeyConstraintElement.setAttributeNode(onDelete);
+        	
+        	Attr onUpdate  = document.createAttribute("onUpdate");
+        	onUpdate.setValue(addForeignKeyConstraintScriptDTO.getOnUpdate());
+        	addForeignKeyConstraintElement.setAttributeNode(onUpdate);
+        	
+        	Attr referencedColumnNames  = document.createAttribute("referencedColumnNames");
+        	referencedColumnNames.setValue(addForeignKeyConstraintScriptDTO.getReferencedColumnName());
+        	addForeignKeyConstraintElement.setAttributeNode(referencedColumnNames);
+        	
+        	Attr referencedTableName  = document.createAttribute("referencedTableName");
+        	referencedTableName.setValue(addForeignKeyConstraintScriptDTO.getReferencedTableName());
+        	addForeignKeyConstraintElement.setAttributeNode(referencedTableName);
+        	
+        	Attr referencedTableSchemaName  = document.createAttribute("referencedTableSchemaName");
+        	referencedTableSchemaName.setValue(addForeignKeyConstraintScriptDTO.getReferencedSchemaName());
+        	addForeignKeyConstraintElement.setAttributeNode(referencedTableSchemaName);
+        	
+        	Attr validate  = document.createAttribute("validate");
+        	validate.setValue("true");
+        	addForeignKeyConstraintElement.setAttributeNode(validate);
+        	
+        	/*
+        	 * Rollback Element
+        	 */
+        	Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		//append rolback child
+    		Element dropForeignKeyConstraintRollback = document.createElement("dropForeignKeyConstraint");
+    		rollbackElement.appendChild(dropForeignKeyConstraintRollback);
+        	
+        	Attr schemaNameRollback = document.createAttribute("baseTableSchemaName");
+        	schemaNameRollback.setValue(addForeignKeyConstraintScriptDTO.getBaseSchemaName());
+        	dropForeignKeyConstraintRollback.setAttributeNode(schemaNameRollback);
+        	
+        	Attr tableNameRollback = document.createAttribute("baseTableName");
+        	tableNameRollback.setValue(addForeignKeyConstraintScriptDTO.getBaseTableName());
+        	dropForeignKeyConstraintRollback.setAttributeNode(tableNameRollback);
+        	
+        	Attr constraintNameRollback = document.createAttribute("constraintName");
+        	constraintNameRollback.setValue(addForeignKeyConstraintScriptDTO.getConstraintName());
+        	dropForeignKeyConstraintRollback.setAttributeNode(constraintNameRollback);
+        	
+        	/*
+			 * generate XML script
+			 */
+        	addForeignKeyConstraintXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+		
+		return addForeignKeyConstraintXMLScript;
 	}
 }

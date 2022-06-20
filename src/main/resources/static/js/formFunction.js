@@ -158,6 +158,15 @@ function loadDropDefaultValueForm(){
 };
 
 /*
+ * load the page addForeignKeyConstraintForm.html in Homepage for the creation of "Add Foreign Key Constraint" Script
+ */
+function loadAddForeignKeyConstraintForm(){
+	$('#formContainer').load('forms/addForeignKeyConstraintForm.html');
+	let schemaSelectId = "base_table_schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
  * Function for load in "createTableForm.html" the form for insert new column to add at table
  */
 function addColumnToTable(){
@@ -250,14 +259,33 @@ function loadTableOption(schemaSelectId, tableSelectId, columnSelectId, constrai
 }
 
 /*
+ * Function to load option in table's selects and fill references schema input field with base schema 
+ * for the form addForeignKeyConstraint
+ *
+ * baseSchemaSelectId : the id of base schema select
+ * referenceSchemaInputId :  the id of reference schema input text field
+ * baseTableSelectId : the id of base table select
+ * referencesTableSelectId : the id of references table select
+ * baseColumnSelectId : the id of base column select
+ * referencesColumnSelectId : the id of reference column select
+ */ 
+function loadTableSelectsForAddForeignKey(baseSchemaSelectId, referenceSchemaInputId, baseTableSelectId, referencesTableSelectId, baseColumnSelectId, referencesColumnSelectId){
+	loadTableOption(baseSchemaSelectId, baseTableSelectId, baseColumnSelectId, null);
+	loadTableOption(baseSchemaSelectId, referencesTableSelectId, referencesColumnSelectId, null);
+	
+	let schemaSelected = document.getElementById(baseSchemaSelectId);
+	document.getElementById(referenceSchemaInputId).value =schemaSelected.value;
+}
+
+/*
  * Function that fills the columns select whith all DB columns present in a specific database Table - for each column will create an option
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select
  * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
  * param columnSelectId : is the ID of select which will contain the list of Columns for the selected DB Table (and Schema)
- * param nullType : type of column to retrive. Possible value = {COLUMN_ALL, COLUMN_NULL, COLUMN_NOT_NULL}
+ * param retriveType : type of column to retrive. Possible value = {COLUMN_ALL, COLUMN_NULL, COLUMN_NOT_NULL, COLUMN_DEFAULT, COLUMN_INT}
  */
-function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, nullType){
+function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, retriveType){
 	let schemaSelected = document.getElementById(schemaSelectId).value;
 	let tableSelected = document.getElementById(tableSelectId).value;
 
@@ -284,7 +312,7 @@ function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, nullTyp
    	}
    
    	let requestUri = "/api/columns/";
-   	switch(nullType){
+   	switch(retriveType){
 		case COLUMN_ALL: requestUri += "byTable/"; break;
 		case COLUMN_NULL: requestUri += "Null/"; break;
 		case COLUMN_NOT_NULL: requestUri += "NotNull/"; break;

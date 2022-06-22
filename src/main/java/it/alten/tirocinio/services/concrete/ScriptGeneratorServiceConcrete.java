@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DeleteDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropForeignKeyConstraintScriptDTO;
@@ -2226,5 +2227,71 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		}
 		
 		return dropForeignKeyConstraintXMLScript;
+	}
+	
+	/*
+	 * Method for generate a Delete Query Script
+	 */
+	@Override
+	public String generateDeleteDataLiquibaseXMLScript(DeleteDataScriptDTO deleteDataScriptDTO) {
+		String deleteQueryXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, deleteDataScriptDTO);
+
+	        if(deleteDataScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }   
+        	/*
+        	 * DELETE Element
+        	 */
+        	Element deleteElement = document.createElement("delete");
+        	//append DELETE to changeSet
+        	changeSet.appendChild(deleteElement);
+        	
+        	//DELETE element attributes
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(deleteDataScriptDTO.getSchemaName());
+        	deleteElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(deleteDataScriptDTO.getTableName());
+        	deleteElement.setAttributeNode(tableName);
+        	
+        	//append WHERE condition element to DELETE
+        	if(!deleteDataScriptDTO.getWhereCondition().equals("")) {
+        		Element whereCondition = document.createElement("where");
+        		deleteElement.appendChild(whereCondition);
+        		
+        		whereCondition.appendChild(document.createTextNode(deleteDataScriptDTO.getWhereCondition()));
+        	}
+        	
+        	/*
+        	 * Rollback Element
+        	 */	
+    		
+        	/*
+			 * generate XML script
+			 */
+    		deleteQueryXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+		
+		return deleteQueryXMLScript;
 	}
 }

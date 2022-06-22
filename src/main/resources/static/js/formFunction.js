@@ -177,6 +177,15 @@ function loadDropForeignKeyConstraintForm(){
 };
 
 /*
+ * load the page deleteDataForm.html in Homepage for the creation of "DELETE" Script
+ */
+function loadDeleteDataForm(){
+	$('#formContainer').load('forms/deleteDataForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
  * Function for load in "createTableForm.html" the form for insert new column to add at table
  */
 function addColumnToTable(){

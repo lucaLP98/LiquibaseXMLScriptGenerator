@@ -98,7 +98,7 @@ function checkNotEmptyField(formId){
 	let notEmpty = true;
 
 	for (let pair of formData.entries()) {
-  		if(pair[0]!= "column_default" && notEmpty==true && pair[1]==""){
+  		if(pair[0]!= "column_default" && pair[0]!= "where_condition" && notEmpty==true && pair[1]==""){
 			notEmpty = false;
 		}
 	}
@@ -628,6 +628,37 @@ function sendGeneratorScriptDropForeignKeyConstraintRequest(){
     		document.getElementById("scriptTextArea").innerHTML = this.responseText;
    		}
   		xhttp.open("POST", "/api/scriptGenerator/dropForeignKeyConstraint/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}
+
+/*
+ * AJAX function for send asynch request to generate an DELETE XML Script and view it into text area
+ */
+function sendGeneratorScriptDeleteRequest(){
+	let formData = new FormData(document.getElementById("deleteDataForm"));
+	
+	let notEmpty = checkNotEmptyField("deleteDataForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.where_condition = formData.get("where_condition");
+		
+		object.changeLog = formData.get("changeLog");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/deleteData/", true);
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{

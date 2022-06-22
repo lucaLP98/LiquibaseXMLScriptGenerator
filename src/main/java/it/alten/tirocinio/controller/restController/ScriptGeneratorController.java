@@ -17,6 +17,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropForeignKeyConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DeleteDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddDefaultValueScriptDTO;
@@ -183,7 +184,7 @@ public class ScriptGeneratorController {
 	 */
 	@PostMapping("/addForeignKeyConstraint/")
 	@ResponseStatus(HttpStatus.OK)
-	public String generateDddForeignKeyConstraintScriptRequest(@RequestBody AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO) {
+	public String generateAddForeignKeyConstraintScriptRequest(@RequestBody AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO) {
 		return scriptGeneratorService.generateAddForeignKeyConstraintLiquibaseXMLScript(addForeignKeyConstraintScriptDTO);
 	}
 	
@@ -192,7 +193,16 @@ public class ScriptGeneratorController {
 	 */
 	@PostMapping("/dropForeignKeyConstraint/")
 	@ResponseStatus(HttpStatus.OK)
-	public String generateDddForeignKeyConstraintScriptRequest(@RequestBody DropForeignKeyConstraintScriptDTO dropForeignKeyConstraintScriptDTO) {
+	public String generateDropForeignKeyConstraintScriptRequest(@RequestBody DropForeignKeyConstraintScriptDTO dropForeignKeyConstraintScriptDTO) {
 		return scriptGeneratorService.generateDropForeignKeyConstraintLiquibaseXMLScript(dropForeignKeyConstraintScriptDTO);
+	}
+	
+	/*
+	 * Method to manage delete query Script xml script request
+	 */
+	@PostMapping("/deleteData/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateDeleteScriptRequest(@RequestBody DeleteDataScriptDTO deleteDataScriptDTO) {
+		return scriptGeneratorService.generateDeleteDataLiquibaseXMLScript(deleteDataScriptDTO);
 	}
 }

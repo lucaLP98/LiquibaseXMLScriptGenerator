@@ -10,6 +10,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropForeignKeyConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DeleteDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddDefaultValueScriptDTO;
@@ -103,7 +104,12 @@ public interface ScriptGeneratorService {
 	String generateAddForeignKeyConstraintLiquibaseXMLScript(AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO);
 
 	/*
-	 * Method for generate an Drop Foreign Key Constraint Script
+	 * Method for generate a Drop Foreign Key Constraint Script
 	 */
 	String generateDropForeignKeyConstraintLiquibaseXMLScript(DropForeignKeyConstraintScriptDTO dropForeignKeyConstraintScriptDTO);
+
+	/*
+	 * Method for generate a Delete Query Script
+	 */
+	String generateDeleteDataLiquibaseXMLScript(DeleteDataScriptDTO deleteDataScriptDTO);
 }

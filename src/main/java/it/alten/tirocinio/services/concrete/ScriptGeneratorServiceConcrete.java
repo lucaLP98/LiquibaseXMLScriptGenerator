@@ -651,6 +651,25 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	        }
 	        
 	        /*
+	         * Pre Condition element
+	         */
+	        Element preConditionElement = createPreConditionElement(document, createSchemaScriptDTO);
+	        changeSet.appendChild(preConditionElement);
+	        
+	        
+	        //add sql check
+	        Element sqlCheckElement = document.createElement("sqlCheck");
+	        preConditionElement.appendChild(sqlCheckElement);
+    		
+    		//add attributes to sql check
+    		Attr expectedResultAttribute = document.createAttribute("expectedResult");
+    		expectedResultAttribute.setValue("0");
+    		sqlCheckElement.setAttributeNode(expectedResultAttribute);
+    		
+    		String querySchemaAlreadyExists = "SELECT COUNT(*) FROM information_schema.schemata WHERE (schema_name = '"+createSchemaScriptDTO.getSchemaName()+"')";
+    		sqlCheckElement.appendChild(document.createTextNode(querySchemaAlreadyExists));
+	        
+	        /*
 	         * create sql element
 	         */
 	        Element sqlElement = document.createElement("sql");

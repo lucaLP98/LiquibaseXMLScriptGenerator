@@ -15,4 +15,9 @@ public interface TableConstraintMetadataService {
 	 * get all DB unique constraints by table name (schema required)
 	 */
 	TableConstraintMetadataListDTO getAllUniqueConstraints(String tableName, String schemaName);
+	
+	/*
+	 * get all DB Foreign Key constraints by table name (schema required)
+	 */
+	TableConstraintMetadataListDTO getAllForeignKeyConstraints(String tableName, String schemaName);
 }

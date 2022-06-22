@@ -34,6 +34,12 @@ public class TableConstraintMetadataController {
 		return tableConstraintMetadataService.getAllUniqueConstraints(tableNam, schemaName);
 	}
 	
+	@GetMapping("/foreignkey/{schemaName}&{tableNam}")
+	@ResponseStatus(HttpStatus.OK)
+	public TableConstraintMetadataListDTO getAllForeignKeyConstraints(@PathVariable String schemaName, @PathVariable String tableNam) {
+		return tableConstraintMetadataService.getAllForeignKeyConstraints(tableNam, schemaName);
+	}
+	
 	@GetMapping("/all/{schemaName}&{tableNam}")
 	@ResponseStatus(HttpStatus.OK)
 	public TableConstraintMetadataListDTO getAllConstraints(@PathVariable String schemaName, @PathVariable String tableNam) {

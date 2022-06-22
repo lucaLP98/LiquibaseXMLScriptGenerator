@@ -9,7 +9,8 @@ const COLUMN_INT = 3;
 const COLUMN_DEFAULT = 4;
 
 const UNIQUE_CONSTRAINT = 5;
-const ALL_CONSTRAINT = 6;
+const FOREIGN_KEY_CONSTRAINT = 6;
+const ALL_CONSTRAINT = 7;
 
 /*
  * Function tha remove all option for the input Select element 
@@ -162,6 +163,15 @@ function loadDropDefaultValueForm(){
  */
 function loadAddForeignKeyConstraintForm(){
 	$('#formContainer').load('forms/addForeignKeyConstraintForm.html');
+	let schemaSelectId = "base_table_schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page dropForeignKeyConstraintForm.html in Homepage for the creation of "Drop Foreign Key Constraint" Script
+ */
+function loadDropForeignKeyConstraintForm(){
+	$('#formContainer').load('forms/dropForeignKeyConstraintForm.html');
 	let schemaSelectId = "base_table_schema_name";
 	createOptionForSchemaSelect(schemaSelectId);
 };
@@ -359,11 +369,12 @@ function loadConstraintOption(schemaSelectId, tableSelectId, constraintSelectId,
 		}
    	}
    
-   	let requestUri = "";
+   	let requestUri = "/api/constraint/";
    	switch(constraintType){
-		case UNIQUE_CONSTRAINT: requestUri = "/api/constraint/unique/"; break;
-		case ALL_CONSTRAINT: requestUri = "/api/constraint/all/"; break;
-		default: requestUri = "/api/constraint/all/"; break;
+		case UNIQUE_CONSTRAINT: requestUri += "unique/"; break;
+		case ALL_CONSTRAINT: requestUri += "all/"; break;
+		case FOREIGN_KEY_CONSTRAINT: requestUri += "foreignkey/"; break;
+		default: requestUri += "all/"; break;
 	}
 	
   	xhttp.open("GET", requestUri + schemaSelected + "&" + tableSelected, true);

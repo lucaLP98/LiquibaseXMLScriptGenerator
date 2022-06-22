@@ -601,3 +601,36 @@ function sendGeneratorScriptAddForeignKeyConstraintRequest(){
 		alert(" WARNING\n Fill in all fields to generate the script");
 	}
 }
+
+/*
+ * AJAX function for send asynch request to generate an Drop Foreign Key Constraint XML Script and view it into text area
+ */
+function sendGeneratorScriptDropForeignKeyConstraintRequest(){
+	let formData = new FormData(document.getElementById("dropForeignKeyConstraintForm"));
+	
+	let notEmpty = checkNotEmptyField("dropForeignKeyConstraintForm");
+	if(notEmpty == true){
+		let object = {};
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		
+		object.base_table_schema_name = formData.get("base_table_schema_name");
+		object.base_table_name = formData.get("base_table_name");
+		object.constraint_name = formData.get("constraint_name");
+		
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		object.changeLog = formData.get("changeLog");
+		let json = JSON.stringify(object);
+	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/dropForeignKeyConstraint/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+	}else{
+		alert(" WARNING\n Fill in all fields to generate the script");
+	}
+}

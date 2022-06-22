@@ -21,6 +21,7 @@ import org.w3c.dom.Element;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.DropForeignKeyConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
@@ -37,9 +38,11 @@ import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
 
 import it.alten.tirocinio.model.ColumnMetadata;
+import it.alten.tirocinio.model.KeyColumnMetadata;
 import it.alten.tirocinio.model.TableMetadata;
 
 import it.alten.tirocinio.repository.ColumnMetadataRepository;
+import it.alten.tirocinio.repository.KeyColumnMetadataRepository;
 import it.alten.tirocinio.repository.TableMetadataRepository;
 
 import it.alten.tirocinio.services.ScriptGeneratorService;
@@ -51,13 +54,15 @@ import it.alten.tirocinio.services.ScriptGeneratorService;
 public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	private final TableMetadataRepository tableMetadataRepository;
 	private final ColumnMetadataRepository columnMetadataRepository;
+	private final KeyColumnMetadataRepository keyColumnMetadataRepository;
 	
 	/* 
 	 * Contructors
 	 */
-	public ScriptGeneratorServiceConcrete(TableMetadataRepository tableMetadataRepository, ColumnMetadataRepository columnMetadataRepository) {
+	public ScriptGeneratorServiceConcrete(TableMetadataRepository tableMetadataRepository, ColumnMetadataRepository columnMetadataRepository, KeyColumnMetadataRepository keyColumnMetadataRepository) {
 		this.tableMetadataRepository = tableMetadataRepository;
 		this.columnMetadataRepository = columnMetadataRepository;
+		this.keyColumnMetadataRepository = keyColumnMetadataRepository;
 	}
 	
 	private Element createChangeLog(Document document) {
@@ -299,6 +304,45 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	//add column elements to createTableRollback element
         	for(ColumnMetadata c : columns) {
         		createTableRollBack.appendChild(newColumnScript(document, c));
+        	}
+        	
+        	//add foreign key constraint
+        	Set<KeyColumnMetadata> keyColumnsMetadata = keyColumnMetadataRepository.getKeyColumnForeignKeyConstraintsByTableAndSchema(dropTableScriptDTO.getTableName(), dropTableScriptDTO.getTableSchema());
+        	for(KeyColumnMetadata c : keyColumnsMetadata) {
+    			Element addForeignKeyConstraintRollBack = document.createElement("addForeignKeyConstraint");
+            	dropTableRollBack.appendChild(addForeignKeyConstraintRollBack);
+            	
+            	Attr baseSchemaNameRollback = document.createAttribute("baseTableSchemaName");
+            	baseSchemaNameRollback.setValue(c.getBaseTableSchema());
+            	addForeignKeyConstraintRollBack.setAttributeNode(baseSchemaNameRollback);
+            	
+            	Attr baseTableNameRollback = document.createAttribute("baseTableName");
+            	baseTableNameRollback.setValue(c.getBaseTableName());
+            	addForeignKeyConstraintRollBack.setAttributeNode(baseTableNameRollback);
+            	
+            	Attr foreignKeyConstraintNameRollback = document.createAttribute("constraintName");
+            	foreignKeyConstraintNameRollback.setValue(c.getConstraintName());
+            	addForeignKeyConstraintRollBack.setAttributeNode(foreignKeyConstraintNameRollback);
+            	
+            	Attr referencedColumnNameRollback = document.createAttribute("referencedColumnNames");
+            	referencedColumnNameRollback.setValue(c.getReferencedColumnName());
+            	addForeignKeyConstraintRollBack.setAttributeNode(referencedColumnNameRollback);
+            	
+            	Attr referencedTableNameRollback = document.createAttribute("referencedTableName");
+            	referencedTableNameRollback.setValue(c.getReferencedTableName());
+            	addForeignKeyConstraintRollBack.setAttributeNode(referencedTableNameRollback);
+            	
+            	Attr referencedTableSchemaNameRollback = document.createAttribute("referencedTableSchemaName");
+            	referencedTableSchemaNameRollback.setValue(c.getReferencedTableSchema());
+            	addForeignKeyConstraintRollBack.setAttributeNode(referencedTableSchemaNameRollback);
+            	
+            	Attr onDeleteRollback = document.createAttribute("onDelete");
+            	onDeleteRollback.setValue(c.getOnDeleteClause());
+            	addForeignKeyConstraintRollBack.setAttributeNode(onDeleteRollback);
+            	
+            	Attr onUpdateRollback = document.createAttribute("onUpdate");
+            	onUpdateRollback.setValue(c.getOnUpdateClause());
+            	addForeignKeyConstraintRollBack.setAttributeNode(onUpdateRollback);
         	}
         	
         	/*
@@ -2058,5 +2102,129 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		}
 		
 		return addForeignKeyConstraintXMLScript;
+	}
+	
+	/*
+	 * Method for generate an Drop Foreign Key Constraint Script
+	 */
+	@Override
+	public String generateDropForeignKeyConstraintLiquibaseXMLScript(DropForeignKeyConstraintScriptDTO dropForeignKeyConstraintScriptDTO) {
+		String dropForeignKeyConstraintXMLScript = "";
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, dropForeignKeyConstraintScriptDTO);
+
+	        if(dropForeignKeyConstraintScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
+	        
+	        /*
+	         * Pre-condition element
+	         */
+	        Element preConditionElement = createPreConditionElement(document, dropForeignKeyConstraintScriptDTO);
+        	//add preCondition element to changeSet
+        	changeSet.appendChild(preConditionElement);
+        	
+        	//add preCondition child
+        	//foreign key constraint exists        	
+        	Element foreignKeyConstraintExistsElement = document.createElement("foreignKeyConstraintExists");
+        	preConditionElement.appendChild(foreignKeyConstraintExistsElement);
+        	
+        	Attr schemaNamePreCond = document.createAttribute("schemaName");
+        	schemaNamePreCond.setValue(dropForeignKeyConstraintScriptDTO.getBaseSchemaName());
+        	foreignKeyConstraintExistsElement.setAttributeNode(schemaNamePreCond);
+        	
+        	Attr foreignKeyNamePreCond = document.createAttribute("foreignKeyName");
+        	foreignKeyNamePreCond.setValue(dropForeignKeyConstraintScriptDTO.getConstraintName());
+        	foreignKeyConstraintExistsElement.setAttributeNode(foreignKeyNamePreCond);
+        	
+        	/*
+        	 * Drop Foreign Key Constraint Element
+        	 */
+        	Element dropForeignKeyConstraintElement = document.createElement("dropForeignKeyConstraint");
+        	//append drop foreign key to changeSet
+        	changeSet.appendChild(dropForeignKeyConstraintElement);
+        	
+        	//drop foreign key attributes
+        	Attr baseSchemaName = document.createAttribute("baseTableSchemaName");
+        	baseSchemaName.setValue(dropForeignKeyConstraintScriptDTO.getBaseSchemaName());
+        	dropForeignKeyConstraintElement.setAttributeNode(baseSchemaName);
+        	
+        	Attr baseTableName = document.createAttribute("baseTableName");
+        	baseTableName.setValue(dropForeignKeyConstraintScriptDTO.getBaseTableName());
+        	dropForeignKeyConstraintElement.setAttributeNode(baseTableName);
+        	
+        	Attr constraintName = document.createAttribute("constraintName");
+        	constraintName.setValue(dropForeignKeyConstraintScriptDTO.getConstraintName());
+        	dropForeignKeyConstraintElement.setAttributeNode(constraintName);
+        	
+        	/*
+        	 * Rollback Element
+        	 */	
+    		KeyColumnMetadata keyColumnMetadata = keyColumnMetadataRepository.getKeyColumnForeignKeyConstraintsByConstraintNameAndSchema(dropForeignKeyConstraintScriptDTO.getConstraintName(), dropForeignKeyConstraintScriptDTO.getBaseSchemaName());
+    		if(keyColumnMetadata != null) {
+    			Element rollbackElement = document.createElement("rollback");
+        		changeSet.appendChild(rollbackElement);
+        		
+        		//append rolback child
+        		Element addForeignKeyConstraintRollback = document.createElement("addForeignKeyConstraint");
+        		rollbackElement.appendChild(addForeignKeyConstraintRollback);
+        		
+        		Attr schemaNameRollback = document.createAttribute("baseTableSchemaName");
+            	schemaNameRollback.setValue(keyColumnMetadata.getBaseTableSchema());
+            	addForeignKeyConstraintRollback.setAttributeNode(schemaNameRollback);
+            	
+            	Attr tableNameRollback = document.createAttribute("baseTableName");
+            	tableNameRollback.setValue(keyColumnMetadata.getBaseTableName());
+            	addForeignKeyConstraintRollback.setAttributeNode(tableNameRollback);
+            	
+            	Attr constraintNameRollback = document.createAttribute("constraintName");
+            	constraintNameRollback.setValue(keyColumnMetadata.getConstraintName());
+            	addForeignKeyConstraintRollback.setAttributeNode(constraintNameRollback);
+            	
+            	Attr referencedColumnNameRollback = document.createAttribute("referencedColumnNames");
+            	referencedColumnNameRollback.setValue(keyColumnMetadata.getReferencedColumnName());
+            	addForeignKeyConstraintRollback.setAttributeNode(referencedColumnNameRollback);
+            	
+            	Attr referencedTableNameRollback = document.createAttribute("referencedTableName");
+            	referencedTableNameRollback.setValue(keyColumnMetadata.getReferencedTableName());
+            	addForeignKeyConstraintRollback.setAttributeNode(referencedTableNameRollback);
+            	
+            	Attr referencedTableSchemaNameRollback = document.createAttribute("referencedTableSchemaName");
+            	referencedTableSchemaNameRollback.setValue(keyColumnMetadata.getReferencedTableSchema());
+            	addForeignKeyConstraintRollback.setAttributeNode(referencedTableSchemaNameRollback);
+            	
+            	Attr onDeleteRollback = document.createAttribute("onDelete");
+            	onDeleteRollback.setValue(keyColumnMetadata.getOnDeleteClause());
+            	addForeignKeyConstraintRollback.setAttributeNode(onDeleteRollback);
+            	
+            	Attr onUpdateRollback = document.createAttribute("onUpdate");
+            	onUpdateRollback.setValue(keyColumnMetadata.getOnUpdateClause());
+            	addForeignKeyConstraintRollback.setAttributeNode(onUpdateRollback);
+    		}
+    		
+        	/*
+			 * generate XML script
+			 */
+        	dropForeignKeyConstraintXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+		
+		return dropForeignKeyConstraintXMLScript;
 	}
 }

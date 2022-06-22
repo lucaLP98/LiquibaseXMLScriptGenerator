@@ -53,4 +53,11 @@ public class TableConstraintMetadataServiceConcrete implements TableConstraintMe
 		return TableConstraintMetadataSetToListDTO(repository.getUniqueConstraintsByTable(tableName, schemaName));
 	}
 
+	/*
+	 * get all DB Foreign Key constraints by table name (schema required)
+	 */
+	@Override
+	public TableConstraintMetadataListDTO getAllForeignKeyConstraints(String tableName, String schemaName) {
+		return TableConstraintMetadataSetToListDTO(repository.getForeignKeyConstraintsByTable(tableName, schemaName));
+	}
 }

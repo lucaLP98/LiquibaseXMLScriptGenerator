@@ -42,10 +42,8 @@ function sendGeneratorScriptCreateTableRequest(){
 	let notEmpty = true;
 	
 	for(let pair of formData.entries()) {			
-		if(pair[1] == "" && notEmpty == true){
-			if(pair[0] != "column_default")	{
-				notEmpty = false
-			}
+		if(pair[1] == "" && notEmpty == true && pair[0] != "column_default"){
+			notEmpty = false;
 		}
 		if(pair[0] == "column_name" && notEmpty == true) {
 			if(columnRead == false){
@@ -664,4 +662,78 @@ function sendGeneratorScriptDeleteRequest(){
 	}else{
 		alert(" WARNING\n Fill in all fields to generate the script");
 	}
+}
+
+/*
+ * AJAX function for send asynch request to generate an INSERT XML Script and view it into text area
+ */
+function sendGeneratorScriptInsertRequest(){
+	let formData = new FormData(document.getElementById("insertDataForm"));
+	let object = {};
+	let columns = {};
+	
+	for(let pair of formData.entries()) {			
+		if(pair[0] != "id_changeset" && pair[0] != "author" && 
+		   pair[0] != "schema_name" && pair[0] != "table_name" && 
+		   pair[0] != "on_error" && pair[0] != "on_fail" && 
+		   pair[0] != "changeLog"){
+			
+		   columns[pair[0]] = pair[1];
+		}	
+	}
+	
+	object.id_changeset = formData.get("id_changeset");
+	object.author = formData.get("author");
+	object.schema_name = formData.get("schema_name");
+	object.table_name = formData.get("table_name");
+	object.on_error = formData.get("on_error");
+	object.on_fail = formData.get("on_fail");
+	object.changeLog = formData.get("changeLog");		
+		
+	object.columns = columns;
+	let json = JSON.stringify(object);
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+    	document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   	}
+  	xhttp.open("POST", "/api/scriptGenerator/insertData/", true);
+  	xhttp.setRequestHeader("Content-type", "application/json");
+  	xhttp.send(json);
+}
+
+/*
+ * AJAX function for send asynch request to generate an UPDATE XML Script and view it into text area
+ */
+function sendGeneratorScriptUpdateRequest(){
+	let formData = new FormData(document.getElementById("insertDataForm"));
+	let object = {};
+	let columns = {};
+	
+	for(let pair of formData.entries()) {	
+		if(pair[0] != "id_changeset" && pair[0] != "author" && 
+		   pair[0] != "schema_name" && pair[0] != "table_name" && 
+		   pair[0] != "where_condition" && pair[0] != "changeLog"){
+			
+			columns[pair[0]] = pair[1];
+		}	
+	}
+	
+	object.id_changeset = formData.get("id_changeset");
+	object.author = formData.get("author");
+	object.schema_name = formData.get("schema_name");
+	object.table_name = formData.get("table_name");
+	object.where_condition = formData.get("where_condition");
+	object.changeLog = formData.get("changeLog");		
+		
+	object.columns = columns;
+	let json = JSON.stringify(object);
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+    	document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   	}
+  	xhttp.open("POST", "/api/scriptGenerator/updateData/", true);
+  	xhttp.setRequestHeader("Content-type", "application/json");
+  	xhttp.send(json);
 }

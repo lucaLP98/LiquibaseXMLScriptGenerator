@@ -26,6 +26,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.DropForeignKeyConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.InsertDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
@@ -37,7 +38,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.AddNotNullConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
-
+import it.alten.tirocinio.api.DTO.scriptDTO.UpdateDataScriptDTO;
 import it.alten.tirocinio.model.ColumnMetadata;
 import it.alten.tirocinio.model.KeyColumnMetadata;
 import it.alten.tirocinio.model.TableMetadata;
@@ -655,7 +656,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	         */
 	        Element preConditionElement = createPreConditionElement(document, createSchemaScriptDTO);
 	        changeSet.appendChild(preConditionElement);
-	        
 	        
 	        //add sql check
 	        Element sqlCheckElement = document.createElement("sqlCheck");
@@ -2312,5 +2312,146 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		}
 		
 		return deleteQueryXMLScript;
+	}
+	
+	/*
+	 * Method for generate a Insert Query Script
+	 */
+	@Override
+	public String generateInsertDataLiquibaseXMLScript(InsertDataScriptDTO insertDataScriptDTO) {
+		String insertDataXMLScript = "";
+			
+		Set<ColumnMetadata> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(insertDataScriptDTO.getSchemaName(), insertDataScriptDTO.getTableName());
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, insertDataScriptDTO);
+
+	        if(insertDataScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
+	        
+	        /*
+	         * Pre-condition element
+	         */
+	        String whereCondition = "";
+	        int idFieldNumber = 0;
+    		for(ColumnMetadata c : columnsMetadatas) {
+    			if(c.getColumnKey().equals("PRI")) {
+    				idFieldNumber++;
+    				if(idFieldNumber > 1) {
+    					whereCondition += " AND ";
+    				}
+    				whereCondition += c.getColumnName() + " = \"" + insertDataScriptDTO.getColumns().get(c.getColumnName()) +"\"";
+    			}
+    		}
+    		if(!whereCondition.equals("")) {
+    			Element preConditionElement = createPreConditionElement(document, insertDataScriptDTO);
+            	//add preCondition element to changeSet
+            	changeSet.appendChild(preConditionElement);
+            	
+            	 //add sql check
+    	        Element sqlCheckElement = document.createElement("sqlCheck");
+    	        preConditionElement.appendChild(sqlCheckElement);
+        		
+        		//add attributes to sql check
+        		Attr expectedResultAttribute = document.createAttribute("expectedResult");
+        		expectedResultAttribute.setValue("0");
+        		sqlCheckElement.setAttributeNode(expectedResultAttribute);        		  	
+        		
+        		String queryRestriction = "SELECT COUNT(*) FROM " + insertDataScriptDTO.getSchemaName() + "." + insertDataScriptDTO.getTableName() + " WHERE ( "+whereCondition+" )";
+        		sqlCheckElement.appendChild(document.createTextNode(queryRestriction));
+    		}
+	        
+	        /*
+	         * INSERT ELEMENT
+	         */
+    		Element insertElement = document.createElement("insert");
+        	//append INSERT to changeSet
+        	changeSet.appendChild(insertElement);
+        	
+        	//INSERT element attributes
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(insertDataScriptDTO.getSchemaName());
+        	insertElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(insertDataScriptDTO.getTableName());
+        	insertElement.setAttributeNode(tableName);
+        	
+        	//append column value to insert
+        	for(ColumnMetadata c : columnsMetadatas) {
+        		if(!insertDataScriptDTO.getColumns().get(c.getColumnName()).equals("")) {
+        			Element columnElement = document.createElement("column");
+            		insertElement.appendChild(columnElement);
+            		
+            		Attr columnName = document.createAttribute("name");
+            		columnName.setValue(c.getColumnName());
+            		columnElement.setAttributeNode(columnName);
+            		
+            		columnElement.appendChild(document.createTextNode(insertDataScriptDTO.getColumns().get(c.getColumnName())));
+        		}
+        	}
+        	
+        	/*
+        	 * ROLLBACK ELEMENT
+        	 */
+        	Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		//append rolback child
+    		Element deleteRollback = document.createElement("delete");
+    		rollbackElement.appendChild(deleteRollback);
+        	
+        	Attr schemaNameRollback = document.createAttribute("schemaName");
+        	schemaNameRollback.setValue(insertDataScriptDTO.getSchemaName());
+        	deleteRollback.setAttributeNode(schemaNameRollback);
+        	
+        	Attr tableNameRollback = document.createAttribute("tableName");
+        	tableNameRollback.setValue(insertDataScriptDTO.getTableName());
+        	deleteRollback.setAttributeNode(tableNameRollback);
+        	
+        	Element whereConditionElementRollback = document.createElement("where");
+        	deleteRollback.appendChild(whereConditionElementRollback);
+        	
+        	String whereConditionRollback = "";
+        	for(ColumnMetadata c : columnsMetadatas) {
+        		if(!insertDataScriptDTO.getColumns().get(c.getColumnName()).equals("")) {
+        			whereConditionRollback += c.getColumnName() + " = \"" + insertDataScriptDTO.getColumns().get(c.getColumnName())  + "\" AND ";
+        		}
+        	}
+        	whereConditionRollback = whereConditionRollback.substring(0, whereConditionRollback.length() - 5);
+        	whereConditionElementRollback.appendChild(document.createTextNode(whereConditionRollback));
+        	
+    		/*
+			 * generate XML script
+			 */
+    		insertDataXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+		
+		return insertDataXMLScript;
+	}
+	
+	/*
+	 * Method for generate a Update Query Script
+	 */
+	@Override
+	public String generateUpdateDataLiquibaseXMLScript(UpdateDataScriptDTO updateDataScriptDTO) {
+		return null;
 	}
 }

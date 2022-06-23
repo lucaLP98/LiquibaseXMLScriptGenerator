@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.InsertDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.UpdateDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropForeignKeyConstraintScriptDTO;
@@ -204,5 +206,23 @@ public class ScriptGeneratorController {
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDeleteScriptRequest(@RequestBody DeleteDataScriptDTO deleteDataScriptDTO) {
 		return scriptGeneratorService.generateDeleteDataLiquibaseXMLScript(deleteDataScriptDTO);
+	}
+	
+	/*
+	 * Method to manage insert query Script xml script request
+	 */
+	@PostMapping("/insertData/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateInsertScriptRequest(@RequestBody InsertDataScriptDTO insertDataScriptDTO) {
+		return scriptGeneratorService.generateInsertDataLiquibaseXMLScript(insertDataScriptDTO);
+	}
+	
+	/*
+	 * Method to manage update query Script xml script request
+	 */
+	@PostMapping("/updatetData/")
+	@ResponseStatus(HttpStatus.OK)
+	public String generateUpdateScriptRequest(@RequestBody UpdateDataScriptDTO updateDataScriptDTO) {
+		return scriptGeneratorService.generateUpdateDataLiquibaseXMLScript(updateDataScriptDTO);
 	}
 }

@@ -2,9 +2,11 @@ package it.alten.tirocinio.services;
 
 import it.alten.tirocinio.api.DTO.scriptDTO.DropTableScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropUniqueConstraintScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.InsertDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
+import it.alten.tirocinio.api.DTO.scriptDTO.UpdateDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropDefaultValueScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.DropForeignKeyConstraintScriptDTO;
@@ -112,4 +114,14 @@ public interface ScriptGeneratorService {
 	 * Method for generate a Delete Query Script
 	 */
 	String generateDeleteDataLiquibaseXMLScript(DeleteDataScriptDTO deleteDataScriptDTO);
+	
+	/*
+	 * Method for generate a Insert Query Script
+	 */
+	String generateInsertDataLiquibaseXMLScript(InsertDataScriptDTO insertDataScriptDTO);
+	
+	/*
+	 * Method for generate a Update Query Script
+	 */
+	String generateUpdateDataLiquibaseXMLScript(UpdateDataScriptDTO updateDataScriptDTO);
 }

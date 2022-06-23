@@ -1,0 +1,101 @@
+<form class="form-horizontal" id="insertDataForm">
+
+  <div class="form-group">
+    <div class="col-sm-10">
+      <h1>INSERT</h1>
+    </div>
+  </div>
+  
+  <!-- CHANGELOG REQUEST -->
+  <div class="form-group">
+    <label for="changeLog" class="col-sm-2 control-label">Generate ChangeLog</label>
+    <div class="col-sm-10">
+    	<label class="radio-inline">
+      		<input checked="checked" type="radio" name="changeLog" value="true"> YES
+    	</label>
+      	<label class="radio-inline">
+      		<input type="radio" name="changeLog" value="false"> NO
+      	</label>
+    </div>
+  </div>
+  <!-- END CHANGELOG REQUEST -->
+  
+	<!-- ID CHANGESET -->
+  <div class="form-group">
+    <label for="id_changeset" class="col-sm-2 control-label">ID ChangeSet</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="id_changeset" id="id_changeset" placeholder="id changeset">
+    </div>
+  </div>
+  <!-- END ID CHANGESET -->
+  
+  <!-- AUTHOR -->
+  <div class="form-group">
+    <label for="author" class="col-sm-2 control-label">Author</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="author" id="author" placeholder="Author">
+    </div>
+  </div>
+  <!-- END AUTHOR -->
+  
+  <!-- ON ERROR -->
+  <div class="form-group">
+    <label for="on_error" class="col-sm-2 control-label">On Error Condition</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_error" name="on_error">
+      	<option disabled selected value=""> -- select an option -- </option>
+      	<option value="HALT">HALT</option>
+      	<option value="CONTINUE">CONTINUE</option>
+      	<option value="MARK_RAN">MARK_RAN</option>
+      	<option value="WARN">WARN</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END ON ERROR -->
+  
+  <!-- ON FAIL -->
+  <div class="form-group">
+    <label for="on_fail" class="col-sm-2 control-label">On Fail Condition</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="on_fail" name="on_fail">
+      	<option disabled selected value=""> -- select an option -- </option>
+      	<option value="HALT">HALT</option>
+      	<option value="CONTINUE">CONTINUE</option>
+      	<option value="MARK_RAN">MARK_RAN</option>
+      	<option value="WARN">WARN</option>
+	  </select>
+    </div>
+  </div>
+  <!-- END ON FAIL -->
+
+  <!-- SCHEMA NAME -->
+  <div class="form-group">
+    <label for="schema_name" class="col-sm-2 control-label">Schema Name</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="schema_name" name="schema_name" onchange="loadTableOptionInsertUpdateQuery('schema_name', 'table_name', 'columnInsertQuery');">
+      	<option value=""  selected > -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END SCHEMA NAME -->
+  
+  <!-- TABLE NAME-->
+  <div class="form-group">
+    <label for="table_name" class="col-sm-2 control-label">Table Name</label>
+    <div class="col-sm-10">
+      <select disabled class="form-control" id="table_name" name="table_name" onchange="addInputColumnIntoHTMLPage('schema_name', 'table_name', 'columnInsertQuery')">
+      	<option value=""  selected> -- select an option -- </option>
+	  </select>
+    </div>
+  </div>
+  <!-- END TABLE NAME -->
+  
+  <!-- COLUMN -->
+  <div id="columnInsertQuery"></div>
+  
+  <div class="form-group">
+  	<div class="col-sm-offset-2 col-sm-10">
+      <button type="button" class="btn btn-success" onclick="sendGeneratorScriptInsertRequest()" >Generate Script</button>
+  	</div>
+  </div>
+</form>

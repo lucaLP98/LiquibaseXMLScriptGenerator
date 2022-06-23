@@ -186,6 +186,24 @@ function loadDeleteDataForm(){
 };
 
 /*
+ * load the page insertDataForm.html in Homepage for the creation of "INSERT" Script
+ */
+function loadInsertDataForm(){
+	$('#formContainer').load('forms/insertDataForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page updateDataForm.html in Homepage for the creation of "UPDATE" Script
+ */
+function loadUpdateDataForm(){
+	$('#formContainer').load('forms/updateDataForm.html');
+	let schemaSelectId = "schema_name";
+	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
  * Function for load in "createTableForm.html" the form for insert new column to add at table
  */
 function addColumnToTable(){
@@ -469,23 +487,57 @@ function loadColumnTypeAndChangeInputFieldType(columnTypeInputFieldId, columnSel
 		columnTypeInputField.value = jsonResponse.column_type;
 		
 		switch(jsonResponse.column_type){
-			case "int": case  "bigint" : case "tinyint" : case "mediumint" : case "numeric" : case "float" : case "double" : case "decimal" :
-				inputField.type = "number";
-			break;
-			
-			case "date" :
-				inputField.type = "date"
-			break;
-			
-			case "time" : case "timestamp" :
-				inputField.type = "time"
-			break;
-			
-			default:
-				inputField.type = "text"
-			break;
+			case "int": case  "bigint" : case "tinyint" : case "mediumint" : case "numeric" : case "float" : case "double" : case "decimal" : inputField.type = "number"; break;			
+			case "date" : inputField.type = "date"; break;
+			case "time" : case "timestamp" : inputField.type = "time"; break;
+			default: inputField.type = "text"; break;
 		}
 	}
 	xhttp.open("GET", "/api/columns/byName/" + selectedSchema + "&" + selectedTable + "&" + selectedColumn, true);
   	xhttp.send();
 } 
+
+function loadTableOptionInsertUpdateQuery(schemaSelectId, tableSelectId, divInputFieldsId){
+	loadTableOption(schemaSelectId, tableSelectId, null);
+	let inputDiv = document.getElementById(divInputFieldsId);
+	inputDiv.innerHTML = " ";
+}
+
+/*
+ * function to add input fields to columns dynamically based on the number and type of columns in the selected table
+ *
+ * param schemaSelectId : the ID of select for the selection of DB schemas
+ * param tableSelectId : the ID of select for the selection of DB tables
+ * param divInputFieldsId : the id of the div where the column fields will be added
+ */
+function addInputColumnIntoHTMLPage(schemaSelectId, tableSelectId, divInputFieldsId){
+	let selectedTable = document.getElementById(tableSelectId).value;
+	let selectedSchema = document.getElementById(schemaSelectId).value;
+	let inputDiv = document.getElementById(divInputFieldsId);
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function(){
+		let jsonResponse = JSON.parse(this.response);
+		let columnArray = jsonResponse.column_list;
+		
+		let inputField = '';
+		
+		for(let i=0;i<columnArray.length;i++){
+			let type = "";
+			switch(columnArray[i].column_type){
+				case "int": case  "bigint" : case "tinyint" : case "mediumint" : case "numeric" : case "float" : case "double" : case "decimal" : type = "number"; break;
+				case "date" : type = "date"; break;	
+				case "time" : case "timestamp" : type = "time"; break;
+				default: type = "text"; break;
+			}
+			
+			inputField += '<div class=\"form-group\"><label class=\"col-sm-2 control-label\">'+columnArray[i].column_name+'</label>';
+			inputField += '<div class=\"col-sm-10\">';
+			inputField += '<input type=\"'+type+'\" class=\"form-control\" id=\"'+columnArray[i].column_name+'\" name=\"'+columnArray[i].column_name+'\" placeholder=\"'+columnArray[i].column_name+'\" ></div></div>';
+		}
+		
+		inputDiv.innerHTML = inputField;
+	}
+	xhttp.open("GET", "/api/columns/byTable/" + selectedSchema + "&" + selectedTable, true);
+  	xhttp.send();
+}

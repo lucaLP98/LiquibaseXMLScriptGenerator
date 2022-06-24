@@ -706,7 +706,7 @@ function sendGeneratorScriptInsertRequest(){
  * AJAX function for send asynch request to generate an UPDATE XML Script and view it into text area
  */
 function sendGeneratorScriptUpdateRequest(){
-	let formData = new FormData(document.getElementById("insertDataForm"));
+	let formData = new FormData(document.getElementById("updateDataForm"));
 	let object = {};
 	let columns = {};
 	

@@ -2452,6 +2452,77 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	 */
 	@Override
 	public String generateUpdateDataLiquibaseXMLScript(UpdateDataScriptDTO updateDataScriptDTO) {
-		return null;
+		String updateDataXMLScript = "";
+		
+		Set<ColumnMetadata> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(updateDataScriptDTO.getSchemaName(), updateDataScriptDTO.getTableName());
+		
+		try {
+			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+	        Document document = documentBuilder.newDocument();
+	        
+	        //changeSet element
+	        Element changeSet = createChangeSetElement(document, updateDataScriptDTO);
+
+	        if(updateDataScriptDTO.getChangeLog()) {
+	        	//create changeLog element
+	        	Element changeLog = createChangeLog(document);
+	        	//append ChangeLog to Document
+	        	document.appendChild(changeLog);
+	        	
+	        	//append changeSet element to changeLog
+	        	changeLog.appendChild(changeSet);
+	        }else {
+	        	//append changeSet element to document
+		        document.appendChild(changeSet);
+	        }
+	        
+	        /*
+	         * Append UPDATE element
+	         */
+	        Element updateElement = document.createElement("update");
+        	//append UPDATE to changeSet
+        	changeSet.appendChild(updateElement);
+        	
+        	//UPDATE element attributes
+        	Attr schemaName = document.createAttribute("schemaName");
+        	schemaName.setValue(updateDataScriptDTO.getSchemaName());
+        	updateElement.setAttributeNode(schemaName);
+        	
+        	Attr tableName = document.createAttribute("tableName");
+        	tableName.setValue(updateDataScriptDTO.getTableName());
+        	updateElement.setAttributeNode(tableName);
+        	
+        	//append column value to update element
+        	for(ColumnMetadata c : columnsMetadatas) {
+        		if(!updateDataScriptDTO.getColumns().get(c.getColumnName()).equals("")) {
+        			Element columnElement = document.createElement("column");
+        			updateElement.appendChild(columnElement);
+            		
+            		Attr columnName = document.createAttribute("name");
+            		columnName.setValue(c.getColumnName());
+            		columnElement.setAttributeNode(columnName);
+            		
+            		columnElement.appendChild(document.createTextNode(updateDataScriptDTO.getColumns().get(c.getColumnName())));
+        		}
+        	}
+        	
+        	//append WHERE condition element to UPDATE
+        	if(!updateDataScriptDTO.getWhereCondition().equals("")) {
+        		Element whereCondition = document.createElement("where");
+        		updateElement.appendChild(whereCondition);
+        		
+        		whereCondition.appendChild(document.createTextNode(updateDataScriptDTO.getWhereCondition()));
+        	}
+	        
+	        /*
+			 * generate XML script
+			 */
+	        updateDataXMLScript = generateXMLScriptToString(document);
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		}
+	        
+		return updateDataXMLScript;
 	}
 }

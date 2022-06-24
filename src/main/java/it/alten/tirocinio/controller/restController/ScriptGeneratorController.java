@@ -220,7 +220,7 @@ public class ScriptGeneratorController {
 	/*
 	 * Method to manage update query Script xml script request
 	 */
-	@PostMapping("/updatetData/")
+	@PostMapping("/updateData/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateUpdateScriptRequest(@RequestBody UpdateDataScriptDTO updateDataScriptDTO) {
 		return scriptGeneratorService.generateUpdateDataLiquibaseXMLScript(updateDataScriptDTO);

@@ -67,6 +67,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		this.keyColumnMetadataRepository = keyColumnMetadataRepository;
 	}
 	
+	/*
+	 * Create the changeLog element
+	 */
 	private Element createChangeLog(Document document) {
 		//create ChangeLog element
 		Element changeLog =  document.createElement("databaseChangeLog");
@@ -76,20 +79,16 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		xmlns.setValue("http://www.liquibase.org/xml/ns/dbchangelog");
 		changeLog.setAttributeNode(xmlns);
 		
-		Attr ext = document.createAttribute("xmlns:ext");
-		ext.setValue("http://www.liquibase.org/xml/ns/dbchangelog-ext");
-		changeLog.setAttributeNode(ext);
+		Attr xsi = document.createAttribute("xmlns:xsi");
+		xsi.setValue("http://www.w3.org/2001/XMLSchema-instance");
+		changeLog.setAttributeNode(xsi);
 		
 		Attr pro = document.createAttribute("xmlns:pro");
 		pro.setValue("http://www.liquibase.org/xml/ns/pro");
 		changeLog.setAttributeNode(pro);
 		
-		Attr xsi = document.createAttribute("xmlns:xsi");
-		xsi.setValue("http://www.w3.org/2001/XMLSchema-instance");
-		changeLog.setAttributeNode(xsi);
-		
-		Attr schemaLocation = document.createAttribute("xmlns:schemaLocation");
-		schemaLocation.setValue("http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd");
+		Attr schemaLocation = document.createAttribute("xsi:schemaLocation");
+		schemaLocation.setValue("http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd\r\n http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd");
 		changeLog.setAttributeNode(schemaLocation);
 		
 		return changeLog;

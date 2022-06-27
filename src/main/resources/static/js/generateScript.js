@@ -42,7 +42,7 @@ function sendGeneratorScriptCreateTableRequest(){
 	let notEmpty = true;
 	
 	for(let pair of formData.entries()) {			
-		if(pair[1] == "" && notEmpty == true && pair[0] != "column_default"){
+		if(pair[1] == "" && notEmpty == true && pair[0] != "column_default" && pair[0] != "data_length" && pair[0] != "pk_data_length"){
 			notEmpty = false;
 		}
 		if(pair[0] == "column_name" && notEmpty == true) {
@@ -53,8 +53,38 @@ function sendGeneratorScriptCreateTableRequest(){
 			columnArray.push(column);			
 			column[pair[0]] = pair[1];	
 		}else if(columnRead == true && notEmpty == true){
-			column[pair[0]] = pair[1];
+			if(pair[0] == "data_length" && (column.column_type == "VARCHAR" || column.column_type == "CHAR")){		
+				if(pair[1] == ""){
+					notEmpty = false;
+				}else{
+					let dataLength = parseInt(pair[1]);
+					if(dataLength > 255){
+						dataLength = 255;
+					}else if(dataLength < 1){
+						dataLength = 1;
+					}
+					column.column_type += "("+dataLength+")";
+				}
+			}else{
+				column[pair[0]] = pair[1];
+			}
 		}
+	}
+	
+	if(formData.get("pk_type") == "VARCHAR" || formData.get("pk_type") == "CHAR"){
+		if(formData.get("pk_data_length") == ""){
+			notEmpty = false;
+		}else{
+			let dataLength = parseInt(formData.get("pk_data_length"));
+			if(dataLength > 255){
+				dataLength = 255;
+			}else if(dataLength < 1){
+				dataLength = 1;
+			}
+			object.pk_type = formData.get("pk_type")+"("+dataLength+")";
+		}
+	}else{
+		object.pk_type = formData.get("pk_type")
 	}
 	
 	if(notEmpty == true){
@@ -65,10 +95,7 @@ function sendGeneratorScriptCreateTableRequest(){
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
 		object.changeLog = formData.get("changeLog");
-	
 		object.pk_name = formData.get("pk_name");
-		object.pk_type = formData.get("pk_type");
-		
 		
 		object.columns = columnArray;
 		let json = JSON.stringify(object);
@@ -96,7 +123,7 @@ function checkNotEmptyField(formId){
 	let notEmpty = true;
 
 	for (let pair of formData.entries()) {
-  		if(pair[0]!= "column_default" && pair[0]!= "where_condition" && notEmpty==true && pair[1]==""){
+  		if(pair[0]!= "column_default" && pair[0]!= "where_condition" && pair[0]!= "data_length" && notEmpty==true && pair[1]==""){
 			notEmpty = false;
 		}
 	}
@@ -191,7 +218,25 @@ function sendGenerateScriptDropColumnRequest(){
 function sendGeneratorScriptAddColumnRequest(){
 	let formData = new FormData(document.getElementById("addColumnForm"));
 	
-	let notEmpty = checkNotEmptyField("addColumnForm");
+	let notEmpty = checkNotEmptyField("addColumnForm");	
+	let dataType;
+	
+	if(notEmpty == true && formData.get("data_length") == ""){
+		notEmpty = false;
+	}else{
+		dataType = formData.get("column_type");
+		
+		if(formData.get("column_type") == "VARCHAR" || formData.get("column_type") == "CHAR"){
+			let lenght = parseInt(formData.get("data_length"));
+			if(lenght > 255){
+				lenght = 255;
+			}else if(lenght<1){
+				lenght = 1
+			}
+			dataType += "("+lenght+")";
+		}
+	}
+
 	if(notEmpty == true){
 		let object = {};
 		object.id_changeset = formData.get("id_changeset");
@@ -199,8 +244,8 @@ function sendGeneratorScriptAddColumnRequest(){
 		object.schema_name = formData.get("schema_name");
 		object.table_name = formData.get("table_name");
 		object.column_name = formData.get("column_name");	
-		object.column_type = formData.get("column_type");
 		object.column_default = formData.get("column_default");
+		object.column_type = dataType;
 		object.is_nullable = formData.get("is_nullable");
 		object.is_unique = formData.get("is_unique");
 		object.changeLog = formData.get("changeLog");

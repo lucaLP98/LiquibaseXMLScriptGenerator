@@ -74,7 +74,7 @@
   <div class="form-group">
     <label for="column_type" class="col-sm-2 control-label">Column Type</label>
     <div class="col-sm-10">
-      <select class="form-control" name="column_type" id="column_type">
+      <select class="form-control" name="column_type" id="column_type" onchange="enableDataLenghtInputField('data_length', 'column_type');">
       	<option value="BIT(1)">BIT(1)</option>
       	<option value="TINYINT">TINYINT</option>
   		<option value="INT">INT</option>
@@ -90,11 +90,20 @@
   		<option value="TIMESTAMP">TIMESTAMP</option>
   		<option value="DATE">DATE</option>
   		<option value="CHAR">CHAR</option>
-  		<option value="VARCHAR(255)">VARCHAR(255)</option>
+  		<option value="VARCHAR">VARCHAR</option>
 	  </select>
     </div>
   </div>
   <!-- END COLUMN TYPE -->
+  
+  <!-- DATA LENGTH -->
+  <div class="form-group">
+    <label for="data_length" class="col-sm-2 control-label">Data Length</label>
+    <div class="col-sm-10">
+      <input type="number" disabled class="form-control" name="data_length" id="data_length" placeholder="max 255 - min 1" max="255" min="1">
+    </div>
+  </div>
+  <!-- END DATA LENGTH -->
   
   <!-- DEFAULT VALUE -->
   <div class="form-group">

@@ -25,10 +25,19 @@
   		<option value="TIMESTAMP">TIMESTAMP</option>
   		<option value="DATE">DATE</option>
   		<option value="CHAR">CHAR</option>
-  		<option value="VARCHAR(255)">VARCHAR(255)</option>
+  		<option value="VARCHAR">VARCHAR</option>
 	  </select>
     </div>
   </div>
+  
+  <!-- DATA LENGTH -->
+  <div class="form-group">
+    <label for="data_length" class="col-sm-2 control-label">Data Length</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" name="data_length" id="data_length" placeholder="max 255 - min 1" max="255" min="1">
+    </div>
+  </div>
+  <!-- END DATA LENGTH -->
   
   <div class="form-group">
     <label for="column_default" class="col-sm-2 control-label">Default Value</label>

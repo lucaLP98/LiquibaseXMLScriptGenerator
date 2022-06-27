@@ -243,6 +243,27 @@ function createOptionForSchemaSelect(selectId){
 };
 
 /*
+ * Function tha enable the input field "Data Length" if selected Data Type is Varchar or Char
+ * and disabled it else
+ * 
+ * param dataLengthInputFieldId : id of data lenght input field
+ * param dataTypeInputFieldId : id of data type input field
+ */
+function enableDataLenghtInputField(dataLengthInputFieldId, dataTypeInputFieldId){	
+	dataLenghInputField = document.getElementById(dataLengthInputFieldId);
+	dataTypeInputField = document.getElementById(dataTypeInputFieldId);
+	
+	dataType = dataTypeInputField.value;
+	dataLenghInputField.value = "";
+	
+	if(dataType == "VARCHAR" || dataType == "CHAR"){
+		dataLenghInputField.disabled = false;
+	}else{
+		dataLenghInputField.disabled = true;
+	}
+}
+
+/*
  * Function that fills the table select whith all DB table present in a specific database schema - for each table will create an option
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select

@@ -104,7 +104,7 @@
   <div class="form-group">
     <label for="pk_type" class="col-sm-2 control-label">PK Column Type</label>
     <div class="col-sm-10">
-      <select class="form-control" id="pk_type" name="pk_type">
+      <select class="form-control" id="pk_type" name="pk_type" onchange="enableDataLenghtInputField('pk_data_length','pk_type')">
       	<option value="BIT(1)">BIT(1)</option>
       	<option value="TINYINT">TINYINT</option>
   		<option value="INT">INT</option>
@@ -120,11 +120,20 @@
   		<option value="TIMESTAMP">TIMESTAMP</option>
   		<option value="DATE">DATE</option value="BIT(1)">
   		<option value="CHAR">CHAR</option>
-  		<option value="VARCHAR(255)">VARCHAR(255)</option>
+  		<option value="VARCHAR">VARCHAR</option>
 	  </select>
     </div>
   </div>
   <!-- END PRIMARY KEY COLUMN TYPE -->
+  
+  <!-- PRIMARY KEY DATA LENGTH -->
+  <div class="form-group">
+    <label for="pk_data_length" class="col-sm-2 control-label">Primary Key Data Length</label>
+    <div class="col-sm-10">
+      <input type="number" disabled class="form-control" name="pk_data_length" id="pk_data_length" placeholder="max 255 - min 1" max="255" min="1">
+    </div>
+  </div>
+  <!-- END PRIMARY KEY DATA LENGTH -->
   
   <!-- PRIMARY KEY RADIO BUTTON-->
   <div class="form-group">

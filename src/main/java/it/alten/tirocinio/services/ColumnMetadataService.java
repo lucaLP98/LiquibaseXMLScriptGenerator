@@ -41,4 +41,9 @@ public interface ColumnMetadataService {
 	 * Get all columns with default value not null by theirs membership table (schema required)
 	 */
 	ColumnMetadataListDTO getColumnWithDefaultValueByTable(String schemaName, String tableName);
+	
+	/*
+	 * Get all columns by theirs data type and membership table (schema required)
+	 */
+	ColumnMetadataListDTO getColumnByTypeAndTable(String dataType, String schemaName, String tableName);
 }

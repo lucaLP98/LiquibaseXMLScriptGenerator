@@ -7,10 +7,11 @@ const COLUMN_NULL = 1;
 const COLUMN_NOT_NULL = 2;
 const COLUMN_INT = 3;
 const COLUMN_DEFAULT = 4;
+const COLUMN_TYPE = 5;
 
-const UNIQUE_CONSTRAINT = 5;
-const FOREIGN_KEY_CONSTRAINT = 6;
-const ALL_CONSTRAINT = 7;
+const UNIQUE_CONSTRAINT = 6;
+const FOREIGN_KEY_CONSTRAINT = 7;
+const ALL_CONSTRAINT = 8;
 
 /*
  * Function tha remove all option for the input Select element 
@@ -342,8 +343,9 @@ function loadTableSelectsForAddForeignKey(baseSchemaSelectId, referenceSchemaInp
  * param tableSelectId : is the ID of select which will contain the list of DB tables for the selected DB schema
  * param columnSelectId : is the ID of select which will contain the list of Columns for the selected DB Table (and Schema)
  * param retriveType : type of column to retrive. Possible value = {COLUMN_ALL, COLUMN_NULL, COLUMN_NOT_NULL, COLUMN_DEFAULT, COLUMN_INT}
+ * param dataType : may by NULL. Indicates the data type of the columns to retrieve, not null only if retriveType = COLUMN_TYPE
  */
-function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, retriveType){
+function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, retriveType, dataType){
 	let schemaSelected = document.getElementById(schemaSelectId).value;
 	let tableSelected = document.getElementById(tableSelectId).value;
 
@@ -376,11 +378,52 @@ function loadColumnOption(schemaSelectId, tableSelectId, columnSelectId, retrive
 		case COLUMN_NOT_NULL: requestUri += "NotNull/"; break;
 		case COLUMN_INT: requestUri += "Integer/"; break;
 		case COLUMN_DEFAULT: requestUri += "WithDefaultValue/"; break;
+		case COLUMN_TYPE: requestUri += "byDataType/"+dataType+"&"; break;
 		default: requestUri += "byTable/"; break;
 	}
 	
   	xhttp.open("GET", requestUri + schemaSelected + "&" + tableSelected, true);
   	xhttp.send();
+}
+
+/*
+ * Load the column type in a input text field
+ *
+ * param schemaInputId : the id of schema name input field, used to retrive the column's schema name
+ * param tableInputId : the id of table name input field, used to retrive the column's table name
+ * param columnInputId : the id of column name input field, used to retrive the column name
+ */
+function loadColumnTypeByColumnName(schemaInputId, tableInputId, columnInputId, columnTypeInputId){
+	let schemaName = document.getElementById(schemaInputId).value;
+	let tableName = document.getElementById(tableInputId).value;
+	let columnName = document.getElementById(columnInputId).value;
+	
+	let columnTypeInpuField = document.getElementById(columnTypeInputId);
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		let jsonResponse = JSON.parse(this.response);
+		columnTypeInpuField.value = jsonResponse.column_type;
+   	}
+   
+  	xhttp.open("GET", "/api/columns/byName/"+schemaName+"&"+tableName+"&"+columnName, true);
+  	xhttp.send();
+}
+
+/*
+ * Fill a column select with all columns of a certain type by their membership table
+ *
+ * param baseColumnTypeInputId : the id of input field which contains the column data type
+ * param ReferencedColumnSelectId : the id of select which will contain the columns found
+ * param tableNameSelectId : the id of input field which contains the column's table name
+ * param schemaNameSelectId : the id of input field which contains the column's schema name
+ */
+function loadReferenceColumnForeignKeyConstraint(baseColumnTypeInputId, ReferencedColumnSelectId, tableNameSelectId, schemaNameSelectId, referencedColumnTypeId){
+	let baseColumnType = document.getElementById(baseColumnTypeInputId).value;
+	let referencedColumnType = document.getElementById(referencedColumnTypeId);
+	referencedColumnType.value = baseColumnType;
+	
+	loadColumnOption(schemaNameSelectId, tableNameSelectId, ReferencedColumnSelectId, COLUMN_TYPE, baseColumnType);
 }
 
 /*

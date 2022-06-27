@@ -56,4 +56,11 @@ public interface ColumnMetadataRepository extends CrudRepository<ColumnMetadata,
 	 */
 	@Query(value = "SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key, column_default  FROM information_schema.columns WHERE (table_schema = :table_schema AND table_name = :table_name AND column_default is not null AND column_default <> \"\")", nativeQuery = true)
 	Set<ColumnMetadata> getAllDBColumnsWithDefaultValueByTableAndSchema(@Param("table_schema") String tableSchema, @Param("table_name") String tableName);
+
+	/*
+	 * Query for retrieve metadata of all columns present in the database by their data type and membership table (required also the table's schema)
+	 */
+	@Query(value = "SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key, column_default  FROM information_schema.columns WHERE (column_type = :column_type AND table_schema = :table_schema AND table_name = :table_name)", nativeQuery = true)
+	Set<ColumnMetadata> getAllDBColumnsByDataTypeAndTable(@Param("column_type") String columnType, @Param("table_schema") String tableSchema, @Param("table_name") String tableName);
+	
 }

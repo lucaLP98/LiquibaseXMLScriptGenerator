@@ -95,4 +95,12 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	public ColumnMetadataListDTO getColumnWithDefaultValueByTable(String schemaName, String tableName) {
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsWithDefaultValueByTableAndSchema(schemaName, tableName));
 	}
+	
+	/*
+	 * Get all columns by theirs data type and membership table (schema required)
+	 */
+	@Override
+	public ColumnMetadataListDTO getColumnByTypeAndTable(String dataType, String schemaName, String tableName) {
+		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsByDataTypeAndTable(dataType, schemaName, tableName));
+	}
 }

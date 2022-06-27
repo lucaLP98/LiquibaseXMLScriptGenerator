@@ -221,19 +221,21 @@ function sendGeneratorScriptAddColumnRequest(){
 	let notEmpty = checkNotEmptyField("addColumnForm");	
 	let dataType;
 	
-	if(notEmpty == true && formData.get("data_length") == ""){
-		notEmpty = false;
-	}else{
+	if(notEmpty == true){
 		dataType = formData.get("column_type");
 		
-		if(formData.get("column_type") == "VARCHAR" || formData.get("column_type") == "CHAR"){
-			let lenght = parseInt(formData.get("data_length"));
-			if(lenght > 255){
-				lenght = 255;
-			}else if(lenght<1){
-				lenght = 1
+		if(dataType == "VARCHAR" || dataType == "CHAR"){
+			if(notEmpty == true && formData.get("data_length") == ""){
+				notEmpty = false;
+			}else{
+				let lenght = parseInt(formData.get("data_length"));
+				if(lenght > 255){
+					lenght = 255;
+				}else if(lenght<1){
+					lenght = 1
+				}
+				dataType += "("+lenght+")";
 			}
-			dataType += "("+lenght+")";
 		}
 	}
 
@@ -480,6 +482,26 @@ function sendGenerateScriptModifyDataTypeRequest(){
 	let formData = new FormData(document.getElementById("modifyDataTypeForm"));
 	
 	let notEmpty = checkNotEmptyField("modifyDataTypeForm");
+	
+	
+	if(notEmpty == true){
+		dataType = formData.get("new_column_type");
+		
+		if(dataType == "VARCHAR" || dataType == "CHAR"){
+			if(notEmpty == true && formData.get("data_length") == ""){
+				notEmpty = false;
+			}else{
+				let lenght = parseInt(formData.get("data_length"));
+				if(lenght > 255){
+					lenght = 255;
+				}else if(lenght<1){
+					lenght = 1
+				}
+				dataType += "("+lenght+")";
+			}
+		}
+	}
+	
 	if(notEmpty == true){
 		let object = {};
 		object.id_changeset = formData.get("id_changeset");
@@ -488,7 +510,7 @@ function sendGenerateScriptModifyDataTypeRequest(){
 		object.table_name = formData.get("table_name");
 		object.column_name = formData.get("column_name");
 		object.old_column_type = formData.get("old_column_type");
-		object.new_column_type = formData.get("new_column_type");
+		object.new_column_type = dataType;
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
 		object.changeLog = formData.get("changeLog");

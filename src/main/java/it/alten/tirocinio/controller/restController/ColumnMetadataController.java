@@ -70,4 +70,10 @@ public class ColumnMetadataController {
 	public ColumnMetadataListDTO getColumnsWithDefaultByTable(@PathVariable String schemaName, @PathVariable String tableName) {
 		return columnMetadataService.getColumnWithDefaultValueByTable(schemaName, tableName);
 	}
+	
+	@GetMapping("/byDataType/{dataType}&{schemaName}&{tableName}")
+	@ResponseStatus(HttpStatus.OK)
+	public ColumnMetadataListDTO getColumnsByDataTypeAndTable(@PathVariable String schemaName, @PathVariable String tableName, @PathVariable String dataType) {
+		return columnMetadataService.getColumnByTypeAndTable(dataType, schemaName, tableName);
+	}
 }

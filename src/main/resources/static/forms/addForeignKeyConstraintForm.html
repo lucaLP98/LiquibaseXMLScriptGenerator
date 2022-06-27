@@ -105,12 +105,21 @@
   <div class="form-group">
     <label for="base_column_name" class="col-sm-2 control-label">Base Column Name</label>
     <div class="col-sm-10">
-      <select disabled class="form-control" id="base_column_name" name="base_column_name">
+      <select disabled class="form-control" id="base_column_name" name="base_column_name" onchange="loadColumnTypeByColumnName('base_table_schema_name', 'base_table_name', 'base_column_name', 'base_column_type')">
       	<option value=""  selected> -- select an option -- </option>
 	  </select>
     </div>
   </div>
   <!-- END BASE COLUMN NAME -->
+  
+  <!-- BASE COLUMN TYPE -->
+  <div class="form-group">
+    <label for="base_column_type" class="col-sm-2 control-label">Base Column Type</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="base_column_type" id="base_column_type" placeholder="base column type" readonly>
+    </div>
+  </div>
+  <!-- END BASE COLUMN TYPE -->
   
   <br><hr style="border-top: 2px dotted #bbb;"><br>
   
@@ -127,7 +136,7 @@
   <div class="form-group">
     <label for="referenced_table_name" class="col-sm-2 control-label">Referenced Table Name</label>
     <div class="col-sm-10">
-      <select disabled class="form-control" id="referenced_table_name" name="referenced_table_name" onchange="loadColumnOption('base_table_schema_name', 'referenced_table_name', 'referenced_column_name', COLUMN_ALL)">
+      <select disabled class="form-control" id="referenced_table_name" name="referenced_table_name" onchange="loadReferenceColumnForeignKeyConstraint('base_column_type', 'referenced_column_name', 'referenced_table_name', 'referenced_table_schema_name', 'referenced_column_type')">
       	<option value=""  selected> -- select an option -- </option>
 	  </select>
     </div>
@@ -144,6 +153,15 @@
     </div>
   </div>
   <!-- END REFERENCED COLUMN NAME -->
+  
+  <!-- BASE REFERENCED TYPE -->
+  <div class="form-group">
+    <label for="referenced_column_type" class="col-sm-2 control-label">Referenced Column Type</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="referenced_column_type" id="referenced_column_type" placeholder="referenced column type" readonly>
+    </div>
+  </div>
+  <!-- END REFERENCED COLUMN TYPE -->
   
   <br><hr style="border-top: 2px dotted #bbb;"><br>
   

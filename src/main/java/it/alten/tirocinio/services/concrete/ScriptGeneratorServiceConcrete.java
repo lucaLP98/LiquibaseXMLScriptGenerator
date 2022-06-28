@@ -225,7 +225,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
 	        Document document = documentBuilder.newDocument();
-	        
+
 	        //changeSet element
 	        Element changeSet = createChangeSetElement(document, dropTableScriptDTO);
 	        

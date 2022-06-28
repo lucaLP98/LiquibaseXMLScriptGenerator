@@ -265,6 +265,26 @@ function enableDataLenghtInputField(dataLengthInputFieldId, dataTypeInputFieldId
 }
 
 /*
+ * Fnction used in addColumnForm.html for enabled data length input field and change input type to default value input field
+ *
+ * param dataLengthInputFieldId : id of data lenght input field
+ * param dataTypeInputFieldId : id of data type input field
+ * param defaultValueInputFieldId : id of column default value input field
+ */ 
+function columnTypeSelected(dataLengthInputFieldId, dataTypeInputFieldId, defaultValueInputFieldId){
+	enableDataLenghtInputField(dataLengthInputFieldId, dataTypeInputFieldId);
+	
+	dataTypeSelected = document.getElementById(dataTypeInputFieldId).value;
+	defaultValueInputField = document.getElementById(defaultValueInputFieldId);
+	switch(dataTypeSelected){
+		case "INT": case  "BIGINT" : case "TINYINT" : case "MEDIUMINT" : case "NUMERIC" : case "FLOAT" : case "DOUBLE" : case "DECIMAL" : defaultValueInputField.type = "number"; break;			
+		case "DATE" : defaultValueInputField.type = "date"; break;
+		case "TIME" : case "TIMESTAMP" : defaultValueInputField.type = "time"; break;
+		default: defaultValueInputField.type = "text"; break;
+	}
+}
+
+/*
  * Function that fills the table select whith all DB table present in a specific database schema - for each table will create an option
  *
  * param schemaSelectId : is the ID of select which contains the list of DB schema tha we use to retrive the schema of tables to load into select

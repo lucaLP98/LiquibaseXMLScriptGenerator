@@ -8,6 +8,7 @@
 		
 		<script type="text/javascript" th:src="@{/js/formFunction.js}"></script>
 		<script type="text/javascript" th:src="@{/js/generateScript.js}"></script>
+		<script type="text/javascript" th:src="@{/js/manageChangeLog.js}"></script>
 		
 		<!-- W3C CSS -->
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -33,6 +34,16 @@
   			<button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">Close &times;</button>
   			
   			<h2 class="w3-bar-item">Menu</h2>
+  			
+  			<!-- CHANGELOG OPTIONS -->
+    		<button class="w3-button w3-block w3-left-align" onclick="dropSubMenu('manageChangeLogOperations')">Manage ChangeLog<i class="fa fa-caret-down"></i></button>
+    		<div id="manageChangeLogOperations" class="w3-hide w3-white w3-card">
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadCreateChangeLogForm()">Create New ChangeLog</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">View ChangeLog</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">Remove ChangeSet</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="loadCloseChangeLogForm()">Close ChangeLog</a>
+      			<a href="#" class="w3-bar-item w3-button" onclick="">Download ChangeLog</a>
+    		</div>
   			
   			<!-- SCHEMA OPERATION OPTIONS -->
   			<a href="#" class="w3-bar-item w3-button" onclick="loadCreateSchemaForm()">DB Schema Creation</a>

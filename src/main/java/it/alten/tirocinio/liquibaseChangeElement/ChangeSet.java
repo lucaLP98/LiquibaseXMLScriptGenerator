@@ -4,12 +4,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class ChangeSet {
-	private String changeSetId;
-	private Document document;
+	private final String changeSetId;
+	private final Document document;
 	private Element changeSet;
 	
-	public ChangeSet(Document document) {
+	/*
+	 * Constructors
+	 */
+	public ChangeSet(Document document, String changeSetId) {
 		this.document = document;
+		this.changeSetId = changeSetId;
 	}
 	
 	/*
@@ -25,12 +29,25 @@ public class ChangeSet {
 	
 	/*
 	 * Setter methods
-	 */
-	public void setChangeSetId(String changeSetId) {
-		this.changeSetId = changeSetId;
-	}
-	
+	 */	
 	public void setChangeSet(Element changeSet) {
 		this.changeSet = changeSet;
+	}
+	
+	/*
+	 * Methods
+	 */	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		if(!(o instanceof ChangeSet))	return false;
+		
+		ChangeSet c = (ChangeSet)o;
+		return (this.changeSetId.equals(c.changeSetId) && this.document==c.document);
+	}
+	
+	@Override 
+	public int hashCode() {
+		return this.changeSetId.hashCode() ^ this.document.hashCode();
 	}
 }

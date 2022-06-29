@@ -11,6 +11,9 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/*
+ * Class representing a Liquibase ChangeLog
+ */
 public class ChangeLog {
 	private String changeLogId;
 	private Document document;
@@ -21,11 +24,8 @@ public class ChangeLog {
 	 * Constructor
 	 */
 	public ChangeLog() {
-		try {
-	        this.document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		} catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-        }
+		this.document = null;
+		this.changeLog = null;
 		this.changeSets = new HashSet<>();
 	}
 	
@@ -49,34 +49,31 @@ public class ChangeLog {
 	}
 	
 	/*
+	 * Setter methods
+	 */
+	public void setChangeLogId(String changeLogId) {
+		this.changeLogId = changeLogId;
+	}
+	
+	public void setChangeLogDocument(Document document) {
+		this.document = document;
+	}
+	
+	/*
 	 * Create the changeLog element
 	 */
-	public void createChangeLog(String changeLogId) {
-		this.changeLogId = changeLogId;
-		
-		//create ChangeLog element
-		changeLog =  document.createElement("databaseChangeLog");
-		
-		//add changeLog's attributes
-		Attr xmlns = document.createAttribute("xmlns");
-		xmlns.setValue("http://www.liquibase.org/xml/ns/dbchangelog");
-		changeLog.setAttributeNode(xmlns);
-		
-		Attr xsi = document.createAttribute("xmlns:xsi");
-		xsi.setValue("http://www.w3.org/2001/XMLSchema-instance");
-		changeLog.setAttributeNode(xsi);
-		
-		Attr pro = document.createAttribute("xmlns:pro");
-		pro.setValue("http://www.liquibase.org/xml/ns/pro");
-		changeLog.setAttributeNode(pro);
-		
-		Attr schemaLocation = document.createAttribute("xsi:schemaLocation");
-		schemaLocation.setValue("http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd\r\n http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd");
-		changeLog.setAttributeNode(schemaLocation);
-		
-		Attr id = document.createAttribute("changeLogId");
-		id.setValue(changeLogId);
-		changeLog.setAttributeNode(id);
+	public void createChangeLog(Element newChangeLog) {
+		this.changeLog = newChangeLog;
+	}
+	
+	
+	/*
+	 * Remove all ChangeSet from set
+	 */
+	public void deletAllChangeSet() {
+		for(ChangeSet c : changeSets) {
+			changeSets.remove(c);
+		}
 	}
 	
 	/*
@@ -96,4 +93,7 @@ public class ChangeLog {
 	/*
 	 * Add a new changeSet to set
 	 */
+	public boolean addChangeSetToChangeLog(ChangeSet changeSet) {
+		return changeSets.add(changeSet);
+	}
 }

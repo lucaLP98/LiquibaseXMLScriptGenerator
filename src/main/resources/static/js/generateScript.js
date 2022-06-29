@@ -27,7 +27,8 @@ function sendGeneratorScriptCreateSchemaRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -108,7 +109,8 @@ function sendGeneratorScriptCreateTableRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 };
 
@@ -137,13 +139,11 @@ function checkNotEmptyField(formId){
  */	
 function copyText(){
   	let copyText = document.getElementById("scriptTextArea");
-
+  	
 	if(copyText.value != ""){
   		copyText.select();
   		copyText.setSelectionRange(0, 99999); /* For mobile device */
   		navigator.clipboard.writeText(copyText.value);
-  		
-  		alert("Script copy on clipboard!");
 	}
 }
 
@@ -176,7 +176,8 @@ function sendGenerateScriptDropTableRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 	
 }
@@ -208,7 +209,8 @@ function sendGenerateScriptDropColumnRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -264,7 +266,8 @@ function sendGeneratorScriptAddColumnRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -296,7 +299,8 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -329,7 +333,8 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -376,7 +381,8 @@ function sendGenerateScriptAddUniqueConstraintRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -407,7 +413,8 @@ function sendGenerateScriptDropUniqueConstraintRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -438,7 +445,8 @@ function sendGeneratorScriptRenameTableRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -471,7 +479,8 @@ function sendGenerateScriptRenameColumnRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -524,7 +533,8 @@ function sendGenerateScriptModifyDataTypeRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -557,7 +567,8 @@ function sendGenerateScriptAddAutoIncrementRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -590,7 +601,8 @@ function sendGenerateScriptAddDefaultValueRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -623,7 +635,8 @@ function sendGenerateScriptDropDefaultValueRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -663,7 +676,8 @@ function sendGeneratorScriptAddForeignKeyConstraintRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -696,7 +710,8 @@ function sendGeneratorScriptDropForeignKeyConstraintRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 
@@ -727,7 +742,8 @@ function sendGeneratorScriptDeleteRequest(){
   		xhttp.setRequestHeader("Content-type", "application/json");
   		xhttp.send(json);
 	}else{
-		alert(" WARNING\n Fill in all fields to generate the script");
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}
 }
 

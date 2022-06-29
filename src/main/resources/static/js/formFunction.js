@@ -205,6 +205,20 @@ function loadUpdateDataForm(){
 };
 
 /*
+ * load the page createChangeLogForm.html in Homepage for the creation of new Liquibase ChangeLog
+ */
+function loadCreateChangeLogForm(){
+	$('#formContainer').load('forms/createChangeLogForm.html');
+};
+
+/*
+ * load the page closeChangeLogForm.html in Homepage to close a Liquibase ChangeLog
+ */
+function loadCloseChangeLogForm(){
+	$('#formContainer').load('forms/closeChangeLogForm.html');
+};
+
+/*
  * Function for load in "createTableForm.html" the form for insert new column to add at table
  */
 function addColumnToTable(){

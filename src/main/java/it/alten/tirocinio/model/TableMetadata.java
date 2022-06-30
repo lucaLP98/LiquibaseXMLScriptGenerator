@@ -85,4 +85,21 @@ public class TableMetadata {
 	public String toString() {
 		return tableSchema + "." + tableName;
 	}
+	
+	/*
+	 * Override methods
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		if(!(o instanceof TableMetadata))	return false;
+		
+		TableMetadata c = (TableMetadata)o;
+		return c.tableName==this.tableName && c.tableSchema==this.tableSchema;
+	}
+	
+	@Override
+	public int hashCode() {
+		return tableName.hashCode() ^ tableSchema.hashCode();
+	}
 }

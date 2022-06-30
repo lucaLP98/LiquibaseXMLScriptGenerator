@@ -3,18 +3,15 @@ package it.alten.tirocinio.liquibaseChangeElement;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Attr;
+//import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /*
  * Class representing a Liquibase ChangeLog
  */
-public class ChangeLog {
+//@Component
+public class ChangeLog implements Cloneable{
 	private String changeLogId;
 	private Document document;
 	private Element changeLog;

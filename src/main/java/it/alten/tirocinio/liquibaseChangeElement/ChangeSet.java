@@ -3,7 +3,7 @@ package it.alten.tirocinio.liquibaseChangeElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class ChangeSet {
+public class ChangeSet{
 	private final String changeSetId;
 	private final Document document;
 	private Element changeSet;

@@ -33,4 +33,21 @@ public class Schema {
 	public String toString() {
 		return schemaName;
 	}
+	
+	/*
+	 * Override methods
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		if(!(o instanceof Schema))	return false;
+		
+		Schema c = (Schema)o;
+		return c.schemaName==this.schemaName;
+	}
+	
+	@Override
+	public int hashCode() {
+		return schemaName.hashCode();
+	}
 }

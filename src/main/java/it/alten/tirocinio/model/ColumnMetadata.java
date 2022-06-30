@@ -91,4 +91,21 @@ public class ColumnMetadata {
 	public String getColumnDefault() {
 		return columnDefault;
 	}
+	
+	/*
+	 * Override methods
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		if(!(o instanceof ColumnMetadata))	return false;
+		
+		ColumnMetadata c = (ColumnMetadata)o;
+		return c.columnName==this.columnName && c.tableName==this.tableName && c.tableSchema==this.tableSchema;
+	}
+	
+	@Override
+	public int hashCode() {
+		return columnName.hashCode() ^ tableName.hashCode() ^ tableSchema.hashCode();
+	}
 }

@@ -113,4 +113,21 @@ public class KeyColumnMetadata {
 	public void setOnDeleteClause(String onDeleteClause) {
 		this.onDeleteClause = onDeleteClause;
 	}
+	
+	/*
+	 * Override methods
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		if(!(o instanceof KeyColumnMetadata))	return false;
+		
+		KeyColumnMetadata c = (KeyColumnMetadata)o;
+		return c.baseColumnName==this.baseColumnName && c.constraintName==this.constraintName && c.baseTableName==this.baseTableName && c.baseTableSchema==this.baseTableSchema;
+	}
+	
+	@Override
+	public int hashCode() {
+		return baseTableName.hashCode() ^ baseTableSchema.hashCode() ^ constraintName.hashCode() ^ baseColumnName.hashCode();
+	}
 }

@@ -1,7 +1,15 @@
 package it.alten.tirocinio.services.concrete;
 
+import java.io.StringWriter;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -11,12 +19,48 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
+import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
 import it.alten.tirocinio.services.ChangeLogService;
 
 @Service
 public class ChangeLogServiceConcrete implements ChangeLogService {
 	@Autowired
 	private ApplicationContext context;
+	
+	/*
+	 * Generate a XML Script in a String format
+	 */
+	private String generateXMLScriptToString(Document document) {
+		String XMLScript = "";
+		
+		try {
+			/*
+        	 *  creation of the xml script
+        	 *  transform the DOM Object to an XML script
+        	 */
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            
+            //indentation for the XML script
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            
+            DOMSource domSource = new DOMSource(document);
+            
+            //creating a String with the script XML
+            StreamResult streamResultString = new StreamResult(new StringWriter());
+            transformer.transform(domSource, streamResultString);
+            XMLScript = streamResultString.getWriter().toString(); //it contain the XML script in format of String          
+            /*
+             * End script generation
+             */
+		} catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }
+		
+		return XMLScript;
+	}
 
 	/*
 	 * Method which allow to create new changeLog
@@ -63,7 +107,10 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 			newChangeLog.setAttributeNode(id);
 	        
 			changeLog.createChangeLog(newChangeLog);
+			changeLog.getChangeLogDocument().appendChild(changeLog.getChangeLogElement());
+			
 			System.out.println("changelog created");
+			
 	        ret = true;
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -88,4 +135,20 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 		System.out.println("changelog closed");
 	}
 
+	/*
+	 * Method which return changelog in String format
+	 */
+	@Override
+	public String printChangeLog() {
+		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
+		String script;
+
+		if(changeLog != null && changeLog.getChangeLogDocument() != null) {
+			script = generateXMLScriptToString(changeLog.getChangeLogDocument());
+		}else {
+			script = "There isn't a open LiquibaseChangeLog.";
+		}
+		
+		return script;	
+	}
 }

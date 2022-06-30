@@ -10,4 +10,9 @@ public interface ChangeLogService {
 	 * Method which allow to close a existing changeLog
 	 */
 	void closeChangeLog();
+	
+	/*
+	 * Method which return changelog in String format
+	 */
+	String printChangeLog();
 }

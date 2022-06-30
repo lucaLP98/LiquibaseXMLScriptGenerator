@@ -13,6 +13,8 @@ const UNIQUE_CONSTRAINT = 6;
 const FOREIGN_KEY_CONSTRAINT = 7;
 const ALL_CONSTRAINT = 8;
 
+var columnNumber = -1;
+
 /*
  * Function tha remove all option for the input Select element 
  *
@@ -224,6 +226,7 @@ function loadCloseChangeLogForm(){
 function addColumnToTable(){
   	$('#newCoulmnForm').load('forms/columnTableForm.html');
   	document.getElementById("newCoulmnForm").removeAttribute("id");
+  	
 }
 
 /*

@@ -3,6 +3,7 @@ package it.alten.tirocinio.controller.restController;
 import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,15 @@ public class ChangeLogController {
 	 */
 	public ChangeLogController(ChangeLogService changeLogService) {
 		this.changeLogService = changeLogService;
+	}
+	
+	/*
+	 * GET Requests
+	 */
+	@GetMapping({"viewChangeLog", "viewChangeLog/"})
+	@ResponseStatus(HttpStatus.OK)
+	public String viewChangeLog() {
+		return changeLogService.printChangeLog();
 	}
 	
 	/*

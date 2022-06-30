@@ -12,7 +12,7 @@ function sendCreateChangeLogRequest(){
 	let notEmpty = checkNotEmptyField("createChangeLogForm");
 	if(notEmpty == true){
 		let object = {};
-		object.id_changeset = formData.get("changelog_id");
+		object.changelog_id = formData.get("changelog_id");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -46,4 +46,16 @@ function sendCloseChangeLogRequest(){
   		xhttp.open("DELETE", "/changeLog/closeChangeLog/", true);
   		xhttp.send();
 	}
+}
+
+/*
+ * AJAX function for send asynch request to view the current Liquibase changeLog
+ */
+function sendViewChangeLogRequest(){	
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+			document.getElementById("scriptTextArea").innerHTML = this.responseText;   		
+		}
+  		xhttp.open("GET", "/changeLog/viewChangeLog/", true);
+  		xhttp.send();
 }

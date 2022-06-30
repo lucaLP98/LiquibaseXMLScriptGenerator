@@ -58,4 +58,21 @@ public class TableConstraintMetadata {
 	public void setConstraintType(String constraintType) {
 		this.constraintType = constraintType;
 	}
+	
+	/*
+	 * Override methods
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		if(!(o instanceof TableConstraintMetadata))	return false;
+		
+		TableConstraintMetadata c = (TableConstraintMetadata)o;
+		return c.constraintName==this.constraintName && c.tableName==this.tableName && c.tableSchema==this.tableSchema;
+	}
+	
+	@Override
+	public int hashCode() {
+		return tableName.hashCode() ^ tableSchema.hashCode() ^ constraintName.hashCode();
+	}
 }

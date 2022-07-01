@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
+import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
 import it.alten.tirocinio.api.DTO.changeLogDTO.CreateChangeLogRequestDTO;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.services.ChangeLogService;
@@ -41,6 +43,13 @@ public class ChangeLogController {
 		return changeLogService.printChangeLog();
 	}
 	
+	@GetMapping({"getChangeSetList", "getChangeSetList/"})
+	@ResponseStatus(HttpStatus.OK)
+	public ChangeSetListDTO getChangeSetList() {
+		ChangeSetListDTO x = changeLogService.getAllChangeSet();
+		return x;
+	}
+	
 	/*
 	 * POST Requests
 	 */
@@ -52,10 +61,16 @@ public class ChangeLogController {
 	
 	/*
 	 * DELETE Requests
-	 */
+	 */	
 	@DeleteMapping({"closeChangeLog", "closeChangeLog/"})
 	@ResponseStatus(HttpStatus.OK)
 	public void closeChangeLog() {
 		changeLogService.closeChangeLog();
+	}
+	
+	@DeleteMapping({"removeChangeSet", "removeChangeSet/"})
+	@ResponseStatus(HttpStatus.OK)
+	public boolean removeChangeSet(@RequestBody ChangeSetDTO changeSetDTO) {
+		return changeLogService.removeChangeSet(changeSetDTO.getChangeSetId());
 	}
 }

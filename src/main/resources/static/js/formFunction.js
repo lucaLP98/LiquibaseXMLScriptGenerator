@@ -13,8 +13,6 @@ const UNIQUE_CONSTRAINT = 6;
 const FOREIGN_KEY_CONSTRAINT = 7;
 const ALL_CONSTRAINT = 8;
 
-var columnNumber = -1;
-
 /*
  * Function tha remove all option for the input Select element 
  *
@@ -204,6 +202,14 @@ function loadUpdateDataForm(){
 	$('#formContainer').load('forms/updateDataForm.html');
 	let schemaSelectId = "schema_name";
 	createOptionForSchemaSelect(schemaSelectId);
+};
+
+/*
+ * load the page removeChangeSetFromChangeLogForm.html in Homepage for remove changeset from changelog
+ */
+function loadRemoveChangeSetForm(){
+	$('#formContainer').load('forms/removeChangeSetFromChangeLogForm.html');
+	loadChangeSetOption("changeset_id_select");
 };
 
 /*
@@ -641,4 +647,47 @@ function addInputColumnIntoHTMLPage(schemaSelectId, tableSelectId, divInputField
 	}
 	xhttp.open("GET", "/api/columns/byTable/" + selectedSchema + "&" + selectedTable, true);
   	xhttp.send();
+}
+
+/*
+ * Function that fills the changeSet select whith all changeset present in current changeLog - for each changeset will create an option
+ *
+ * param changeSetSelectId is the ID of the select element to which we want to add options
+ */
+function loadChangeSetOption(changeSetSelectId){
+
+	alert("You are about to delete a ChangeSet from the ChangeLog. The cancellation is irreversible. Continue to continue.");
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		let jsonResponse = JSON.parse(this.response);
+    	let changeSetArray = jsonResponse.changeset_list;   
+		let disabledOption;
+		
+		if(changeSetArray.length == 0){
+    		disabledOption = document.createElement("option");
+    		disabledOption.selected = true;
+    		disabledOption.value = "";
+    		disabledOption.innerHTML = " -- There aren't ChangeSet yet -- "
+		}else{
+    		disabledOption = document.createElement("option");
+    		disabledOption.selected = true;
+    		disabledOption.value = "";
+    		disabledOption.innerHTML = " -- select an option -- "
+		}
+		
+    	let changeSetSelect = document.getElementById(changeSetSelectId);
+    	removeOptions(changeSetSelect);
+    	changeSetSelect.appendChild(disabledOption);  	 	
+    	
+    	for(let i=0; i<changeSetArray.length; i++){
+			let option = document.createElement("option");
+			option.value = changeSetArray[i].changeset_id;
+			option.innerHTML = changeSetArray[i].changeset_id;
+			changeSetSelect.appendChild(option); 
+		}
+   	}
+   	
+  	xhttp.open("GET", "/changeLog/getChangeSetList/", true);
+  	xhttp.send(); 
 }

@@ -59,3 +59,37 @@ function sendViewChangeLogRequest(){
   		xhttp.open("GET", "/changeLog/viewChangeLog/", true);
   		xhttp.send();
 }
+
+/*
+ * AJAX function for send asynch request to remove a changeset by its ID from current Liquibase changeLog
+ */
+function sendRemoveChangeSetFromChangeLogRequest(){
+	let formData = new FormData(document.getElementById("removeChangeSetFromChangeLogForm"));
+	let alertMsg = document.getElementById("alertMsg");
+	
+	let notEmpty = checkNotEmptyField("removeChangeSetFromChangeLogForm");
+	if(notEmpty == true){
+		if(formData.get("removeChangeSet") == "true"){
+			let object = {};
+			object.changeset_id = formData.get("changeset_id");
+			let json = JSON.stringify(object);
+				
+			const xhttp = new XMLHttpRequest();
+			xhttp.onload = function() {
+				if(this.response == "true"){
+					alertMsg.innerHTML = "<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>OK!</strong> ChangeSet successfully removed!</div>";		
+   					sendViewChangeLogRequest();
+   					loadChangeSetOption("changeset_id_select");
+				}else{
+					alertMsg.innerHTML = "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> ChangeSet not removed.</div>";				
+				}
+				
+   			}
+  			xhttp.open("DELETE", "/changeLog/removeChangeSet/", true);
+  			xhttp.setRequestHeader("Content-type", "application/json");
+  			xhttp.send(json);
+		}
+	}else{
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
+	}
+}

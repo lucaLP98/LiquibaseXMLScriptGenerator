@@ -1,6 +1,7 @@
 package it.alten.tirocinio.liquibaseChangeElement;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 //import org.springframework.stereotype.Component;
@@ -17,12 +18,15 @@ public class ChangeLog implements Cloneable{
 	private Element changeLog;
 	private Set<ChangeSet> changeSets;
 	
+	private boolean created;
+	
 	/*
 	 * Constructor
 	 */
 	public ChangeLog() {
 		this.document = null;
 		this.changeLog = null;
+		created = false;
 		this.changeSets = new HashSet<>();
 	}
 	
@@ -45,6 +49,10 @@ public class ChangeLog implements Cloneable{
 		return changeSets;
 	}
 	
+	public boolean changeLogExists() {
+		return created;
+	}
+	
 	/*
 	 * Setter methods
 	 */
@@ -54,6 +62,10 @@ public class ChangeLog implements Cloneable{
 	
 	public void setChangeLogDocument(Document document) {
 		this.document = document;
+	}
+	
+	public void setCreated(boolean created) {
+		this.created = created;
 	}
 	
 	/*
@@ -68,8 +80,12 @@ public class ChangeLog implements Cloneable{
 	 * Remove all ChangeSet from set
 	 */
 	public void deletAllChangeSet() {
-		for(ChangeSet c : changeSets) {
-			changeSets.remove(c);
+		if(created) {
+			Iterator<ChangeSet> iter = changeSets.iterator();
+			while(iter.hasNext()) {
+				iter.next();
+				iter.remove();
+			}
 		}
 	}
 	
@@ -77,13 +93,15 @@ public class ChangeLog implements Cloneable{
 	 * Delete a changeSet from Set by his Id
 	 */
 	public boolean deleteChangeSetFromChangeLog(String changeSetId) {
+		if(!created)	return false;
+		
 		ChangeSet toDelete = null;
 		for(ChangeSet c : changeSets) {
 			if(c.getChangeSetId().equals(changeSetId)) {
 				toDelete = c;
 			}
 		}
-		
+		this.changeLog.removeChild(toDelete.getChangeset());
 		return changeSets.remove(toDelete);
 	}
 	
@@ -91,6 +109,12 @@ public class ChangeLog implements Cloneable{
 	 * Add a new changeSet to set
 	 */
 	public boolean addChangeSetToChangeLog(ChangeSet changeSet) {
-		return changeSets.add(changeSet);
+		if(!created)	return false;
+		
+		boolean ret = changeSets.add(changeSet);
+		if(ret) {
+			changeLog.appendChild(changeSet.getChangeset());
+		}
+		return ret;
 	}
 }

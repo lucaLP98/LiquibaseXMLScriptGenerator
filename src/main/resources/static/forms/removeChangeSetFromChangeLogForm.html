@@ -1,0 +1,51 @@
+
+<form class="form-horizontal" id="removeChangeSetFromChangeLogForm">
+
+  <div class="form-group">
+    <div class="col-sm-10">
+      <h1>Remove ChangeSet From ChangeLog</h1>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <p class="col-sm-10" >Select the ChangeSet to remove from the current ChangeLog by its ID. Make sure an Open ChangeLog exists before continuing.</p>
+    <p class="col-sm-10">WARNING: The cancellation is irreversible.</p>
+  </div>
+
+  <!-- CHANGESET ID -->
+  <div class="form-group">
+    <label for="changeset_id" class="col-sm-2 control-label">ChangeSet ID</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="changeset_id_select" name="changeset_id">
+      	<option id="a">A</option> 
+      	<option id="b">B</option> 
+      	<option id="c">C</option> 
+      	<!-- <option value=""  selected > -- select an option -- </option> -->
+	  </select>
+    </div>
+  </div>
+  <!-- END CHANGESET ID -->
+  
+  <!-- CONFIRM DELETE -->
+  <div class="form-group">
+    <label for="closeChangeLog" class="col-sm-2 control-label">Are you sure to remove this ChangeSet?</label>
+    <div class="col-sm-10">
+        <label class="radio-inline">
+  			<input type="radio" name="removeChangeSet" id="removeChangeSet" value="true"> YES </input>
+		</label>
+		<label class="radio-inline">
+  			<input type="radio" checked="checked" name="removeChangeSet" id="removeChangeSet" value="false"> NO </input>
+		</label>
+    </div>
+  </div>
+  <!-- END CONFIRM DELETE -->
+  
+  
+  <div id="alertMsg"></div>
+  
+  <div class="form-group">
+  	<div class="col-sm-offset-2 col-sm-10">
+      <button type="button" class="btn btn-success" onclick="sendRemoveChangeSetFromChangeLogRequest()" >Remove ChangeSet</button>
+  	</div>
+  </div>
+</form>

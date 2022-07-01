@@ -1,6 +1,9 @@
 package it.alten.tirocinio.services.concrete;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,6 +21,9 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
+import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
+import it.alten.tirocinio.api.Mapper.ChangeSetMapper;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
 import it.alten.tirocinio.services.ChangeLogService;
@@ -26,6 +32,19 @@ import it.alten.tirocinio.services.ChangeLogService;
 public class ChangeLogServiceConcrete implements ChangeLogService {
 	@Autowired
 	private ApplicationContext context;
+	
+	/*
+	 * Converter between set of CHangeSet and ChangeSetListDTO
+	 */
+	private ChangeSetListDTO changeSetToChangeSetListDTO(Set<ChangeSet> changeSet) {
+		List<ChangeSetDTO> changeSetDTO = new ArrayList<>();
+		
+		for(ChangeSet c: changeSet) {
+			changeSetDTO.add(ChangeSetMapper.INSTANCE.changeSetToChangeSetDTO(c));
+		}
+		
+		return new ChangeSetListDTO(changeSetDTO);
+	}
 	
 	/*
 	 * Generate a XML Script in a String format
@@ -70,7 +89,7 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 		Document document;
 		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		
-		if(changeLog.getChangeLogDocument() != null) {
+		if(changeLog.changeLogExists()) {
 			System.out.println("changelog not created - already exists");
 			return false;
 		}
@@ -80,10 +99,9 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	        document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 	        changeLog.setChangeLogDocument(document);
 	        changeLog.setChangeLogId(changeLogId);
-	           
+	        
 	        //create ChangeLog element
-	        Element newChangeLog;
-	        newChangeLog =  document.createElement("databaseChangeLog");
+	        Element newChangeLog =  document.createElement("databaseChangeLog");
 			
 			//add changeLog's attributes
 			Attr xmlns = document.createAttribute("xmlns");
@@ -108,6 +126,18 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	        
 			changeLog.createChangeLog(newChangeLog);
 			changeLog.getChangeLogDocument().appendChild(changeLog.getChangeLogElement());
+			changeLog.setCreated(true);
+	        
+	        /******************************/
+	        Element a1 =  document.createElement("elemento1");
+			ChangeSet c = new ChangeSet(document, "c1");
+			c.setChangeSet(a1);		
+			Element a2 =  document.createElement("elemento2");
+			ChangeSet c2 = new ChangeSet(document, "c2");
+			c2.setChangeSet(a2);
+			changeLog.addChangeSetToChangeLog(c);
+			changeLog.addChangeSetToChangeLog(c2);
+			/******************************/
 			
 			System.out.println("changelog created");
 			
@@ -127,10 +157,11 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	@Override
 	public void closeChangeLog() {
 		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
-		
+			
 		changeLog.setChangeLogDocument(null);
 		changeLog.setChangeLogId(null);
 		changeLog.deletAllChangeSet();
+		changeLog.setCreated(false);
 		
 		System.out.println("changelog closed");
 	}
@@ -143,12 +174,36 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		String script;
 
-		if(changeLog != null && changeLog.getChangeLogDocument() != null) {
+		if(changeLog != null && changeLog.changeLogExists()) {
 			script = generateXMLScriptToString(changeLog.getChangeLogDocument());
 		}else {
 			script = "There isn't a open LiquibaseChangeLog.";
 		}
 		
 		return script;	
+	}
+	
+	/*
+	 * Method which return list of all ChangeSet contained in the ChangeLog
+	 */
+	@Override
+	public ChangeSetListDTO getAllChangeSet() {
+		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
+		if(changeLog != null && changeLog.changeLogExists()) {
+			return changeSetToChangeSetListDTO(changeLog.getChangeSets());
+		}
+		return null;
+	}
+	
+	/*
+	 * Method which remove a ChangeSet from ChangeLog
+	 */
+	@Override
+	public boolean removeChangeSet(String changeSetId) {
+		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
+		if(changeLog != null && changeLog.changeLogExists()) {
+			return changeLog.deleteChangeSetFromChangeLog(changeSetId);
+		}
+		return false;
 	}
 }

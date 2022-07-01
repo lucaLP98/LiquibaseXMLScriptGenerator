@@ -127,17 +127,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 			changeLog.createChangeLog(newChangeLog);
 			changeLog.getChangeLogDocument().appendChild(changeLog.getChangeLogElement());
 			changeLog.setCreated(true);
-	        
-	        /******************************/
-	        Element a1 =  document.createElement("elemento1");
-			ChangeSet c = new ChangeSet(document, "c1");
-			c.setChangeSet(a1);		
-			Element a2 =  document.createElement("elemento2");
-			ChangeSet c2 = new ChangeSet(document, "c2");
-			c2.setChangeSet(a2);
-			changeLog.addChangeSetToChangeLog(c);
-			changeLog.addChangeSetToChangeLog(c2);
-			/******************************/
 			
 			System.out.println("changelog created");
 			

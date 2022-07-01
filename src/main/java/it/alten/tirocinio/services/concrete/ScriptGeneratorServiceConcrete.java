@@ -13,6 +13,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -39,6 +41,8 @@ import it.alten.tirocinio.api.DTO.scriptDTO.AddUniqueConstraintScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.CreateSchemaScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.UpdateDataScriptDTO;
+import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
+import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
 import it.alten.tirocinio.model.ColumnMetadata;
 import it.alten.tirocinio.model.KeyColumnMetadata;
 import it.alten.tirocinio.model.TableMetadata;
@@ -46,7 +50,6 @@ import it.alten.tirocinio.model.TableMetadata;
 import it.alten.tirocinio.repository.ColumnMetadataRepository;
 import it.alten.tirocinio.repository.KeyColumnMetadataRepository;
 import it.alten.tirocinio.repository.TableMetadataRepository;
-
 import it.alten.tirocinio.services.ScriptGeneratorService;
 
 /*
@@ -57,6 +60,8 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	private final TableMetadataRepository tableMetadataRepository;
 	private final ColumnMetadataRepository columnMetadataRepository;
 	private final KeyColumnMetadataRepository keyColumnMetadataRepository;
+	@Autowired
+	private ApplicationContext context;
 	
 	/* 
 	 * Contructors
@@ -1671,83 +1676,98 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	    return modifyColumnDataTypeXMLScript;
 	}
 	
+	private Element generateAddAutoIncrementChangeSet(Document document, AddAutoIncrementScriptDTO addAutoIncrementScriptDTO) {
+		//changeSet element
+        Element changeSet = createChangeSetElement(document, addAutoIncrementScriptDTO);
+        
+        /*
+         * Pre-condition element
+         */
+        Element preConditionElement = createPreConditionElement(document, addAutoIncrementScriptDTO);
+    	//add preCondition element to changeSet
+    	changeSet.appendChild(preConditionElement);
+    	
+        //add preCondition child
+    	//column exists
+    	Element columnExistsElement = document.createElement("columnExists");
+    	preConditionElement.appendChild(columnExistsElement);
+    	
+    	Attr schemaNamePreCond = document.createAttribute("schemaName");
+    	schemaNamePreCond.setValue(addAutoIncrementScriptDTO.getSchemaName());
+    	columnExistsElement.setAttributeNode(schemaNamePreCond);
+    	
+    	Attr tableNamePreCond = document.createAttribute("tableName");
+    	tableNamePreCond.setValue(addAutoIncrementScriptDTO.getTableName());
+    	columnExistsElement.setAttributeNode(tableNamePreCond);
+    	
+    	Attr columnNamePreCond = document.createAttribute("columnName");
+    	columnNamePreCond.setValue(addAutoIncrementScriptDTO.getColumnName());
+    	columnExistsElement.setAttributeNode(columnNamePreCond);
+    	
+    	/*
+    	 * Add auto increment element
+    	 */
+    	Element addAutoIncrementElement = document.createElement("addAutoIncrement");
+    	changeSet.appendChild(addAutoIncrementElement);
+    	
+    	Attr schemaName = document.createAttribute("schemaName");
+    	schemaName.setValue(addAutoIncrementScriptDTO.getSchemaName());
+    	addAutoIncrementElement.setAttributeNode(schemaName);
+    	
+    	Attr tableName = document.createAttribute("tableName");
+    	tableName.setValue(addAutoIncrementScriptDTO.getTableName());
+    	addAutoIncrementElement.setAttributeNode(tableName);
+    	
+    	Attr columnName = document.createAttribute("columnName");
+    	columnName.setValue(addAutoIncrementScriptDTO.getColumnName());
+    	addAutoIncrementElement.setAttributeNode(columnName);
+    	
+    	Attr startWith = document.createAttribute("startWith");
+    	startWith.setValue(addAutoIncrementScriptDTO.getStratWith().toString());
+    	addAutoIncrementElement.setAttributeNode(startWith);
+    	
+    	Attr incrementBy = document.createAttribute("incrementBy");
+    	incrementBy.setValue(addAutoIncrementScriptDTO.getIncrementBy().toString());
+    	addAutoIncrementElement.setAttributeNode(incrementBy);
+        
+        return changeSet;
+	}
+	
 	/*
-	 * Method for generate anAdd Auto Increment Script
+	 * Method for generate an Add Auto Increment Script
 	 */
 	@Override
 	public String generateAddAutoIncrementLiquibaseXMLScript(AddAutoIncrementScriptDTO addAutoIncrementScriptDTO) {
 		String addAutoIncrementXMLScript = "";
 		
 		try {
-			DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-	        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-	        Document document = documentBuilder.newDocument();
-	        
+			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
+			Document document;
+			
+			if(Boolean.parseBoolean(addAutoIncrementScriptDTO.getAddToChangelog()) && changeLog!=null && changeLog.changeLogExists()) {
+				document = changeLog.getChangeLogDocument();
+			}else {
+		        document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			}
+			
 	        //changeSet element
-	        Element changeSet = createChangeSetElement(document, addAutoIncrementScriptDTO);
-
+	        Element changeSet = generateAddAutoIncrementChangeSet(document, addAutoIncrementScriptDTO);
 	        if(addAutoIncrementScriptDTO.getChangeLog()) {
 	        	//create changeLog element
-	        	Element changeLog = createChangeLog(document);
+	        	Element changeLogElement = createChangeLog(document);
 	        	//append ChangeLog to Document
-	        	document.appendChild(changeLog);
+	        	document.appendChild(changeLogElement);
 	        	
 	        	//append changeSet element to changeLog
-	        	changeLog.appendChild(changeSet);
+	        	changeLogElement.appendChild(changeSet);
+	        }else if(Boolean.parseBoolean(addAutoIncrementScriptDTO.getAddToChangelog()) && changeLog!=null && changeLog.changeLogExists()){
+	        	ChangeSet changeSetToAdd = new ChangeSet(document, addAutoIncrementScriptDTO.getIdChangeset());
+	        	changeSetToAdd.setChangeSet(changeSet);
+	        	changeLog.addChangeSetToChangeLog(changeSetToAdd);
 	        }else {
 	        	//append changeSet element to document
 		        document.appendChild(changeSet);
 	        }
-	        
-	        /*
-	         * Pre-condition element
-	         */
-	        Element preConditionElement = createPreConditionElement(document, addAutoIncrementScriptDTO);
-        	//add preCondition element to changeSet
-        	changeSet.appendChild(preConditionElement);
-        	
-	        //add preCondition child
-        	//column exists
-        	Element columnExistsElement = document.createElement("columnExists");
-        	preConditionElement.appendChild(columnExistsElement);
-        	
-        	Attr schemaNamePreCond = document.createAttribute("schemaName");
-        	schemaNamePreCond.setValue(addAutoIncrementScriptDTO.getSchemaName());
-        	columnExistsElement.setAttributeNode(schemaNamePreCond);
-        	
-        	Attr tableNamePreCond = document.createAttribute("tableName");
-        	tableNamePreCond.setValue(addAutoIncrementScriptDTO.getTableName());
-        	columnExistsElement.setAttributeNode(tableNamePreCond);
-        	
-        	Attr columnNamePreCond = document.createAttribute("columnName");
-        	columnNamePreCond.setValue(addAutoIncrementScriptDTO.getColumnName());
-        	columnExistsElement.setAttributeNode(columnNamePreCond);
-        	
-        	/*
-        	 * Add auto increment element
-        	 */
-        	Element addAutoIncrementElement = document.createElement("addAutoIncrement");
-        	changeSet.appendChild(addAutoIncrementElement);
-        	
-        	Attr schemaName = document.createAttribute("schemaName");
-        	schemaName.setValue(addAutoIncrementScriptDTO.getSchemaName());
-        	addAutoIncrementElement.setAttributeNode(schemaName);
-        	
-        	Attr tableName = document.createAttribute("tableName");
-        	tableName.setValue(addAutoIncrementScriptDTO.getTableName());
-        	addAutoIncrementElement.setAttributeNode(tableName);
-        	
-        	Attr columnName = document.createAttribute("columnName");
-        	columnName.setValue(addAutoIncrementScriptDTO.getColumnName());
-        	addAutoIncrementElement.setAttributeNode(columnName);
-        	
-        	Attr startWith = document.createAttribute("startWith");
-        	startWith.setValue(addAutoIncrementScriptDTO.getStratWith().toString());
-        	addAutoIncrementElement.setAttributeNode(startWith);
-        	
-        	Attr incrementBy = document.createAttribute("incrementBy");
-        	incrementBy.setValue(addAutoIncrementScriptDTO.getIncrementBy().toString());
-        	addAutoIncrementElement.setAttributeNode(incrementBy);
 		
         	/*
 			 * generate XML script

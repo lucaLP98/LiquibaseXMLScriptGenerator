@@ -541,12 +541,18 @@ function sendGenerateScriptModifyDataTypeRequest(){
 /*
  * AJAX function for send asynch request to generate an Add Auto Increment to Column XML Script and view it into text area
  */
-function sendGenerateScriptAddAutoIncrementRequest(){
+function sendGenerateScriptAddAutoIncrementRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("addAutoIncrementForm"));
+	
+	if(addToChangeLog && !sessionStorage.getItem('changeLogExists')){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong>There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("addAutoIncrementForm");
 	if(notEmpty == true){
 		let object = {};
+		
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')) ? "true" : "false";	
 		object.id_changeset = formData.get("id_changeset");
 		object.author = formData.get("author");
 		object.schema_name = formData.get("schema_name");
@@ -556,7 +562,8 @@ function sendGenerateScriptAddAutoIncrementRequest(){
 		object.increment_by = formData.get("increment_by");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')) ?  "false" : formData.get("changeLog");
+		
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();

@@ -19,7 +19,7 @@ public abstract class ScriptDTO {
 	private String onFail;
 	
 	@JsonProperty("add_to_changelog")
-	private String addToChangelog;
+	private Boolean addToChangelog;
 	
 	/*
 	 * Getter methods
@@ -45,7 +45,7 @@ public abstract class ScriptDTO {
 	}
 	
 	
-	public String getAddToChangelog() {
+	public Boolean getAddToChangelog() {
 		return addToChangelog;
 	}
 
@@ -72,7 +72,7 @@ public abstract class ScriptDTO {
 		this.onFail = onFail;
 	}
 	
-	public void setAddToChangelog(String addToChangelog) {
+	public void setAddToChangelog(Boolean addToChangelog) {
 		this.addToChangelog = addToChangelog;
 	}
 }

@@ -82,7 +82,15 @@
   
   <div class="form-group">
   	<div class="col-sm-offset-2 col-sm-10">
-      <button type="button" class="btn btn-success" onclick="sendGeneratorScriptCreateSchemaRequest()" >Generate Script</button>
+      <button type="button" class="btn btn-success" onclick="sendGeneratorScriptCreateSchemaRequest(false)" >Generate Script</button>
+      <button type="button" class="btn btn-success" onclick="sendGeneratorScriptCreateSchemaRequest(true)">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			Generate And Add To ChangeLog
+	  </button>
+	  <button type="button" class="btn btn-info" onclick="">
+	  		<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+	  		Download This Script
+	  </button>
   	</div>
   </div>
 </form>

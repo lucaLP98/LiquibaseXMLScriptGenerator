@@ -5,8 +5,12 @@
 /*
  * AJAX function for send asynch request to generate a Create Schema XML Script and view it into text area
  */
-function sendGeneratorScriptCreateSchemaRequest(){
+function sendGeneratorScriptCreateSchemaRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("schemaForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("schemaForm");
 	if(notEmpty == true){
@@ -16,7 +20,8 @@ function sendGeneratorScriptCreateSchemaRequest(){
 		object.schema_name = formData.get("schema_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";	
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -35,12 +40,16 @@ function sendGeneratorScriptCreateSchemaRequest(){
 /*
  * AJAX function for send asynch request to generate a Create Table XML Script and view it into text area
  */
-function sendGeneratorScriptCreateTableRequest(){
+function sendGeneratorScriptCreateTableRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("tableForm"));
 	let object = {};
 	let columnArray = [];
 	let columnRead = false;
 	let notEmpty = true;
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	for(let pair of formData.entries()) {			
 		if(pair[1] == "" && notEmpty == true && pair[0] != "column_default" && pair[0] != "data_length" && pair[0] != "pk_data_length"){
@@ -95,7 +104,8 @@ function sendGeneratorScriptCreateTableRequest(){
 		object.table_name = formData.get("table_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";	
 		object.pk_name = formData.get("pk_name");
 		
 		object.columns = columnArray;
@@ -150,9 +160,13 @@ function copyText(){
 /*
  * AJAX function for send asynch request to generate a Drop Table XML Script and view it into text area
  */
-function sendGenerateScriptDropTableRequest(){
+function sendGenerateScriptDropTableRequest(addToChangeLog){
 	let dropTableForm = document.getElementById("dropTableForm");
 	let formData = new FormData(dropTableForm);
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmptyFields = checkNotEmptyField("dropTableForm")
 	if(notEmptyFields == true){
@@ -165,7 +179,8 @@ function sendGenerateScriptDropTableRequest(){
 		object.cascade_constraint = formData.get("cascade_constraint");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -185,8 +200,12 @@ function sendGenerateScriptDropTableRequest(){
 /*
  * AJAX function for send asynch request to generate a Drop Column XML Script and view it into text area
  */
-function sendGenerateScriptDropColumnRequest(){
+function sendGenerateScriptDropColumnRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("dropColumnForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("dropColumnForm");
 	if(notEmpty == true){
@@ -198,7 +217,8 @@ function sendGenerateScriptDropColumnRequest(){
 		object.column_name = formData.get("column_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -217,8 +237,12 @@ function sendGenerateScriptDropColumnRequest(){
 /*
  * AJAX function for send asynch request to generate a Add Column XML Script and view it into text area
  */
-function sendGeneratorScriptAddColumnRequest(){
+function sendGeneratorScriptAddColumnRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("addColumnForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong>There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("addColumnForm");	
 	let dataType;
@@ -243,6 +267,7 @@ function sendGeneratorScriptAddColumnRequest(){
 
 	if(notEmpty == true){
 		let object = {};
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
 		object.id_changeset = formData.get("id_changeset");
 		object.author = formData.get("author");
 		object.schema_name = formData.get("schema_name");
@@ -252,7 +277,7 @@ function sendGeneratorScriptAddColumnRequest(){
 		object.column_type = dataType;
 		object.is_nullable = formData.get("is_nullable");
 		object.is_unique = formData.get("is_unique");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
 		let json = JSON.stringify(object);
@@ -274,8 +299,12 @@ function sendGeneratorScriptAddColumnRequest(){
 /*
  * AJAX function for send asynch request to generate a Drop Not Null Constraint XML Script and view it into text area
  */
-function sendGenerateScriptDropNotNullConstraintRequest(){
+function sendGenerateScriptDropNotNullConstraintRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("dropNotNullConstraintForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("dropNotNullConstraintForm");
 	if(notEmpty == true){
@@ -288,7 +317,8 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
 		object.column_type = formData.get("column_type");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -307,8 +337,12 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
 /*
  * AJAX function for send asynch request to generate a Add Not Null Constraint XML Script and view it into text area
  */
- function sendGenerateScriptAddNotNullConstraintRequest(){
+ function sendGenerateScriptAddNotNullConstraintRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("addNotNullConstraintForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("addNotNullConstraintForm");
 	if(notEmpty == true){
@@ -322,7 +356,8 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
 		object.default_null_value = formData.get("default_null_value");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";	
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -341,8 +376,12 @@ function sendGenerateScriptDropNotNullConstraintRequest(){
 /*
  * AJAX function for send asynch request to generate a Add Unique Constraint XML Script and view it into text area
  */
-function sendGenerateScriptAddUniqueConstraintRequest(){
+function sendGenerateScriptAddUniqueConstraintRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("addUniqueConstraintForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("addUniqueConstraintForm");
 	if(notEmpty == true){
@@ -354,7 +393,8 @@ function sendGenerateScriptAddUniqueConstraintRequest(){
 		object.constraint_name = formData.get("constraint_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";	
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		
 		let columnArray = [];
 		let columnRead = false;
@@ -389,8 +429,12 @@ function sendGenerateScriptAddUniqueConstraintRequest(){
 /*
  * AJAX function for send asynch request to generate a Drop Unique Constraint XML Script and view it into text area
  */
-function sendGenerateScriptDropUniqueConstraintRequest(){
+function sendGenerateScriptDropUniqueConstraintRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("dropUniqueConstraintForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("dropUniqueConstraintForm");
 	if(notEmpty == true){
@@ -402,7 +446,8 @@ function sendGenerateScriptDropUniqueConstraintRequest(){
 		object.constraint_name = formData.get("constraint_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -421,8 +466,12 @@ function sendGenerateScriptDropUniqueConstraintRequest(){
 /*
  * AJAX function for send asynch request to generate a Rename Table XML Script and view it into text area
  */
-function sendGeneratorScriptRenameTableRequest(){
+function sendGeneratorScriptRenameTableRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("renameTableForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("renameTableForm");
 	if(notEmpty == true){
@@ -434,7 +483,8 @@ function sendGeneratorScriptRenameTableRequest(){
 		object.new_table_name = formData.get("new_table_name");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";	
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -453,8 +503,12 @@ function sendGeneratorScriptRenameTableRequest(){
 /*
  * AJAX function for send asynch request to generate a Rename Column XML Script and view it into text area
  */
-function sendGenerateScriptRenameColumnRequest(){
+function sendGenerateScriptRenameColumnRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("renameColumnForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("renameColumnForm");
 	if(notEmpty == true){
@@ -468,7 +522,8 @@ function sendGenerateScriptRenameColumnRequest(){
 		object.column_type = formData.get("column_type");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -487,12 +542,14 @@ function sendGenerateScriptRenameColumnRequest(){
 /*
  * AJAX function for send asynch request to generate a Modify Column Data Type XML Script and view it into text area
  */
-function sendGenerateScriptModifyDataTypeRequest(){
+function sendGenerateScriptModifyDataTypeRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("modifyDataTypeForm"));
 	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
+	
 	let notEmpty = checkNotEmptyField("modifyDataTypeForm");
-	
-	
 	if(notEmpty == true){
 		dataType = formData.get("new_column_type");
 		
@@ -522,7 +579,8 @@ function sendGenerateScriptModifyDataTypeRequest(){
 		object.new_column_type = dataType;
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -544,15 +602,15 @@ function sendGenerateScriptModifyDataTypeRequest(){
 function sendGenerateScriptAddAutoIncrementRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("addAutoIncrementForm"));
 	
-	if(addToChangeLog && !sessionStorage.getItem('changeLogExists')){
-		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong>There is no open changelog.</div>";	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
 	}
 	
 	let notEmpty = checkNotEmptyField("addAutoIncrementForm");
 	if(notEmpty == true){
 		let object = {};
 		
-		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')) ? "true" : "false";	
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";	
 		object.id_changeset = formData.get("id_changeset");
 		object.author = formData.get("author");
 		object.schema_name = formData.get("schema_name");
@@ -562,7 +620,7 @@ function sendGenerateScriptAddAutoIncrementRequest(addToChangeLog){
 		object.increment_by = formData.get("increment_by");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')) ?  "false" : formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		
 		let json = JSON.stringify(object);
 	
@@ -582,8 +640,12 @@ function sendGenerateScriptAddAutoIncrementRequest(addToChangeLog){
 /*
  * AJAX function for send asynch request to generate an Add Default Value XML Script and view it into text area
  */
-function sendGenerateScriptAddDefaultValueRequest(){
+function sendGenerateScriptAddDefaultValueRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("addDefaultValueForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("addDefaultValueForm");
 	if(notEmpty == true){
@@ -597,7 +659,8 @@ function sendGenerateScriptAddDefaultValueRequest(){
 		object.column_type = formData.get("column_type");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -616,8 +679,12 @@ function sendGenerateScriptAddDefaultValueRequest(){
 /*
  * AJAX function for send asynch request to generate an Drop Default Value XML Script and view it into text area
  */
-function sendGenerateScriptDropDefaultValueRequest(){
+function sendGenerateScriptDropDefaultValueRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("dropDefaultValueForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("dropDefaultValueForm");
 	if(notEmpty == true){
@@ -631,7 +698,8 @@ function sendGenerateScriptDropDefaultValueRequest(){
 		object.default_value = formData.get("default_value");
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -650,8 +718,12 @@ function sendGenerateScriptDropDefaultValueRequest(){
 /*
  * AJAX function for send asynch request to generate an Add Foreign Key Constraint XML Script and view it into text area
  */
-function sendGeneratorScriptAddForeignKeyConstraintRequest(){
+function sendGeneratorScriptAddForeignKeyConstraintRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("addForeignKeyConstraintForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("addForeignKeyConstraintForm");
 	if(notEmpty == true){
@@ -672,7 +744,8 @@ function sendGeneratorScriptAddForeignKeyConstraintRequest(){
 		
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -691,8 +764,12 @@ function sendGeneratorScriptAddForeignKeyConstraintRequest(){
 /*
  * AJAX function for send asynch request to generate an Drop Foreign Key Constraint XML Script and view it into text area
  */
-function sendGeneratorScriptDropForeignKeyConstraintRequest(){
+function sendGeneratorScriptDropForeignKeyConstraintRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("dropForeignKeyConstraintForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("dropForeignKeyConstraintForm");
 	if(notEmpty == true){
@@ -706,7 +783,8 @@ function sendGeneratorScriptDropForeignKeyConstraintRequest(){
 		
 		object.on_error = formData.get("on_error");
 		object.on_fail = formData.get("on_fail");
-		object.changeLog = formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";	
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -725,8 +803,12 @@ function sendGeneratorScriptDropForeignKeyConstraintRequest(){
 /*
  * AJAX function for send asynch request to generate an DELETE XML Script and view it into text area
  */
-function sendGeneratorScriptDeleteRequest(){
+function sendGeneratorScriptDeleteRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("deleteDataForm"));
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	let notEmpty = checkNotEmptyField("deleteDataForm");
 	if(notEmpty == true){
@@ -737,8 +819,9 @@ function sendGeneratorScriptDeleteRequest(){
 		object.schema_name = formData.get("schema_name");
 		object.table_name = formData.get("table_name");
 		object.where_condition = formData.get("where_condition");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
 		
-		object.changeLog = formData.get("changeLog");
 		let json = JSON.stringify(object);
 	
 		const xhttp = new XMLHttpRequest();
@@ -757,10 +840,14 @@ function sendGeneratorScriptDeleteRequest(){
 /*
  * AJAX function for send asynch request to generate an INSERT XML Script and view it into text area
  */
-function sendGeneratorScriptInsertRequest(){
+function sendGeneratorScriptInsertRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("insertDataForm"));
 	let object = {};
 	let columns = {};
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	for(let pair of formData.entries()) {			
 		if(pair[0] != "id_changeset" && pair[0] != "author" && 
@@ -778,7 +865,8 @@ function sendGeneratorScriptInsertRequest(){
 	object.table_name = formData.get("table_name");
 	object.on_error = formData.get("on_error");
 	object.on_fail = formData.get("on_fail");
-	object.changeLog = formData.get("changeLog");		
+	object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+	object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";		
 		
 	object.columns = columns;
 	let json = JSON.stringify(object);
@@ -795,10 +883,14 @@ function sendGeneratorScriptInsertRequest(){
 /*
  * AJAX function for send asynch request to generate an UPDATE XML Script and view it into text area
  */
-function sendGeneratorScriptUpdateRequest(){
+function sendGeneratorScriptUpdateRequest(addToChangeLog){
 	let formData = new FormData(document.getElementById("updateDataForm"));
 	let object = {};
 	let columns = {};
+	
+	if(addToChangeLog && sessionStorage.getItem('changeLogExists')=="false"){
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
+	}
 	
 	for(let pair of formData.entries()) {	
 		if(pair[0] != "id_changeset" && pair[0] != "author" && 
@@ -814,7 +906,8 @@ function sendGeneratorScriptUpdateRequest(){
 	object.schema_name = formData.get("schema_name");
 	object.table_name = formData.get("table_name");
 	object.where_condition = formData.get("where_condition");
-	object.changeLog = formData.get("changeLog");		
+	object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+	object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");	
 		
 	object.columns = columns;
 	let json = JSON.stringify(object);

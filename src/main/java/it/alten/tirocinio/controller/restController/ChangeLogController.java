@@ -1,6 +1,12 @@
 package it.alten.tirocinio.controller.restController;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
@@ -47,6 +54,31 @@ public class ChangeLogController {
 	public ChangeSetListDTO getChangeSetList() {
 		ChangeSetListDTO x = changeLogService.getAllChangeSet();
 		return x;
+	}
+	
+	@GetMapping({"downloadChangeLog", "downloadChangeLog/"})
+	@ResponseStatus(HttpStatus.OK)
+	public StreamingResponseBody downloadChangeLog(HttpServletResponse response) {
+		File scriptFile = changeLogService.getChangeLogFile(); 
+		
+		response.setContentLength((int) scriptFile.length());
+		response.setHeader("Content-Disposition", "attachment; filename=" + scriptFile.getName());
+		int BUFFER_SIZE = 1024;
+		
+		return outputStream -> {
+			int bytesRead;
+			byte[] buffer = new byte[BUFFER_SIZE];
+
+			//convert the file to InputStream
+			InputStream inputStream = new FileInputStream(scriptFile);
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+
+			if (inputStream != null) {
+				inputStream.close();
+			}
+		};
 	}
 	
 	/*

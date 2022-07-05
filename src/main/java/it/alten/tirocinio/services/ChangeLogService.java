@@ -1,6 +1,8 @@
 package it.alten.tirocinio.services;
 
 
+import java.io.File;
+
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
 
 public interface ChangeLogService {
@@ -28,4 +30,9 @@ public interface ChangeLogService {
 	 * Method which remove a ChangeSet from ChangeLog
 	 */
 	boolean removeChangeSet(String changeSetId);
+	
+	/*
+	 * Method that creates the script xml file 
+	 */
+	File getChangeLogFile() ;
 }

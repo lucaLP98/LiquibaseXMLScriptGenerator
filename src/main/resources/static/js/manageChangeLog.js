@@ -41,6 +41,7 @@ function sendCloseChangeLogRequest(){
 	let formData = new FormData(document.getElementById("closeChangeLogForm"));
 	let alertMsg = document.getElementById("alertMsg");
 	
+	
 	if(formData.get("closeChangeLog") == "true"){
 		const xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {
@@ -88,7 +89,6 @@ function sendRemoveChangeSetFromChangeLogRequest(){
 				}else{
 					alertMsg.innerHTML = "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> ChangeSet not removed.</div>";				
 				}
-				
    			}
   			xhttp.open("DELETE", "/changeLog/removeChangeSet/", true);
   			xhttp.setRequestHeader("Content-type", "application/json");
@@ -96,5 +96,5 @@ function sendRemoveChangeSetFromChangeLogRequest(){
 		}
 	}else{
 		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
-	}
+	}	
 }

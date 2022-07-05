@@ -86,26 +86,34 @@ public class ChangeLog implements Cloneable{
 	public boolean deleteChangeSetFromChangeLog(String changeSetId) {
 		if(!created)	return false;
 		
-		ChangeSet toDelete = null;
+		ChangeSet changeSetToDelete = null;
 		for(ChangeSet c : changeSets) {
 			if(c.getChangeSetId().equals(changeSetId)) {
-				toDelete = c;
+				changeSetToDelete = c;
 			}
 		}
-		this.changeLog.removeChild(toDelete.getChangeset());
-		return changeSets.remove(toDelete);
+		
+		boolean deleted;
+		if(changeSetToDelete != null) {
+			deleted = changeSets.remove(changeSetToDelete);
+			if(deleted)	changeLog.removeChild(changeSetToDelete.getChangeset());
+		}else {
+			deleted = false;
+		}
+		
+		return deleted;
 	}
 	
 	/*
 	 * Add a new changeSet to set
 	 */
-	public boolean addChangeSetToChangeLog(ChangeSet changeSet) {
+	public boolean addChangeSetToChangeLog(ChangeSet newChangeSet) {
 		if(!created)	return false;
 		
-		boolean ret = changeSets.add(changeSet);
-		if(ret) {
-			changeLog.appendChild(changeSet.getChangeset());
+		boolean added = changeSets.add(newChangeSet);
+		if(added) {
+			changeLog.appendChild(newChangeSet.getChangeset());
 		}
-		return ret;
+		return added;
 	}
 }

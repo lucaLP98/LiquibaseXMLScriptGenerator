@@ -1,5 +1,6 @@
 package it.alten.tirocinio.services.concrete;
 
+import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +10,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -188,5 +191,39 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 			return changeLog.deleteChangeSetFromChangeLog(changeSetId);
 		}
 		return false;
+	}
+	
+	/*
+	 * Method that creates the script xml file 
+	 */
+	@Override
+	public synchronized File getChangeLogFile() {
+		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
+		File scriptFile = new File("C:\\Users\\lpastore\\Desktop\\Test\\tirocinio\\xmlScript\\dbchangelog.xml");
+		
+		try {
+			//create the xml file
+	        //transform the DOM Object to an XML File
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		
+			//indentation for the XML script
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+	        
+	        DOMSource domSource = new DOMSource(changeLog.getChangeLogDocument());
+	        
+	        //creating the XML file whit the script
+	        StreamResult streamResultFile = new StreamResult(scriptFile);
+	        transformer.transform(domSource, streamResultFile);
+		
+		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return scriptFile;
 	}
 }

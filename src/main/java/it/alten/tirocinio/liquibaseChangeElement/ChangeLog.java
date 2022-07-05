@@ -13,7 +13,6 @@ import org.w3c.dom.Element;
  */
 //@Component
 public class ChangeLog implements Cloneable{
-	private String changeLogId;
 	private Document document;
 	private Element changeLog;
 	private Set<ChangeSet> changeSets;
@@ -32,11 +31,7 @@ public class ChangeLog implements Cloneable{
 	
 	/*
 	 * Getter methods
-	 */
-	public String getChangeLogId() {
-		return changeLogId;
-	}
-	
+	 */	
 	public Document getChangeLogDocument() {
 		return document;
 	}
@@ -55,11 +50,7 @@ public class ChangeLog implements Cloneable{
 	
 	/*
 	 * Setter methods
-	 */
-	public void setChangeLogId(String changeLogId) {
-		this.changeLogId = changeLogId;
-	}
-	
+	 */	
 	public void setChangeLogDocument(Document document) {
 		this.document = document;
 	}

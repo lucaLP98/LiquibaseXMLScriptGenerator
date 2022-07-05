@@ -7,7 +7,7 @@ public interface ChangeLogService {
 	/*
 	 * Method which allow to create new changeLog
 	 */
-	boolean createNewChangeLog(String changeLogId);
+	boolean createNewChangeLog();
 	
 	/*
 	 * Method which allow to close a existing changeLog

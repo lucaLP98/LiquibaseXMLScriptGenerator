@@ -85,7 +85,7 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 * Method which allow to create new changeLog
 	 */
 	@Override
-	public boolean createNewChangeLog(String changeLogId) {
+	public boolean createNewChangeLog() {
 		Document document;
 		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		
@@ -98,7 +98,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 		try {
 	        document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 	        changeLog.setChangeLogDocument(document);
-	        changeLog.setChangeLogId(changeLogId);
 	        
 	        //create ChangeLog element
 	        Element newChangeLog =  document.createElement("databaseChangeLog");
@@ -119,10 +118,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 			Attr schemaLocation = document.createAttribute("xsi:schemaLocation");
 			schemaLocation.setValue("http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd\r\n http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd");
 			newChangeLog.setAttributeNode(schemaLocation);
-			
-			Attr id = document.createAttribute("changeLogId");
-			id.setValue(changeLogId);
-			newChangeLog.setAttributeNode(id);
 	        
 			changeLog.createChangeLog(newChangeLog);
 			changeLog.getChangeLogDocument().appendChild(changeLog.getChangeLogElement());
@@ -148,7 +143,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			
 		changeLog.setChangeLogDocument(null);
-		changeLog.setChangeLogId(null);
 		changeLog.deletAllChangeSet();
 		changeLog.setCreated(false);
 		

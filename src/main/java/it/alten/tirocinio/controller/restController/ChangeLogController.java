@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
-import it.alten.tirocinio.api.DTO.changeLogDTO.CreateChangeLogRequestDTO;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.services.ChangeLogService;
 
@@ -55,8 +54,8 @@ public class ChangeLogController {
 	 */
 	@PostMapping({"createChangeLog", "createChangeLog/"})
 	@ResponseStatus(HttpStatus.CREATED)
-	public boolean createChangeLog(@RequestBody CreateChangeLogRequestDTO createChangeLogRequestDTO) {
-		return changeLogService.createNewChangeLog(createChangeLogRequestDTO.getChangeLogId());
+	public boolean createChangeLog() {
+		return changeLogService.createNewChangeLog();
 	}
 	
 	/*

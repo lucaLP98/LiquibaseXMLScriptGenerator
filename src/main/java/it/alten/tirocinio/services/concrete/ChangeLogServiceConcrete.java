@@ -215,7 +215,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	        //creating the XML file whit the script
 	        StreamResult streamResultFile = new StreamResult(scriptFile);
 	        transformer.transform(domSource, streamResultFile);
-		
 		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

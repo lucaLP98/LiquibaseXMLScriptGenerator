@@ -75,9 +75,9 @@ public class ChangeLogController {
 				outputStream.write(buffer, 0, bytesRead);
 			}
 
-			if (inputStream != null) {
-				inputStream.close();
-			}
+			if (inputStream != null) inputStream.close();
+			
+			scriptFile.delete();
 		};
 	}
 	

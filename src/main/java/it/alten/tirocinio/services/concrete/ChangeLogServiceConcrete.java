@@ -10,7 +10,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -199,7 +198,7 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	@Override
 	public synchronized File getChangeLogFile() {
 		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
-		File scriptFile = new File("C:\\Users\\lpastore\\Desktop\\Test\\tirocinio\\xmlScript\\dbchangelog.xml");
+		File scriptFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "dbchangelog.xml");
 		
 		try {
 			//create the xml file
@@ -215,11 +214,7 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	        //creating the XML file whit the script
 	        StreamResult streamResultFile = new StreamResult(scriptFile);
 	        transformer.transform(domSource, streamResultFile);
-		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
+		} catch ( TransformerFactoryConfigurationError | TransformerException e) {
 			e.printStackTrace();
 		}
         

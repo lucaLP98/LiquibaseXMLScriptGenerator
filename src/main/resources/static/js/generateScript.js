@@ -849,35 +849,41 @@ function sendGeneratorScriptInsertRequest(addToChangeLog){
 		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
 	}
 	
-	for(let pair of formData.entries()) {			
-		if(pair[0] != "id_changeset" && pair[0] != "author" && 
-		   pair[0] != "schema_name" && pair[0] != "table_name" && 
-		   pair[0] != "on_error" && pair[0] != "on_fail" && 
-		   pair[0] != "changeLog"){
-			
-		   columns[pair[0]] = pair[1];
-		}	
-	}
+	if(formData.get("id_changeset")!="" && formData.get("author")!="" &&  formData.get("schema_name")!="" && 
+	   formData.get("table_name")!="" && formData.get("on_error")!="" && formData.get("on_fail")!=""){
+		for(let pair of formData.entries()) {			
+			if(pair[0] != "id_changeset" && pair[0] != "author" && 
+			   pair[0] != "schema_name" && pair[0] != "table_name" && 
+			   pair[0] != "on_error" && pair[0] != "on_fail" && 
+			   pair[0] != "changeLog"){
+				
+			   columns[pair[0]] = pair[1];
+			}	
+		}
 	
-	object.id_changeset = formData.get("id_changeset");
-	object.author = formData.get("author");
-	object.schema_name = formData.get("schema_name");
-	object.table_name = formData.get("table_name");
-	object.on_error = formData.get("on_error");
-	object.on_fail = formData.get("on_fail");
-	object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
-	object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";		
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.on_error = formData.get("on_error");
+		object.on_fail = formData.get("on_fail");
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";		
 		
-	object.columns = columns;
-	let json = JSON.stringify(object);
+		object.columns = columns;
+		let json = JSON.stringify(object);
 	
-	const xhttp = new XMLHttpRequest();
-	xhttp.onload = function() {
-    	document.getElementById("scriptTextArea").innerHTML = this.responseText;
-   	}
-  	xhttp.open("POST", "/api/scriptGenerator/insertData/", true);
-  	xhttp.setRequestHeader("Content-type", "application/json");
-  	xhttp.send(json);
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/insertData/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+  	}else{
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
+	}
 }
 
 /*
@@ -892,31 +898,36 @@ function sendGeneratorScriptUpdateRequest(addToChangeLog){
 		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> There is no open changelog.</div>";	
 	}
 	
-	for(let pair of formData.entries()) {	
-		if(pair[0] != "id_changeset" && pair[0] != "author" && 
-		   pair[0] != "schema_name" && pair[0] != "table_name" && 
-		   pair[0] != "where_condition" && pair[0] != "changeLog"){
+	if(formData.get("id_changeset")!="" && formData.get("author")!="" && formData.get("schema_name")!="" && formData.get("table_name")!=""){
+		for(let pair of formData.entries()) {	
+			if(pair[0] != "id_changeset" && pair[0] != "author" && 
+		   		pair[0] != "schema_name" && pair[0] != "table_name" && 
+		   		pair[0] != "where_condition" && pair[0] != "changeLog"){
 			
-			columns[pair[0]] = pair[1];
-		}	
-	}
+				columns[pair[0]] = pair[1];
+			}	
+		}
 	
-	object.id_changeset = formData.get("id_changeset");
-	object.author = formData.get("author");
-	object.schema_name = formData.get("schema_name");
-	object.table_name = formData.get("table_name");
-	object.where_condition = formData.get("where_condition");
-	object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
-	object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");	
+		object.id_changeset = formData.get("id_changeset");
+		object.author = formData.get("author");
+		object.schema_name = formData.get("schema_name");
+		object.table_name = formData.get("table_name");
+		object.where_condition = formData.get("where_condition");
+		object.add_to_changelog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ? "true" : "false";
+		object.changeLog = (addToChangeLog && sessionStorage.getItem('changeLogExists')=="true") ?  "false" : formData.get("changeLog");	
 		
-	object.columns = columns;
-	let json = JSON.stringify(object);
+		object.columns = columns;
+		let json = JSON.stringify(object);
 	
-	const xhttp = new XMLHttpRequest();
-	xhttp.onload = function() {
-    	document.getElementById("scriptTextArea").innerHTML = this.responseText;
-   	}
-  	xhttp.open("POST", "/api/scriptGenerator/updateData/", true);
-  	xhttp.setRequestHeader("Content-type", "application/json");
-  	xhttp.send(json);
+		const xhttp = new XMLHttpRequest();
+		xhttp.onload = function() {
+    		document.getElementById("scriptTextArea").innerHTML = this.responseText;
+   		}
+  		xhttp.open("POST", "/api/scriptGenerator/updateData/", true);
+  		xhttp.setRequestHeader("Content-type", "application/json");
+  		xhttp.send(json);
+  	}else{
+		let alertMsg = document.getElementById("alertMsg");
+		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
+	}
 }

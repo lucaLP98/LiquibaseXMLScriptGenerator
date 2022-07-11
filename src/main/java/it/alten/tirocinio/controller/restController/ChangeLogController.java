@@ -6,7 +6,6 @@ import java.io.InputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +20,6 @@ import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.services.ChangeLogService;
-
-
 
 /*
  * Spring Controller for operation on ChangeLog
@@ -79,7 +76,7 @@ public class ChangeLogController {
 
 			if (inputStream != null) inputStream.close();
 			
-			scriptFile.delete();
+			//scriptFile.delete();
 		};
 	}
 	

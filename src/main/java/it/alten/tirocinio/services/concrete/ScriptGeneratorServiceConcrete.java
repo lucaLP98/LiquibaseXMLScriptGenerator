@@ -1,6 +1,9 @@
 package it.alten.tirocinio.services.concrete;
 
 import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,6 +34,7 @@ import it.alten.tirocinio.api.DTO.scriptDTO.InsertDataScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.ModifyColumnDataTypeScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.RenameTableScriptDTO;
+import it.alten.tirocinio.DAO.GenericEntityDAO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddAutoIncrementScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddColumnScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.AddDefaultValueScriptDTO;
@@ -59,16 +63,21 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	private final TableMetadataRepository tableMetadataRepository;
 	private final ColumnMetadataRepository columnMetadataRepository;
 	private final KeyColumnMetadataRepository keyColumnMetadataRepository;
+	private final GenericEntityDAO genericEntityDAO;
 	@Autowired
 	private ApplicationContext context;
 	
 	/* 
 	 * Contructors
 	 */
-	public ScriptGeneratorServiceConcrete(TableMetadataRepository tableMetadataRepository, ColumnMetadataRepository columnMetadataRepository, KeyColumnMetadataRepository keyColumnMetadataRepository) {
+	public ScriptGeneratorServiceConcrete(TableMetadataRepository tableMetadataRepository, 
+										  ColumnMetadataRepository columnMetadataRepository, 
+										  KeyColumnMetadataRepository keyColumnMetadataRepository, 
+										  GenericEntityDAO genericEntityDAO) {
 		this.tableMetadataRepository = tableMetadataRepository;
 		this.columnMetadataRepository = columnMetadataRepository;
 		this.keyColumnMetadataRepository = keyColumnMetadataRepository;
+		this.genericEntityDAO = genericEntityDAO;
 	}
 	
 	/*
@@ -2394,6 +2403,55 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	/*
     	 * Rollback Element
     	 */	
+    	String rollBackQuery = "SELECT * FROM " + deleteDataScriptDTO.getSchemaName() + "." + deleteDataScriptDTO.getTableName();
+    	if(!deleteDataScriptDTO.getWhereCondition().equals("")) {
+    		rollBackQuery += " WHERE " + deleteDataScriptDTO.getWhereCondition();
+    	}
+    	ResultSet rollBackData = genericEntityDAO.selectQuery(rollBackQuery);
+    	ResultSetMetaData rollBackMetaData;
+		try {
+			rollBackMetaData = rollBackData.getMetaData();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			rollBackMetaData = null;
+		}
+    	
+    	if(rollBackData != null && rollBackMetaData!= null) {
+    		Element rollbackElement = document.createElement("rollback");
+    		changeSet.appendChild(rollbackElement);
+    		
+    		Element insertElement = document.createElement("insert");
+	    	//append INSERT to rollback
+    		rollbackElement.appendChild(insertElement);
+    		
+    		//INSERT element attributes
+	    	Attr schemaNameRollBack = document.createAttribute("schemaName");
+	    	schemaNameRollBack.setValue(deleteDataScriptDTO.getSchemaName());
+	    	insertElement.setAttributeNode(schemaNameRollBack);
+	    	
+	    	Attr tableNameRollBack = document.createAttribute("tableName");
+	    	tableNameRollBack.setValue(deleteDataScriptDTO.getTableName());
+	    	insertElement.setAttributeNode(tableNameRollBack);
+    		
+    		try {
+				while(rollBackData.next()) {					
+					for(int i=1;i<=rollBackMetaData.getColumnCount();i++) {
+						if(rollBackData.getString(rollBackMetaData.getColumnName(i)) != null) {
+							Element columnElement = document.createElement("column");
+			        		insertElement.appendChild(columnElement);
+			        		
+			        		Attr columnName = document.createAttribute("name");
+			        		columnName.setValue(rollBackMetaData.getColumnName(i));
+			        		columnElement.setAttributeNode(columnName);
+			        		
+			        		columnElement.appendChild(document.createTextNode(rollBackData.getString(rollBackMetaData.getColumnName(i))));
+						}				
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+    	}
     	
     	return changeSet;
 	}

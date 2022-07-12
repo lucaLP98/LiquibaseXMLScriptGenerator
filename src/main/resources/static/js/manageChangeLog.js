@@ -40,12 +40,13 @@ function sendCreateChangeLogRequest(){
 function sendCloseChangeLogRequest(){
 	let formData = new FormData(document.getElementById("closeChangeLogForm"));
 	let alertMsg = document.getElementById("alertMsg");
-	
+	let scriptTextArea = document.getElementById("scriptTextArea");
 	
 	if(formData.get("closeChangeLog") == "true"){
 		const xhttp = new XMLHttpRequest();
 		xhttp.onload = function() {
 			alertMsg.innerHTML = "<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>OK!</strong> ChangeLog successfully closed!</div>";		
+   			scriptTextArea.innerHTML = "";
    			sessionStorage.setItem('changeLogExists', 'false');
    		}
   		xhttp.open("DELETE", "/changeLog/closeChangeLog/", true);

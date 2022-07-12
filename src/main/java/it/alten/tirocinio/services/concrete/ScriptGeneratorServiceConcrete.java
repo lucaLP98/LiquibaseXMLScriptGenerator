@@ -1,9 +1,7 @@
 package it.alten.tirocinio.services.concrete;
 
 import java.io.StringWriter;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -253,7 +251,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	}
 	
 	/*
-	 * Create Element ChangeSet for Add Auto Increment Script
+	 * Create Element ChangeSet for Drop Table Script
 	 */
 	private Element generateDropTable(Document document, DropTableScriptDTO dropTableScriptDTO) {
 		//changeSet element
@@ -361,6 +359,39 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	Attr onUpdateRollback = document.createAttribute("onUpdate");
         	onUpdateRollback.setValue(c.getOnUpdateClause());
         	addForeignKeyConstraintRollBack.setAttributeNode(onUpdateRollback);
+    	}
+    	
+    	//insert value for the deleted table
+    	String rollBackQuery = "SELECT * FROM " + dropTableScriptDTO.getTableSchema() + "." + dropTableScriptDTO.getTableName();
+    	Set<Map<String, String>> resultSetRollBack = genericEntityDAO.selectQuery(rollBackQuery);
+    	if(resultSetRollBack != null) {
+	    	for(Map<String, String> c : resultSetRollBack) {    	
+	    		Element insertElement = document.createElement("insert");
+		    	//append INSERT to rollback
+	    		dropTableRollBack.appendChild(insertElement);
+	    		
+	    		//INSERT element attributes
+		    	Attr schemaNameRollBack = document.createAttribute("schemaName");
+		    	schemaNameRollBack.setValue(dropTableScriptDTO.getTableSchema());
+		    	insertElement.setAttributeNode(schemaNameRollBack);
+		    	
+		    	Attr tableNameRollBack = document.createAttribute("tableName");
+		    	tableNameRollBack.setValue(dropTableScriptDTO.getTableName());
+		    	insertElement.setAttributeNode(tableNameRollBack);
+	    		
+	    		for(String s : c.keySet()) {
+	    			if(c.get(s) != null) {
+	    				Element columnElement = document.createElement("column");
+		        		insertElement.appendChild(columnElement);
+		        		
+		        		Attr columnName = document.createAttribute("name");
+		        		columnName.setValue(s);
+		        		columnElement.setAttributeNode(columnName);
+		        		
+		        		columnElement.appendChild(document.createTextNode(c.get(s)));
+	    			}
+	    		}
+	    	}
     	}
     	
 		return changeSet;
@@ -2402,55 +2433,44 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	
     	/*
     	 * Rollback Element
-    	 */	
+    	 */	    	
     	String rollBackQuery = "SELECT * FROM " + deleteDataScriptDTO.getSchemaName() + "." + deleteDataScriptDTO.getTableName();
     	if(!deleteDataScriptDTO.getWhereCondition().equals("")) {
     		rollBackQuery += " WHERE " + deleteDataScriptDTO.getWhereCondition();
     	}
-    	ResultSet rollBackData = genericEntityDAO.selectQuery(rollBackQuery);
-    	ResultSetMetaData rollBackMetaData;
-		try {
-			rollBackMetaData = rollBackData.getMetaData();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			rollBackMetaData = null;
-		}
-    	
-    	if(rollBackData != null && rollBackMetaData!= null) {
+    	Set<Map<String, String>> resultSetRollBack = genericEntityDAO.selectQuery(rollBackQuery);
+    		
+    	if(resultSetRollBack != null) {
     		Element rollbackElement = document.createElement("rollback");
     		changeSet.appendChild(rollbackElement);
     		
-    		Element insertElement = document.createElement("insert");
-	    	//append INSERT to rollback
-    		rollbackElement.appendChild(insertElement);
-    		
-    		//INSERT element attributes
-	    	Attr schemaNameRollBack = document.createAttribute("schemaName");
-	    	schemaNameRollBack.setValue(deleteDataScriptDTO.getSchemaName());
-	    	insertElement.setAttributeNode(schemaNameRollBack);
-	    	
-	    	Attr tableNameRollBack = document.createAttribute("tableName");
-	    	tableNameRollBack.setValue(deleteDataScriptDTO.getTableName());
-	    	insertElement.setAttributeNode(tableNameRollBack);
-    		
-    		try {
-				while(rollBackData.next()) {					
-					for(int i=1;i<=rollBackMetaData.getColumnCount();i++) {
-						if(rollBackData.getString(rollBackMetaData.getColumnName(i)) != null) {
-							Element columnElement = document.createElement("column");
-			        		insertElement.appendChild(columnElement);
-			        		
-			        		Attr columnName = document.createAttribute("name");
-			        		columnName.setValue(rollBackMetaData.getColumnName(i));
-			        		columnElement.setAttributeNode(columnName);
-			        		
-			        		columnElement.appendChild(document.createTextNode(rollBackData.getString(rollBackMetaData.getColumnName(i))));
-						}				
-					}
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+	    	for(Map<String, String> c : resultSetRollBack) {  
+	    		Element insertElement = document.createElement("insert");
+		    	//append INSERT to rollback
+	    		rollbackElement.appendChild(insertElement);
+	    		
+	    		//INSERT element attributes
+		    	Attr schemaNameRollBack = document.createAttribute("schemaName");
+		    	schemaNameRollBack.setValue(deleteDataScriptDTO.getSchemaName());
+		    	insertElement.setAttributeNode(schemaNameRollBack);
+		    	
+		    	Attr tableNameRollBack = document.createAttribute("tableName");
+		    	tableNameRollBack.setValue(deleteDataScriptDTO.getTableName());
+		    	insertElement.setAttributeNode(tableNameRollBack);
+		    	
+	    		for(String s : c.keySet()) {
+	    			if(c.get(s) != null) {
+	    				Element columnElement = document.createElement("column");
+		        		insertElement.appendChild(columnElement);
+		        		
+		        		Attr columnName = document.createAttribute("name");
+		        		columnName.setValue(s);
+		        		columnElement.setAttributeNode(columnName);
+		        		
+		        		columnElement.appendChild(document.createTextNode(c.get(s)));
+	    			}
+	    		}
+	    	}
     	}
     	
     	return changeSet;
@@ -2629,7 +2649,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	}
 	
 	/*
-	 * Create Element ChangeSet for Add Auto Increment Script
+	 * Create Element ChangeSet for UPDATE data Script
 	 */
 	private Element generateUpdateDataChangeSet(Document document, UpdateDataScriptDTO updateDataScriptDTO) {
 		Set<ColumnMetadata> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(updateDataScriptDTO.getSchemaName(), updateDataScriptDTO.getTableName());

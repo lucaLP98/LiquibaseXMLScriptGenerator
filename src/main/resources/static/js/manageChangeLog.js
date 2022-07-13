@@ -58,13 +58,13 @@ function sendCloseChangeLogRequest(){
  * AJAX function for send asynch request to view the current Liquibase changeLog
  */
 function sendViewChangeLogRequest(){	
-		const xhttp = new XMLHttpRequest();
+	const xhttp = new XMLHttpRequest();
 				
-		xhttp.onload = function() {
-			document.getElementById("scriptTextArea").innerHTML = this.responseText;   		
-		}
-  		xhttp.open("GET", "/changeLog/viewChangeLog/", true);
-  		xhttp.send();
+	xhttp.onload = function() {
+		document.getElementById("scriptTextArea").innerHTML = this.responseText;   		
+	}
+  	xhttp.open("GET", "/changeLog/viewChangeLog/", true);
+  	xhttp.send();
 }
 
 /*
@@ -98,4 +98,38 @@ function sendRemoveChangeSetFromChangeLogRequest(){
 	}else{
 		alertMsg.innerHTML = "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Warning!</strong> Fill in all fields to generate the script.</div>";
 	}	
+}
+
+/*
+ * load the page liquibaseEngine.html in Homepage for the operation on Database
+ */
+function loadLiquibaseEnginePage(){
+	$('#formContainer').load('forms/liquibaseEngine.html');
+	
+	const xhttp = new XMLHttpRequest();
+				
+	xhttp.onload = function() {
+		document.getElementById("scriptTextArea").innerHTML = this.responseText;   	
+		if(this.responseText == "There isn't a open LiquibaseChangeLog."){
+			document.getElementById("run_changelog_button").disabled = true
+		}
+	}
+  	xhttp.open("GET", "/changeLog/viewChangeLog/", true);
+  	xhttp.send();
+};
+
+function runChangeLogScript(){
+	$('#formContainer').load('forms/liquibaseEngine.html');
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onload = function() {
+		alertMsg = document.getElementById("alertMsg");
+		if(this.responseText == "success"){
+			alertMsg.innerHTML = "<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>OK!</strong> ChangeLog Script executed successfully!</div>";		
+		}else{
+			alertMsg.innerHTML = "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Error!</strong> The execution was aborted.</div>";
+		}
+	}
+  	xhttp.open("GET", "/liquibaseEngine/runChangeLog/", true);
+  	xhttp.send();
 }

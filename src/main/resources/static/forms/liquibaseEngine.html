@@ -1,0 +1,23 @@
+<form class="form-horizontal">
+  <div class="form-group">
+    <div class="col-sm-10">
+      <h1>Liquibase Engine</h1>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <p class="col-sm-10" >Before performing any operation, make sure you have a ChangeLog open. To find out, go to the "Manage ChangeLog" menu and click on "View ChangeLog".</p>
+  </div>
+  
+  <div class="form-group">
+    <p class="col-sm-10" >Pressing the button you will execute the currently open ChangeLog. This will make changes to the database.</p>
+  </div>
+  
+  <div id="alertMsg"></div>
+ 
+  <div class="form-group">
+  	<div class="col-sm-offset-2 col-sm-10">
+      <button type="button" id="run_changelog_button" class="btn btn-success" onclick="runChangeLogScript()" >Run ChangeLog</button>
+  	</div>
+  </div>
+</form>

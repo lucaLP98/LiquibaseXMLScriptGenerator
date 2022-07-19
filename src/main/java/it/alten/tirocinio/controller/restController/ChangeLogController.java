@@ -51,8 +51,7 @@ public class ChangeLogController {
 	@GetMapping({"getChangeSetList", "getChangeSetList/"})
 	@ResponseStatus(HttpStatus.OK)
 	public ChangeSetListDTO getChangeSetList() {
-		ChangeSetListDTO x = changeLogService.getAllChangeSet();
-		return x;
+		return changeLogService.getAllChangeSet();
 	}
 	
 	@GetMapping({"downloadChangeLog", "downloadChangeLog/"})
@@ -101,6 +100,6 @@ public class ChangeLogController {
 	@DeleteMapping({"removeChangeSet", "removeChangeSet/"})
 	@ResponseStatus(HttpStatus.OK)
 	public boolean removeChangeSet(@RequestBody ChangeSetDTO changeSetDTO) {
-		return changeLogService.removeChangeSet(changeSetDTO.getChangeSetId());
+		return (changeSetDTO == null) ? false : changeLogService.removeChangeSet(changeSetDTO.getChangeSetId());
 	}
 }

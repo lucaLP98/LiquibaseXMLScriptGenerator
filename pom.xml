@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>tirocinio</name>
 	<description>Tirocinio curriculare Pastore Luca</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>18</java.version>
 	</properties>

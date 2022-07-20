@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan(basePackages = {"it.alten.tirocinio"})
+@ComponentScan(basePackages = {"it.alten.tirocinio.test"})
 @SpringBootApplication
 public class TirocinioApplication {
 

@@ -1,4 +1,4 @@
-package it.alten.tirocinio.controller.restController;
+package it.alten.tirocinio.test.controller.restController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,10 +25,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import static org.hamcrest.Matchers.hasSize;
 
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
+import it.alten.tirocinio.controller.restController.ChangeLogController;
 import it.alten.tirocinio.services.ChangeLogService;
 
 public class ChangeLogControllerTest {
@@ -46,6 +52,14 @@ public class ChangeLogControllerTest {
 	public void init() {
 		MockitoAnnotations.openMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(changeLogController).build();
+	}
+	
+	private String jsonToString(Object o) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+	    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+	    ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+	    String requestJson= ow.writeValueAsString(o);
+	    return requestJson;
 	}
 	
 	@Test
@@ -99,15 +113,20 @@ public class ChangeLogControllerTest {
 		
 		MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 		
+		ChangeSetDTO changeSet = new ChangeSetDTO();
+		changeSet.setChangeSetId("set-1");
 		
-		/*
-		 * VEWDERE COME PASSARE DTO PER TESTING
-		 */
-		
-		MvcResult result = mockMvc.perform(delete(BASE_URL + "removeChangeSet/").contentType(APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk())
+		MvcResult result = mockMvc.perform(delete(BASE_URL + "removeChangeSet/")
+					.contentType(APPLICATION_JSON_UTF8)
+					.content(jsonToString(changeSet)))
+					.andExpect(status().isOk())
 				.andReturn();
 		
 		assertTrue(Boolean.parseBoolean(result.getResponse().getContentAsString()));
+	}
+	
+	@Test
+	public void closeChangeLogTest() throws Exception{
+		mockMvc.perform(delete(BASE_URL + "closeChangeLog")).andExpect(status().isOk());
 	}
 }

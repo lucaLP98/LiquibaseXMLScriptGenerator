@@ -110,6 +110,8 @@ public class ChangeLog implements Cloneable{
 	public boolean addChangeSetToChangeLog(ChangeSet newChangeSet) {
 		if(!created)	return false;
 		
+		if(newChangeSet == null)	return false;
+		
 		boolean added = changeSets.add(newChangeSet);
 		if(added) {
 			changeLog.appendChild(newChangeSet.getChangeset());

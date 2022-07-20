@@ -29,7 +29,7 @@ public class ColumnMetadataController {
 	/*
 	 * GET requests
 	 */
-	@GetMapping("/all/")
+	@GetMapping({"/all/", "all"})
 	@ResponseStatus(HttpStatus.OK)
 	public ColumnMetadataListDTO gettAllColumns() {
 		return columnMetadataService.getAllColumns();

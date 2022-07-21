@@ -1,4 +1,4 @@
-package it.alten.tirocinio.test.controller.restController;
+package it.alten.tirocinio.controller.restController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,7 +34,6 @@ import static org.hamcrest.Matchers.hasSize;
 
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
-import it.alten.tirocinio.controller.restController.ChangeLogController;
 import it.alten.tirocinio.services.ChangeLogService;
 
 public class ChangeLogControllerTest {

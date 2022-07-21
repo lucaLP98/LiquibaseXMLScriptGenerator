@@ -1,4 +1,4 @@
-package it.alten.tirocinio.test.liquibaseChangeElement;
+package it.alten.tirocinio.liquibaseChangeElement;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,9 +8,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
-
-import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
-import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
 
 public class ChangeLogTest {
 	private ChangeLog createTestChangeLog() throws ParserConfigurationException {

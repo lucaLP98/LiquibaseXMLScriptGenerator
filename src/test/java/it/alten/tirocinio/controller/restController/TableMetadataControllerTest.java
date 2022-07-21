@@ -1,4 +1,4 @@
-package it.alten.tirocinio.test.controller.restController;
+package it.alten.tirocinio.controller.restController;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,7 +22,6 @@ import static org.hamcrest.Matchers.hasSize;
 
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataListDTO;
-import it.alten.tirocinio.controller.restController.TableMetadataController;
 import it.alten.tirocinio.services.TableMetadataService;
 
 public class TableMetadataControllerTest {

@@ -28,10 +28,10 @@ public class TableConstraintMetadataController {
 	/*
 	 * GET requests
 	 */
-	@GetMapping("/unique/{schemaName}&{tableNam}")
+	@GetMapping("/unique/{schemaName}&{tableName}")
 	@ResponseStatus(HttpStatus.OK)
-	public TableConstraintMetadataListDTO getAllUniqueConstraints(@PathVariable String schemaName, @PathVariable String tableNam) {
-		return tableConstraintMetadataService.getAllUniqueConstraints(tableNam, schemaName);
+	public TableConstraintMetadataListDTO getAllUniqueConstraints(@PathVariable String schemaName, @PathVariable String tableName) {
+		return tableConstraintMetadataService.getAllUniqueConstraints(tableName, schemaName);
 	}
 	
 	@GetMapping("/foreignkey/{schemaName}&{tableNam}")

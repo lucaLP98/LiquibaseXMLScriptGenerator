@@ -1,4 +1,4 @@
-package it.alten.tirocinio.test.controller.restController;
+package it.alten.tirocinio.controller.restController;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
-import it.alten.tirocinio.controller.restController.SchemaController;
 import it.alten.tirocinio.services.SchemaService;
 
 public class SchemaControllerTest {

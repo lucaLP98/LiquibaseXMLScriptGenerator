@@ -1,4 +1,4 @@
-package it.alten.tirocinio.test.controller.restController;
+package it.alten.tirocinio.controller.restController;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
@@ -7,7 +7,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import it.alten.tirocinio.controller.restController.ScriptGeneratorController;
 import it.alten.tirocinio.services.ScriptGeneratorService;
 
 public class ScriptGeneratorControllerTest {

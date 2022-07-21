@@ -1,4 +1,4 @@
-package it.alten.tirocinio.test;
+package it.alten.tirocinio;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

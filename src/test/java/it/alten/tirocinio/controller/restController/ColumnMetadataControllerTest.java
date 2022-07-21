@@ -1,4 +1,4 @@
-package it.alten.tirocinio.test.controller.restController;
+package it.alten.tirocinio.controller.restController;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import it.alten.tirocinio.api.DTO.entityDTO.ColumnMetadataDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.ColumnMetadataListDTO;
-import it.alten.tirocinio.controller.restController.ColumnMetadataController;
 import it.alten.tirocinio.services.ColumnMetadataService;
 
 public class ColumnMetadataControllerTest {

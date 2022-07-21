@@ -1,5 +1,6 @@
 package it.alten.tirocinio.test.controller.restController;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -70,11 +71,25 @@ public class ColumnMetadataControllerTest {
 	
 	@Test
 	public void getColumnsByNameAndTableTest() throws Exception {
-		when(columnMetadataService.getColumnByNameAndTable(anyString(), anyString(), anyString())).thenReturn(new ColumnMetadataDTO());
+		String columnNameTestString = "col1";
+		String columnTypeTestString = "INTEGER";
+		String columnTableTestString = "tab1";
+		String columnSchemaTestString = "demo1";
 		
-		mockMvc.perform(get(BASE_URL + "/byName/"+anyString()+"&"+anyString()+"&"+anyString()))
+		ColumnMetadataDTO columnMetadati = new ColumnMetadataDTO();
+		columnMetadati.setColumnName(columnNameTestString);
+		columnMetadati.setColumnType(columnTypeTestString);
+		columnMetadati.setTableName(columnTableTestString);
+		columnMetadati.setTableSchema(columnSchemaTestString);
+		when(columnMetadataService.getColumnByNameAndTable(columnSchemaTestString, columnTableTestString, columnNameTestString)).thenReturn(columnMetadati);
+		
+		mockMvc.perform(get(BASE_URL + "/byName/"+columnSchemaTestString+"&"+columnTableTestString+"&"+columnNameTestString))
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.column_name", equalTo(columnNameTestString)))
+			.andExpect(jsonPath("$.table_name", equalTo(columnTableTestString)))
+			.andExpect(jsonPath("$.table_schema", equalTo(columnSchemaTestString)))
+			.andExpect(jsonPath("$.column_type", equalTo(columnTypeTestString)));
 	}
 	
 	@Test

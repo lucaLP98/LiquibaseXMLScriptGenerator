@@ -33,8 +33,10 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	private ColumnMetadataListDTO ColumnMetadataSetToListDTO(Set<ColumnMetadata> columnsMetadata) {
 		List<ColumnMetadataDTO> columnsDTO = new ArrayList<>();
 		
-		for(ColumnMetadata c : columnsMetadata) {
-			columnsDTO.add(ColumnMetadataMapper.INSTANCE.ColumnMetadataToColumnMetadataDTO(c));
+		if(columnsMetadata != null) {
+			for(ColumnMetadata c : columnsMetadata) {
+				columnsDTO.add(ColumnMetadataMapper.INSTANCE.ColumnMetadataToColumnMetadataDTO(c));
+			}
 		}
 		
 		return new ColumnMetadataListDTO(columnsDTO);

@@ -33,8 +33,10 @@ public class SchemaServiceConcrete implements SchemaService {
 	private SchemaListDTO SchemaSetToListDTO(Set<Schema> schemas) {
 		List<SchemaDTO> schemasDTO = new ArrayList<>();
 		
-		for(Schema s : schemas) {
-			schemasDTO.add(SchemaMapper.INSTANCE.schemaToSchemaDTO(s));
+		if(schemas != null) {
+			for(Schema s : schemas) {
+				schemasDTO.add(SchemaMapper.INSTANCE.schemaToSchemaDTO(s));
+			}
 		}
 		
 		return new SchemaListDTO(schemasDTO);
@@ -44,8 +46,7 @@ public class SchemaServiceConcrete implements SchemaService {
 	 * Get all schema which are present in DB 
 	 */
 	@Override
-	public SchemaListDTO getAllDatabaseSchema() {				
+	public SchemaListDTO getAllDatabaseSchema() {	
 		return SchemaSetToListDTO(schemaRepository.getAllDBSchema());
 	}
-
 }

@@ -33,8 +33,10 @@ public class TableMetadataServiceConcrete implements TableMetadataService {
 	private TableMetadataListDTO TableMetadataSetToListDTO(Set<TableMetadata> tablesMetadata) {
 		List<TableMetadataDTO> tablesDTO = new ArrayList<>();
 		
-		for(TableMetadata t: tablesMetadata) {
-			tablesDTO.add(TableMetadataMapper.INSTANCE.tableMetadataToTableMetadataDTO(t));
+		if(tablesMetadata != null) {
+			for(TableMetadata t: tablesMetadata) {
+				tablesDTO.add(TableMetadataMapper.INSTANCE.tableMetadataToTableMetadataDTO(t));
+			}
 		}
 		
 		return new TableMetadataListDTO(tablesDTO);
@@ -53,6 +55,8 @@ public class TableMetadataServiceConcrete implements TableMetadataService {
 	 */
 	@Override
 	public TableMetadataListDTO getAllTablesBySchema(String schemaName) {
+		if(schemaName == null || schemaName.equals(""))	return new TableMetadataListDTO(new ArrayList<>());
+		
 		return TableMetadataSetToListDTO(tableMetadataRepository.getAllDBTablesBySchema(schemaName));
 	}
 
@@ -61,6 +65,9 @@ public class TableMetadataServiceConcrete implements TableMetadataService {
 	 */
 	@Override
 	public TableMetadataDTO getTableByNameAndSchema(String schemaName, String tableName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new TableMetadataDTO();
+		
 		return TableMetadataMapper.INSTANCE.tableMetadataToTableMetadataDTO(tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName));
 	}
 

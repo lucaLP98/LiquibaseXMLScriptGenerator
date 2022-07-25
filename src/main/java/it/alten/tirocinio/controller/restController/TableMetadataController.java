@@ -43,7 +43,7 @@ public class TableMetadataController {
 	
 	@GetMapping("/byName/{schemaName}.{tableName}")
 	@ResponseStatus(HttpStatus.OK)
-	public TableMetadataDTO getAllTablesByNameAndSchema(@PathVariable String schemaName, @PathVariable String tableName) {
+	public TableMetadataDTO getTableByNameAndSchema(@PathVariable String schemaName, @PathVariable String tableName) {
 		return tableMetadataService.getTableByNameAndSchema(schemaName, tableName);
 	}
 }

@@ -77,7 +77,7 @@ public class TableMetadataControllerTest {
 	}
 	
 	@Test
-	public void getAllTablesByNameAndSchemaTest() throws Exception {
+	public void getTableByNameAndSchemaTest() throws Exception {
 		String schemaTestString = "tab1";
 		String tableTestString = "demo";
 		

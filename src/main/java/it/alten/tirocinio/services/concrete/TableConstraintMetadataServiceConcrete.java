@@ -30,8 +30,10 @@ public class TableConstraintMetadataServiceConcrete implements TableConstraintMe
 	private TableConstraintMetadataListDTO TableConstraintMetadataSetToListDTO(Set<TableConstraintMetadata> tableConstraintMetadata) {
 		List<TableConstraintMetadataDTO> constraintsDTO = new ArrayList<>();
 		
-		for(TableConstraintMetadata c : tableConstraintMetadata) {
-			constraintsDTO.add(TableConstraintMetadataMapper.INSTANCE.TableConstraintMetadataDTOToTableConstraintMetadata(c));
+		if(tableConstraintMetadata != null) {
+			for(TableConstraintMetadata c : tableConstraintMetadata) {
+				constraintsDTO.add(TableConstraintMetadataMapper.INSTANCE.TableConstraintMetadataDTOToTableConstraintMetadata(c));
+			}
 		}
 		
 		return new TableConstraintMetadataListDTO(constraintsDTO);

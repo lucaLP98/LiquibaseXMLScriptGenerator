@@ -41,8 +41,10 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	private ChangeSetListDTO changeSetToChangeSetListDTO(Set<ChangeSet> changeSet) {
 		List<ChangeSetDTO> changeSetDTO = new ArrayList<>();
 		
-		for(ChangeSet c: changeSet) {
-			changeSetDTO.add(ChangeSetMapper.INSTANCE.changeSetToChangeSetDTO(c));
+		if(changeSet != null) {
+			for(ChangeSet c: changeSet) {
+				changeSetDTO.add(ChangeSetMapper.INSTANCE.changeSetToChangeSetDTO(c));
+			}
 		}
 		
 		return new ChangeSetListDTO(changeSetDTO);

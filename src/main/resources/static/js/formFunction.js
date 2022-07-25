@@ -252,10 +252,10 @@ function createOptionForSchemaSelect(selectId){
 	const xhttp = new XMLHttpRequest();
 	
 	xhttp.onload = function() {
-    	let select = document.getElementById(selectId);
-    	let jsonResponse = JSON.parse(this.response);
+    	let select = document.getElementById(selectId)
+		let jsonResponse = JSON.parse(this.response);
     	let schemaArray = jsonResponse.schema_list;
-    	for(let i=0; i<schemaArray.length; i++){
+		for(let i=0; i<schemaArray.length; i++){
 			let option = document.createElement("option");
 			option.value = schemaArray[i].schema_name;
 			option.innerHTML = schemaArray[i].schema_name;

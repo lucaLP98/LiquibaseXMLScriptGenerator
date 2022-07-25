@@ -3,6 +3,8 @@ package it.alten.tirocinio.controller.restController;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -56,6 +58,8 @@ public class ColumnMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.column_list", hasSize(3)));
+		
+		verify(columnMetadataService, times(1)).getAllColumns();
 	}
 	
 	@Test
@@ -66,6 +70,8 @@ public class ColumnMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.column_list", hasSize(3)));
+		
+		verify(columnMetadataService, times(1)).getAllColumnsByTable(anyString(), anyString());
 	}
 	
 	@Test
@@ -89,6 +95,8 @@ public class ColumnMetadataControllerTest {
 			.andExpect(jsonPath("$.table_name", equalTo(columnTableTestString)))
 			.andExpect(jsonPath("$.table_schema", equalTo(columnSchemaTestString)))
 			.andExpect(jsonPath("$.column_type", equalTo(columnTypeTestString)));
+		
+		verify(columnMetadataService, times(1)).getColumnByNameAndTable(columnSchemaTestString, columnTableTestString, columnNameTestString);
 	}
 	
 	@Test
@@ -99,6 +107,8 @@ public class ColumnMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.column_list", hasSize(3)));
+		
+		verify(columnMetadataService, times(1)).getColumnNotNullByTable(anyString(), anyString());
 	}
 	
 	@Test
@@ -109,6 +119,8 @@ public class ColumnMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.column_list", hasSize(3)));
+		
+		verify(columnMetadataService, times(1)).getColumnNullableByTable(anyString(), anyString());
 	}
 	
 	@Test
@@ -119,6 +131,8 @@ public class ColumnMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.column_list", hasSize(3)));
+		
+		verify(columnMetadataService, times(1)).getIntegerColumnByTable(anyString(), anyString());
 	}
 	
 	@Test
@@ -129,6 +143,8 @@ public class ColumnMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.column_list", hasSize(3)));
+		
+		verify(columnMetadataService, times(1)).getColumnWithDefaultValueByTable(anyString(), anyString());
 	}
 	
 	@Test
@@ -139,5 +155,7 @@ public class ColumnMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.column_list", hasSize(3)));
+		
+		verify(columnMetadataService, times(1)).getColumnByTypeAndTable(anyString(), anyString(), anyString());
 	}
 }

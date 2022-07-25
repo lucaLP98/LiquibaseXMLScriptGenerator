@@ -46,4 +46,25 @@ public class InsertDataScriptDTO extends ScriptDTO {
 	public void setColumns(Map<String, String> columns) {
 		this.columns = columns;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ schemaName.hashCode() ^ columns.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof InsertDataScriptDTO))	return false;
+		
+		InsertDataScriptDTO script = (InsertDataScriptDTO)o;
+		
+		boolean equal =  super.equals(script) && script.tableName.equals(this.tableName) && script.schemaName.equals(this.schemaName);
+	
+		if(!(this.columns.keySet().containsAll(script.columns.keySet())))	equal = false;
+		if(!(this.columns.entrySet().containsAll(script.columns.entrySet())))	equal = false;
+		
+		return equal;
+	}
 }

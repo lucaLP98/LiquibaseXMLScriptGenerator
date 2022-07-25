@@ -7,10 +7,7 @@ public class AddAutoIncrementScriptDTO extends ScriptDTO {
 	private String schemaName;
 	
 	@JsonProperty("table_name")
-	private String table_name;
-	
-	@JsonProperty("new_column_name")
-	private String newColumnName;
+	private String tableName;
 	
 	@JsonProperty("column_name")
 	private String columnName;
@@ -29,11 +26,7 @@ public class AddAutoIncrementScriptDTO extends ScriptDTO {
 	}
 	
 	public String getTableName() {
-		return table_name;
-	}
-	
-	public String getNewColumnName() {
-		return newColumnName;
+		return tableName;
 	}
 	
 	public String getColumnName() {
@@ -51,12 +44,8 @@ public class AddAutoIncrementScriptDTO extends ScriptDTO {
 	/*
 	 * Setter methods
 	 */
-	public void setTableName(String table_name) {
-		this.table_name = table_name;
-	}
-	
-	public void setNewColumnName(String newColumnName) {
-		this.newColumnName = newColumnName;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 	
 	public void setColumnName(String columnName) {
@@ -73,5 +62,22 @@ public class AddAutoIncrementScriptDTO extends ScriptDTO {
 	
 	public void setStartWith(Integer startWith) {
 		this.startWith = startWith;
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ schemaName.hashCode() ^ columnName.hashCode() ^ startWith.hashCode() ^ incrementBy.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof AddAutoIncrementScriptDTO))	return false;
+		
+		AddAutoIncrementScriptDTO script = (AddAutoIncrementScriptDTO)o;
+		
+		return super.equals(script) && script.tableName.equals(this.tableName) && script.schemaName.equals(this.schemaName) && script.columnName.equals(columnName) &&
+				script.startWith.equals(this.startWith) && script.incrementBy.equals(this.incrementBy);
 	}
 }

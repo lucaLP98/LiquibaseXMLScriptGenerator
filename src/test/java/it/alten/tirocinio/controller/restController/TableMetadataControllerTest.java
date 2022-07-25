@@ -1,5 +1,7 @@
 package it.alten.tirocinio.controller.restController;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -57,6 +59,8 @@ public class TableMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.table_list", hasSize(3)));
+		
+		verify(tableMetadataService, times(1)).getAllTables();
 	}
 	
 	@Test
@@ -68,6 +72,8 @@ public class TableMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.table_list", hasSize(3)));
+		
+		verify(tableMetadataService, times(1)).getAllTablesBySchema(testString);
 	}
 	
 	@Test
@@ -86,5 +92,7 @@ public class TableMetadataControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.table_schema", equalTo(schemaTestString)))
 			.andExpect(jsonPath("$.table_name", equalTo(tableTestString)));
+		
+		verify(tableMetadataService, times(1)).getTableByNameAndSchema(schemaTestString, tableTestString);
 	}
 }

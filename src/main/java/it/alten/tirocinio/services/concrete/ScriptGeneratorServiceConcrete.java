@@ -639,11 +639,11 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     		columnElement.appendChild(constraintElement);
     		
     		Attr nullableAttributeConstraint = document.createAttribute("nullable");
-    		nullableAttributeConstraint.setValue(c.getIsNullable());
+    		nullableAttributeConstraint.setValue(c.getIsNullable().toString());
     		constraintElement.setAttributeNode(nullableAttributeConstraint);
     		
     		Attr uniqueAttributeConstraint = document.createAttribute("unique");
-    		uniqueAttributeConstraint.setValue(c.getUnique());
+    		uniqueAttributeConstraint.setValue(c.getUnique().toString());
     		constraintElement.setAttributeNode(uniqueAttributeConstraint);
     		
     		Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
@@ -869,11 +869,11 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	
     	//add constraint element's attributes
     	Attr nullable = document.createAttribute("nullable");
-    	nullable.setValue(addColumnScriptDTO.getIsNullable());
+    	nullable.setValue(addColumnScriptDTO.getIsNullable().toString());
     	columnConstraintElement.setAttributeNode(nullable);
     	
     	Attr unique = document.createAttribute("unique");
-    	unique.setValue(addColumnScriptDTO.getUnique());
+    	unique.setValue(addColumnScriptDTO.getUnique().toString());
     	columnConstraintElement.setAttributeNode(unique);
     	
     	Attr uniqueName = document.createAttribute("uniqueConstraintName");

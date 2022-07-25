@@ -7,7 +7,7 @@ public class ModifyColumnDataTypeScriptDTO extends ScriptDTO {
 	private String schemaName;
 	
 	@JsonProperty("table_name")
-	private String table_name;
+	private String tableName;
 	
 	@JsonProperty("column_name")
 	private String columnName;
@@ -26,7 +26,7 @@ public class ModifyColumnDataTypeScriptDTO extends ScriptDTO {
 	}
 	
 	public String getTableName() {
-		return table_name;
+		return tableName;
 	}
 	
 	public String getColumnName() {
@@ -44,8 +44,8 @@ public class ModifyColumnDataTypeScriptDTO extends ScriptDTO {
 	/*
 	 * Setter methods
 	 */
-	public void setTableName(String table_name) {
-		this.table_name = table_name;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 	
 	public void setColumnName(String columnName) {
@@ -62,5 +62,22 @@ public class ModifyColumnDataTypeScriptDTO extends ScriptDTO {
 	
 	public void setOldColumnType(String oldColumnType) {
 		this.oldColumnType = oldColumnType;
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ schemaName.hashCode() ^ columnName.hashCode() ^ oldColumnType.hashCode() ^ newColumnType.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof ModifyColumnDataTypeScriptDTO))	return false;
+		
+		ModifyColumnDataTypeScriptDTO script = (ModifyColumnDataTypeScriptDTO)o;
+		
+		return super.equals(script) && script.tableName.equals(this.tableName) && script.schemaName.equals(this.schemaName) && 
+				script.columnName.equals(this.columnName) && script.oldColumnType.equals(this.oldColumnType) && script.newColumnType.equals(this.newColumnType);
 	}
 }

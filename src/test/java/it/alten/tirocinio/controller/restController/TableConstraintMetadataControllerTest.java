@@ -1,5 +1,7 @@
 package it.alten.tirocinio.controller.restController;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -60,6 +62,8 @@ public class TableConstraintMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.constraint_list", hasSize(3)));
+		
+		verify(tableConstraintMetadataService, times(1)).getAllUniqueConstraints(tableNameTest, schemaNameTest);
 	}
 
 	@Test
@@ -70,6 +74,8 @@ public class TableConstraintMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.constraint_list", hasSize(3)));
+		
+		verify(tableConstraintMetadataService, times(1)).getAllForeignKeyConstraints(tableNameTest, schemaNameTest);
 	}
 	
 	@Test
@@ -80,5 +86,7 @@ public class TableConstraintMetadataControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.constraint_list", hasSize(3)));
+		
+		verify(tableConstraintMetadataService, times(1)).getAllConstraints(tableNameTest, schemaNameTest);
 	} 
 }

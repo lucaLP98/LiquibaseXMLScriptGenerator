@@ -19,4 +19,20 @@ public class CreateSchemaScriptDTO extends ScriptDTO {
 	public String getSchemaName() {
 		return schemaName;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ schemaName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof CreateSchemaScriptDTO))	return false;
+		
+		CreateSchemaScriptDTO script = (CreateSchemaScriptDTO)o;
+		
+		return super.equals(script) && script.schemaName.equals(this.schemaName);
+	}
 }

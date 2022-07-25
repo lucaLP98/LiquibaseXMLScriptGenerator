@@ -41,4 +41,20 @@ public class DropUniqueConstraintScriptDTO extends ScriptDTO {
 	public String getConstrainName() {
 		return constrainName;
 	}	
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ tableSchema.hashCode() ^ constrainName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof DropUniqueConstraintScriptDTO))	return false;
+		
+		DropUniqueConstraintScriptDTO script = (DropUniqueConstraintScriptDTO)o;
+		
+		return super.equals(script) && script.tableName.equals(this.tableName) && script.tableSchema.equals(this.tableSchema) && script.constrainName.equals(constrainName);
+	}
 }

@@ -44,4 +44,20 @@ public class DropColumnScriptDTO extends ScriptDTO {
 	public void setColumnName(String columnName) {
 		this.columnName = columnName;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ tableSchema.hashCode() ^ columnName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof DropColumnScriptDTO))	return false;
+		
+		DropColumnScriptDTO script = (DropColumnScriptDTO)o;
+		
+		return super.equals(script) && script.tableName.equals(this.tableName) && script.tableSchema.equals(this.tableSchema) && script.columnName.equals(columnName);
+	}
 }

@@ -41,4 +41,20 @@ public class RenameTableScriptDTO extends ScriptDTO {
 	public void setSchemaName(String schemaName) {
 		this.schemaName = schemaName;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ schemaName.hashCode() ^ oldTableName.hashCode() ^ newTableName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof RenameTableScriptDTO))	return false;
+		
+		RenameTableScriptDTO script = (RenameTableScriptDTO)o;
+		
+		return super.equals(script) && script.schemaName.equals(this.schemaName) && script.oldTableName.equals(this.oldTableName) && script.newTableName.equals(newTableName);
+	}
 }

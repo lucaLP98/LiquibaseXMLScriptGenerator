@@ -19,10 +19,10 @@ public class AddColumnScriptDTO extends ScriptDTO {
 	private String columnDefault;
 	
 	@JsonProperty("is_nullable")
-	private String nullable;
+	private Boolean nullable;
 	
 	@JsonProperty("is_unique")
-	private String unique;
+	private Boolean unique;
 	
 	/*
 	 * Getter methods
@@ -47,11 +47,11 @@ public class AddColumnScriptDTO extends ScriptDTO {
 		return columnDefault;
 	}
 	
-	public String getIsNullable() {
+	public Boolean getIsNullable() {
 		return nullable;
 	}
 	
-	public String getUnique() {
+	public Boolean getUnique() {
 		return unique;
 	}
 	
@@ -78,11 +78,28 @@ public class AddColumnScriptDTO extends ScriptDTO {
 		this.columnDefault = columnDefault;
 	}
 	
-	public void setIsNullable(String nullable) {
+	public void setIsNullable(Boolean nullable) {
 		this.nullable = nullable;
 	}
 	
-	public void setUnique(String unique) {
+	public void setUnique(Boolean unique) {
 		this.unique = unique;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ schemaName.hashCode() ^ columnName.hashCode() ^ columnType.hashCode() ^ unique.hashCode() ^ nullable.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof AddColumnScriptDTO))	return false;
+		
+		AddColumnScriptDTO script = (AddColumnScriptDTO)o;
+		
+		return super.equals(script) && script.tableName.equals(this.tableName) && script.schemaName.equals(this.schemaName) && script.columnName.equals(columnName) &&
+				script.columnType.equals(this.columnType) && script.nullable.equals(this.nullable) && script.unique.equals(this.unique);
+	} 
 }

@@ -29,6 +29,22 @@ public class AddUniqueConstraintScriptDTO extends ScriptDTO {
 		public String getColumnName() {
 			return columnName;
 		}
+		
+		@Override
+		public int hashCode() {
+			return columnName.hashCode();
+		}
+		
+		@Override
+		public boolean equals(Object o) {
+			if(o == null)	return false;
+			
+			if(!(o instanceof ColumnUnique))	return false;
+			
+			ColumnUnique script = (ColumnUnique)o;
+			
+			return script.columnName.equals(this.columnName);
+		}
 	}
 	
 	/*
@@ -45,6 +61,7 @@ public class AddUniqueConstraintScriptDTO extends ScriptDTO {
 	public void setColumns(List<ColumnUnique> columns) {
 		this.columns = columns;
 	}
+	
 	public void setConstrainName(String constrainName) {
 		this.constrainName = constrainName;
 	}
@@ -66,5 +83,31 @@ public class AddUniqueConstraintScriptDTO extends ScriptDTO {
 	
 	public String getConstrainName() {
 		return constrainName;
+	}
+	
+	@Override
+	public int hashCode() {
+		int hashcode =  super.hashCode() ^ tableName.hashCode() ^ tableSchema.hashCode() ^ constrainName.hashCode();
+		
+		for(ColumnUnique c : columns) {
+			hashcode ^= c.hashCode();
+		}
+		
+		return hashcode;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof AddUniqueConstraintScriptDTO))	return false;
+		
+		AddUniqueConstraintScriptDTO script = (AddUniqueConstraintScriptDTO)o;
+		
+		boolean equal = super.equals(script) && script.tableName.equals(this.tableName) && script.tableSchema.equals(this.tableSchema) && script.constrainName.equals(constrainName);
+	
+		if(!this.columns.containsAll(script.columns)) equal = false;
+		
+		return equal;
 	}
 }

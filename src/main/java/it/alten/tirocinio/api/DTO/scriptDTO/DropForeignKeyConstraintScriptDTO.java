@@ -41,4 +41,20 @@ public class DropForeignKeyConstraintScriptDTO extends ScriptDTO {
 	public void setBaseTableName(String baseTableName) {
 		this.baseTableName = baseTableName;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ constraintName.hashCode() ^ baseSchemaName.hashCode() ^ baseTableName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof DropForeignKeyConstraintScriptDTO))	return false;
+		
+		DropForeignKeyConstraintScriptDTO script = (DropForeignKeyConstraintScriptDTO)o;
+		
+		return super.equals(script) && script.constraintName.equals(this.constraintName) && script.baseSchemaName.equals(this.baseSchemaName) && script.baseTableName.equals(this.baseTableName);
+	}
 }

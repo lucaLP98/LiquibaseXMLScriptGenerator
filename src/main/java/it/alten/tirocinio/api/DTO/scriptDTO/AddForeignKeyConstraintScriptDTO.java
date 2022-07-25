@@ -107,4 +107,24 @@ public class AddForeignKeyConstraintScriptDTO extends ScriptDTO {
 	public void setReferencedColumnName(String referencedColumnName) {
 		this.referencedColumnName = referencedColumnName;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ constraintName.hashCode() ^ onDelete.hashCode() ^ onUpdate.hashCode() ^ baseSchemaName.hashCode() ^
+				baseTableName.hashCode() ^ baseColumnName.hashCode() ^ referencedSchemaName.hashCode() ^ referencedTableName.hashCode() ^ 
+				referencedColumnName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof AddForeignKeyConstraintScriptDTO))	return false;
+		
+		AddForeignKeyConstraintScriptDTO script = (AddForeignKeyConstraintScriptDTO)o;
+		
+		return super.equals(script) && script.constraintName.equals(this.constraintName) && script.onDelete.equals(this.onDelete) && script.onUpdate.equals(onUpdate) &&
+				script.baseSchemaName.equals(this.baseSchemaName) && script.baseTableName.equals(this.baseTableName) && script.baseColumnName.equals(this.baseColumnName) &&
+				script.referencedSchemaName.equals(this.referencedSchemaName) && script.referencedTableName.equals(this.referencedTableName) && script.referencedColumnName.equals(this.referencedColumnName);
+	}
 }

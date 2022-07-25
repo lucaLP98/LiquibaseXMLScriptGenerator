@@ -75,4 +75,20 @@ public abstract class ScriptDTO {
 	public void setAddToChangelog(Boolean addToChangelog) {
 		this.addToChangelog = addToChangelog;
 	}
+	
+	@Override
+	public int hashCode() {
+		return author.hashCode() ^ idChangeset.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof ScriptDTO))	return false;
+		
+		ScriptDTO s = (ScriptDTO)o;
+		
+		return s.idChangeset.equals(this.idChangeset) && s.author.equals(this.author) && s.onError.equals(this.onError) && s.onFail.endsWith(this.onFail);
+	}
 }

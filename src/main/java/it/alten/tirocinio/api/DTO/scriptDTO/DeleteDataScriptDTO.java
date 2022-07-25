@@ -44,4 +44,26 @@ public class DeleteDataScriptDTO extends ScriptDTO {
 	public void setWhereCondition(String whereCondition) {
 		this.whereCondition = whereCondition;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ schemaName.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof DeleteDataScriptDTO))	return false;
+		
+		DeleteDataScriptDTO script = (DeleteDataScriptDTO)o;
+		
+		boolean equal = super.equals(script) && script.tableName.equals(this.tableName) && script.schemaName.equals(this.schemaName);
+	
+		if(equal && whereCondition!=null) {
+			equal = script.whereCondition.equals(this.whereCondition);
+		}
+		
+		return equal;
+	}
 }

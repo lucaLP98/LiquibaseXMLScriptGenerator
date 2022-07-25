@@ -63,4 +63,21 @@ public class AddNotNullConstraintScriptDTO extends ScriptDTO {
 	public String getDefaultNullValue() {
 		return defaultNullValue;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ tableSchema.hashCode() ^ columnName.hashCode() ^ columnDataType.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof AddNotNullConstraintScriptDTO))	return false;
+		
+		AddNotNullConstraintScriptDTO script = (AddNotNullConstraintScriptDTO)o;
+		
+		return super.equals(script) && script.tableName.equals(this.tableName) && script.tableSchema.equals(this.tableSchema) && 
+				script.columnName.equals(columnName) && script.columnDataType.equals(this.columnDataType);
+	}
 }

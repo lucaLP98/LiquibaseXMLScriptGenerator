@@ -7,7 +7,7 @@ public class DropDefaultValueScriptDTO extends ScriptDTO{
 	private String schemaName;
 	
 	@JsonProperty("table_name")
-	private String table_name;
+	private String tableName;
 	
 	@JsonProperty("column_name")
 	private String columnName;
@@ -26,7 +26,7 @@ public class DropDefaultValueScriptDTO extends ScriptDTO{
 	}
 	
 	public String getTableName() {
-		return table_name;
+		return tableName;
 	}
 	
 	public String getColumnName() {
@@ -44,8 +44,8 @@ public class DropDefaultValueScriptDTO extends ScriptDTO{
 	/*
 	 * Setter methods
 	 */
-	public void setTableName(String table_name) {
-		this.table_name = table_name;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 	
 	public void setColumnName(String columnName) {
@@ -62,5 +62,23 @@ public class DropDefaultValueScriptDTO extends ScriptDTO{
 	
 	public void setSchemaName(String schemaName) {
 		this.schemaName = schemaName;
+	}
+
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ schemaName.hashCode() ^ columnName.hashCode() ^ defaultValue.hashCode() ^ columnType.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof DropDefaultValueScriptDTO))	return false;
+		
+		DropDefaultValueScriptDTO script = (DropDefaultValueScriptDTO)o;
+		
+		return super.equals(script) && script.tableName.equals(this.tableName) && script.schemaName.equals(this.schemaName) && 
+				script.columnName.equals(columnName) && script.defaultValue.equals(this.defaultValue) && script.columnType.equals(this.columnType);
 	}
 }

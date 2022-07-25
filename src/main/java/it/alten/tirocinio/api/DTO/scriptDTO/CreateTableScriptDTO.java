@@ -65,4 +65,27 @@ public class CreateTableScriptDTO extends ScriptDTO{
 	public List<AddColumnScriptDTO> getColumns(){
 		return columns;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ tableName.hashCode() ^ tableSchema.hashCode() ^ primaryKeyName.hashCode() ^ primaryKeyType.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null)	return false;
+		
+		if(!(o instanceof CreateTableScriptDTO))	return false;
+		
+		CreateTableScriptDTO script = (CreateTableScriptDTO)o;
+		
+		boolean equal = super.equals(script) && script.tableName.equals(this.tableName) && script.tableSchema.equals(this.tableSchema) && 
+				script.primaryKeyName.equals(this.primaryKeyName) && script.primaryKeyType.equals(this.primaryKeyType);
+		/*
+		if(!(this.columns.containsAll(script.columns))) {
+			equal = false;
+		}*/
+		
+		return equal;
+	}
 }

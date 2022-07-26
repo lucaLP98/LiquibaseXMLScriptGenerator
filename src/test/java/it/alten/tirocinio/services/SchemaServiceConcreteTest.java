@@ -45,6 +45,7 @@ public class SchemaServiceConcreteTest {
 		when(schemaRepository.getAllDBSchema()).thenReturn(set);
 		
 		SchemaListDTO listDTO = service.getAllDatabaseSchema();
+
 		assertEquals(3, listDTO.getSchemaList().size());
 	}
 	

@@ -68,7 +68,10 @@ public class TableMetadataServiceConcrete implements TableMetadataService {
 		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
 			return new TableMetadataDTO();
 		
-		return TableMetadataMapper.INSTANCE.tableMetadataToTableMetadataDTO(tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName));
+		TableMetadata t = tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName);
+		if(t == null) t = new TableMetadata();
+		
+		return TableMetadataMapper.INSTANCE.tableMetadataToTableMetadataDTO(t);
 	}
 
 }

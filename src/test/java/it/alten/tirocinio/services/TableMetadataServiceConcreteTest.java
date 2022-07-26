@@ -27,7 +27,7 @@ public class TableMetadataServiceConcreteTest {
 	private TableMetadataServiceConcrete service;
 	
 	private Set<TableMetadata> testSet;
-	private final int TEST_SET_SIZE = 3;
+	private int TEST_SET_SIZE;
 	
 	@BeforeEach
 	public void init() {
@@ -46,8 +46,12 @@ public class TableMetadataServiceConcreteTest {
 		testSet.add(t1);	
 		testSet.add(t2);	
 		testSet.add(t3);
+		TEST_SET_SIZE = testSet.size();
 	}
 	
+	/*
+	 * method getAllTables
+	 */
 	@Test
 	public void getAllTablesTest() {
 		when(tableMetadataRepository.getAllDBTables()).thenReturn(testSet);
@@ -66,6 +70,9 @@ public class TableMetadataServiceConcreteTest {
 		assertEquals(0, metadataListDTO.getTablesMetadataList().size());
 	}
 	
+	/*
+	 * method getAllTablesBySchema
+	 */
 	@Test 
 	public void getAllTablesBySchemaTest() {
 		String schemaName = "demo";
@@ -102,6 +109,9 @@ public class TableMetadataServiceConcreteTest {
 		assertEquals(0, metadataListDTO.getTablesMetadataList().size());
 	}
 	
+	/*
+	 * method getTableByNameAndSchema
+	 */
 	@Test
 	public void getTableByNameAndSchema() {
 		String schemaName = "demo";

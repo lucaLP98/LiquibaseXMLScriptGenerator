@@ -67,6 +67,12 @@ public class ChangeLogTest {
 	}
 	
 	@Test
+	public void deleteChangeSetFromChangeLogTest_BLankStringParameter() throws ParserConfigurationException {
+		ChangeLog changeLog = createTestChangeLog();
+		assertFalse(changeLog.deleteChangeSetFromChangeLog(""));
+	}
+	
+	@Test
 	public void deleteChangeSetFromChangeLogTest_changesetNotPresent() throws ParserConfigurationException {
 		ChangeLog changeLog = createTestChangeLog();
 		Document document = changeLog.getChangeLogDocument();

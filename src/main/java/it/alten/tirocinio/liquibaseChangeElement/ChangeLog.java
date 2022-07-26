@@ -86,7 +86,7 @@ public class ChangeLog implements Cloneable{
 	public boolean deleteChangeSetFromChangeLog(String changeSetId) {
 		if(!created)	return false;
 		
-		if(changeSetId == null)		return false;
+		if(changeSetId == null || changeSetId.equals(""))	return false;
 		
 		ChangeSet changeSetToDelete = null;
 		for(ChangeSet c : changeSets) {

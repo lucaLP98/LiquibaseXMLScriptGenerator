@@ -55,8 +55,6 @@ public class TableMetadataServiceConcrete implements TableMetadataService {
 	 */
 	@Override
 	public TableMetadataListDTO getAllTablesBySchema(String schemaName) {
-		if(schemaName == null || schemaName.equals(""))	return new TableMetadataListDTO(new ArrayList<>());
-		
 		return TableMetadataSetToListDTO(tableMetadataRepository.getAllDBTablesBySchema(schemaName));
 	}
 
@@ -65,9 +63,6 @@ public class TableMetadataServiceConcrete implements TableMetadataService {
 	 */
 	@Override
 	public TableMetadataDTO getTableByNameAndSchema(String schemaName, String tableName) {
-		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
-			return new TableMetadataDTO();
-		
 		TableMetadata t = tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName);
 		if(t == null) t = new TableMetadata();
 		

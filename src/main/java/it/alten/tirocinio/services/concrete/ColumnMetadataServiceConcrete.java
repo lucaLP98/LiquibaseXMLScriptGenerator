@@ -55,6 +55,9 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataListDTO getAllColumnsByTable(String schemaName, String tableName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new ColumnMetadataListDTO();
+		
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsByTableAndSchema(schemaName, tableName));
 	}
 
@@ -63,6 +66,9 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataDTO getColumnByNameAndTable(String schemaName, String tableName, String columnName) {
+		if(schemaName==null || tableName==null || columnName==null || schemaName.equals("") || tableName.equals("") || columnName.equals(""))
+			return new ColumnMetadataDTO();
+		
 		ColumnMetadata c = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName);
 		if(c == null) c = new ColumnMetadata();
 		
@@ -74,6 +80,9 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataListDTO getColumnNotNullByTable(String schemaName, String tableName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new ColumnMetadataListDTO();
+		
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBNotNullColumnsByTableAndSchema(schemaName, tableName));
 	}
 	
@@ -82,6 +91,9 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataListDTO getColumnNullableByTable(String schemaName, String tableName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new ColumnMetadataListDTO();
+		
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBNullableColumnsByTableAndSchema(schemaName, tableName));
 	}
 	
@@ -90,6 +102,9 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataListDTO getIntegerColumnByTable(String schemaName, String tableName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new ColumnMetadataListDTO();
+		
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBIntegerColumnsByTableAndSchema(schemaName, tableName));
 	}
 	
@@ -98,6 +113,9 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataListDTO getColumnWithDefaultValueByTable(String schemaName, String tableName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new ColumnMetadataListDTO();
+		
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsWithDefaultValueByTableAndSchema(schemaName, tableName));
 	}
 	
@@ -106,6 +124,9 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataListDTO getColumnByTypeAndTable(String dataType, String schemaName, String tableName) {
+		if(schemaName==null || tableName==null || dataType==null || schemaName.equals("") || tableName.equals("") || dataType.equals(""))
+			return new ColumnMetadataListDTO();
+		
 		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsByDataTypeAndTable(dataType, schemaName, tableName));
 	}
 }

@@ -1,5 +1,6 @@
 package it.alten.tirocinio.api.DTO.entityDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +15,9 @@ public class TableConstraintMetadataListDTO {
 	/*
 	 * Constructors
 	 */
-	public TableConstraintMetadataListDTO() { }
+	public TableConstraintMetadataListDTO() { 
+		constraintsMetadata = new ArrayList<>();
+	}
 	
 	public TableConstraintMetadataListDTO(List<TableConstraintMetadataDTO> constraintsMetadata) {
 		this.constraintsMetadata = constraintsMetadata;
@@ -24,7 +27,7 @@ public class TableConstraintMetadataListDTO {
 	 * Setter methods
 	 */
 	public void setConstraintsMetadata(List<TableConstraintMetadataDTO> constraintsMetadata) {
-		this.constraintsMetadata = constraintsMetadata;
+		this.constraintsMetadata.addAll(constraintsMetadata);
 	}
 	
 	/*

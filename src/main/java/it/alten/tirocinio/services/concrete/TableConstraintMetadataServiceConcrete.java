@@ -44,6 +44,9 @@ public class TableConstraintMetadataServiceConcrete implements TableConstraintMe
 	 */
 	@Override
 	public TableConstraintMetadataListDTO getAllConstraints(String tableName, String schemaName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new TableConstraintMetadataListDTO();
+			
 		return TableConstraintMetadataSetToListDTO(repository.getAllConstraintsByTable(tableName, schemaName));
 	}
 
@@ -52,6 +55,9 @@ public class TableConstraintMetadataServiceConcrete implements TableConstraintMe
 	 */
 	@Override
 	public TableConstraintMetadataListDTO getAllUniqueConstraints(String tableName, String schemaName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new TableConstraintMetadataListDTO();
+		
 		return TableConstraintMetadataSetToListDTO(repository.getUniqueConstraintsByTable(tableName, schemaName));
 	}
 
@@ -60,6 +66,9 @@ public class TableConstraintMetadataServiceConcrete implements TableConstraintMe
 	 */
 	@Override
 	public TableConstraintMetadataListDTO getAllForeignKeyConstraints(String tableName, String schemaName) {
+		if(schemaName==null || tableName==null || schemaName.equals("") || tableName.equals(""))
+			return new TableConstraintMetadataListDTO();
+		
 		return TableConstraintMetadataSetToListDTO(repository.getForeignKeyConstraintsByTable(tableName, schemaName));
 	}
 }

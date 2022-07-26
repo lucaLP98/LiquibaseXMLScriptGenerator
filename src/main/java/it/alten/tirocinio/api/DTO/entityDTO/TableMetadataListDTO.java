@@ -1,5 +1,6 @@
 package it.alten.tirocinio.api.DTO.entityDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +15,9 @@ public class TableMetadataListDTO {
 	/*
 	 * Constructors
 	 */
-	public TableMetadataListDTO() {}
+	public TableMetadataListDTO() {
+		tablesMetadataList = new ArrayList<>();
+	}
 	
 	public TableMetadataListDTO(List<TableMetadataDTO> tablesMetadataList) {
 		this.tablesMetadataList = tablesMetadataList;
@@ -25,7 +28,7 @@ public class TableMetadataListDTO {
 	 * Setter methods
 	 */
 	public void setTablesMetadataList(List<TableMetadataDTO> tablesMetadataList) {
-		this.tablesMetadataList = tablesMetadataList;
+		this.tablesMetadataList.addAll(tablesMetadataList);
 	}
 	
 	/*

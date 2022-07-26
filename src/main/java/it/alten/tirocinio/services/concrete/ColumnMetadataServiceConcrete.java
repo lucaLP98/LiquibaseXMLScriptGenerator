@@ -63,7 +63,10 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 	 */
 	@Override
 	public ColumnMetadataDTO getColumnByNameAndTable(String schemaName, String tableName, String columnName) {
-		return ColumnMetadataMapper.INSTANCE.ColumnMetadataToColumnMetadataDTO(columnMetadataRepository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName));
+		ColumnMetadata c = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName);
+		if(c == null) c = new ColumnMetadata();
+		
+		return ColumnMetadataMapper.INSTANCE.ColumnMetadataToColumnMetadataDTO(c);
 	}
 
 	/*

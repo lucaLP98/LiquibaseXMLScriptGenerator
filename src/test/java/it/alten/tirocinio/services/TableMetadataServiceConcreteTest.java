@@ -1,6 +1,7 @@
 package it.alten.tirocinio.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
@@ -123,10 +124,10 @@ public class TableMetadataServiceConcreteTest {
 		
 		when(tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName)).thenReturn(t1);
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertEquals(tableName, metadataListDTO.getTableName());
-		assertEquals(schemaName, metadataListDTO.getTableSchema());
+		assertEquals(tableName, metadataDTO.getTableName());
+		assertEquals(schemaName, metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -140,10 +141,11 @@ public class TableMetadataServiceConcreteTest {
 		
 		when(tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName)).thenReturn(null);
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -151,10 +153,11 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = "demo";
 		String tableName = null;
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -162,10 +165,11 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = "demo";
 		String tableName = "";
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -173,10 +177,11 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = null;
 		String tableName = "tab";
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -184,10 +189,11 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = null;
 		String tableName = null;
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -195,10 +201,11 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = null;
 		String tableName = "";
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -206,10 +213,11 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = "";
 		String tableName = "tab";
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -217,10 +225,11 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = "";
 		String tableName = null;
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 	
 	@Test
@@ -228,9 +237,10 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = "";
 		String tableName = "";
 		
-		TableMetadataDTO metadataListDTO = service.getTableByNameAndSchema(schemaName, tableName);
+		TableMetadataDTO metadataDTO = service.getTableByNameAndSchema(schemaName, tableName);
 		
-		assertNull(metadataListDTO.getTableName());
-		assertNull(metadataListDTO.getTableSchema());
+		assertNotNull(metadataDTO);
+		assertNull(metadataDTO.getTableName());
+		assertNull(metadataDTO.getTableSchema());
 	}
 }

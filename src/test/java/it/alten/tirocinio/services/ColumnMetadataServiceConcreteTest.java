@@ -586,4 +586,771 @@ public class ColumnMetadataServiceConcreteTest {
 	/*
 	 * Method getColumnNotNullByTable
 	 */
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameNull_tableNameNull() {
+		String schemaName = null;
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameNull_tableNameEmpty() {
+		String schemaName = null;
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameNull_tableNameNotEmpty() {
+		String schemaName = null;
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameEmpty_tableNameNull() {
+		String schemaName = "";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameEmpty_tableNameEmpty() {
+		String schemaName = "";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameEmpty_tableNameNotEmpty() {
+		String schemaName = "";
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameNotEmpty_tableNameNull() {
+		String schemaName = "demo";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameNotEmpty_tableNameEmpty() {
+		String schemaName = "demo";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_schemaNameNotEmpty_tableNameNotEmpty() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBNotNullColumnsByTableAndSchema(schemaName, tableName)).thenReturn(testSet);
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(TEST_SET_SIZE, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNotNullByTableTest_emptyResult() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBNotNullColumnsByTableAndSchema(schemaName, tableName)).thenReturn(new HashSet<>());
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNotNullByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	/*
+	 * Method getColumnNullableByTable
+	 */
+	@Test
+	public void getColumnNullableByTableTest_schemaNameNull_tableNameNull() {
+		String schemaName = null;
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameNull_tableNameEmpty() {
+		String schemaName = null;
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameNull_tableNameNotEmpty() {
+		String schemaName = null;
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameEmpty_tableNameNull() {
+		String schemaName = "";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameEmpty_tableNameEmpty() {
+		String schemaName = "";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameEmpty_tableNameNotEmpty() {
+		String schemaName = "";
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameNotEmpty_tableNameNull() {
+		String schemaName = "demo";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameNotEmpty_tableNameEmpty() {
+		String schemaName = "demo";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_schemaNameNotEmpty_tableNameNotEmpty() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBNullableColumnsByTableAndSchema(schemaName, tableName)).thenReturn(testSet);
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(TEST_SET_SIZE, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnNullableByTableTest_emptyResult() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBNullableColumnsByTableAndSchema(schemaName, tableName)).thenReturn(new HashSet<>());
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnNullableByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	/*
+	 * Method getIntegerColumnByTable
+	 */
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameNull_tableNameNull() {
+		String schemaName = null;
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameNull_tableNameEmpty() {
+		String schemaName = null;
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameNull_tableNameNotEmpty() {
+		String schemaName = null;
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameEmpty_tableNameNull() {
+		String schemaName = "";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameEmpty_tableNameEmpty() {
+		String schemaName = "";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameEmpty_tableNameNotEmpty() {
+		String schemaName = "";
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameNotEmpty_tableNameNull() {
+		String schemaName = "demo";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameNotEmpty_tableNameEmpty() {
+		String schemaName = "demo";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_schemaNameNotEmpty_tableNameNotEmpty() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBIntegerColumnsByTableAndSchema(schemaName, tableName)).thenReturn(testSet);
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(TEST_SET_SIZE, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getIntegerColumnByTableTest_emptyResult() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBIntegerColumnsByTableAndSchema(schemaName, tableName)).thenReturn(new HashSet<>());
+		
+		ColumnMetadataListDTO metadataListDTO = service.getIntegerColumnByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	/*
+	 * Method getColumnWithDefaultValueByTable
+	 */
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameNull_tableNameNull() {
+		String schemaName = null;
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameNull_tableNameEmpty() {
+		String schemaName = null;
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameNull_tableNameNotEmpty() {
+		String schemaName = null;
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameEmpty_tableNameNull() {
+		String schemaName = "";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameEmpty_tableNameEmpty() {
+		String schemaName = "";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameEmpty_tableNameNotEmpty() {
+		String schemaName = "";
+		String tableName = "tab1";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameNotEmpty_tableNameNull() {
+		String schemaName = "demo";
+		String tableName = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameNotEmpty_tableNameEmpty() {
+		String schemaName = "demo";
+		String tableName = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_schemaNameNotEmpty_tableNameNotEmpty() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBColumnsWithDefaultValueByTableAndSchema(schemaName, tableName)).thenReturn(testSet);
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(TEST_SET_SIZE, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnWithDefaultValueByTableTest_emptyResult() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		
+		when(repository.getAllDBColumnsWithDefaultValueByTableAndSchema(schemaName, tableName)).thenReturn(new HashSet<>());
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnWithDefaultValueByTable(schemaName, tableName);
+		
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	/*
+	 * Method getColumnByTypeAndTable
+	 */
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameNull_dataTypeNull() {
+		String schemaName = null;
+		String tableName = null;
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameNull_dataTypeEmpty() {
+		String schemaName = null;
+		String tableName = null;
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameNull_dataTypeNotEmpty() {
+		String schemaName = null;
+		String tableName = null;
+		String dataType = "varchar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameEmpty_dataTypeNull() {
+		String schemaName = null;
+		String tableName = "";
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameEmpty_dataTypeEmpty() {
+		String schemaName = null;
+		String tableName = "";
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameEmpty_dataTypeNotEmpty() {
+		String schemaName = null;
+		String tableName = "";
+		String dataType = "varhcar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameNotEmpty_dataTypeNull() {
+		String schemaName = null;
+		String tableName = "tab1";
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameNotEmpty_dataTypeEmpty() {
+		String schemaName = null;
+		String tableName = "tab1";
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNull_tableNameNotEmpty_dataTypeNotEmpty() {
+		String schemaName = null;
+		String tableName = "tab1";
+		String dataType = "varchar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameNull_dataTypeNull() {
+		String schemaName = "";
+		String tableName = null;
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameNull_dataTypeEmpty() {
+		String schemaName = "";
+		String tableName = null;
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameNull_dataTypeNotEmpty() {
+		String schemaName = "";
+		String tableName = null;
+		String dataType = "varchar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameEmpty_dataTypeNull() {
+		String schemaName = "";
+		String tableName = "";
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameEmpty_dataTypeEmpty() {
+		String schemaName = "";
+		String tableName = "";
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameEmpty_dataTypeNotEmpty() {
+		String schemaName = "";
+		String tableName = "";
+		String dataType = "varchar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameNotEmpty_dataTypeNULL() {
+		String schemaName = "";
+		String tableName = "tab1";
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameNotEmpty_dataTypeEmpty() {
+		String schemaName = "";
+		String tableName = "tab1";
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameEmpty_tableNameNotEmpty_dataTypeNotEmpty() {
+		String schemaName = "";
+		String tableName = "tab1";
+		String dataType = "varchar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameNull_dataTypeNull() {
+		String schemaName = "demo";
+		String tableName = null;
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameNull_dataTypeEmpty() {
+		String schemaName = "demo";
+		String tableName = null;
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameNull_dataTypeNotEmpty() {
+		String schemaName = "demo";
+		String tableName = null;
+		String dataType = "varchar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameEmpty_dataTypeNull() {
+		String schemaName = "demo";
+		String tableName = "";
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameEmpty_dataTypeEmpty() {
+		String schemaName = "demo";
+		String tableName = "";
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameEmpty_dataTypeNotEmpty() {
+		String schemaName = "demo";
+		String tableName = "";
+		String dataType = "varchar";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameNotEmpty_dataTypeNull() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		String dataType = null;
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameNotEmpty_dataTypeEmpty() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		String dataType = "";
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_schemaNameNotEmpty_tableNameNotEmpty_dataTypeNotEmpty() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		String dataType = "varchar";
+		
+		when(repository.getAllDBColumnsByDataTypeAndTable(dataType, schemaName, tableName)).thenReturn(testSet);
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(TEST_SET_SIZE, metadataListDTO.getColumnsMetadataList().size());
+	}
+	
+	@Test
+	public void getColumnByTypeAndTableTest_resultEmpty() {
+		String schemaName = "demo";
+		String tableName = "tab1";
+		String dataType = "varchar";
+		
+		when(repository.getAllDBColumnsByDataTypeAndTable(dataType, schemaName, tableName)).thenReturn(new HashSet<>());
+		
+		ColumnMetadataListDTO metadataListDTO = service.getColumnByTypeAndTable(dataType, schemaName, tableName);
+		
+		assertNotNull(metadataListDTO);
+		assertEquals(0, metadataListDTO.getColumnsMetadataList().size());
+	}
 }

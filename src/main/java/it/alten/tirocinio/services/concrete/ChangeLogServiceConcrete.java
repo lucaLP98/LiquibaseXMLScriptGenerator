@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -16,8 +17,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -32,9 +31,9 @@ import it.alten.tirocinio.services.ChangeLogService;
 
 @Service
 public class ChangeLogServiceConcrete implements ChangeLogService {
-	@Autowired
-	private ApplicationContext context;
-	
+	@Resource(name = "sessionChangeLog")
+	private ChangeLog changeLog;
+	 
 	/*
 	 * Converter between set of CHangeSet and ChangeSetListDTO
 	 */
@@ -91,7 +90,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	@Override
 	public boolean createNewChangeLog() {
 		Document document;
-		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		
 		if(changeLog.changeLogExists()) {
 			System.out.println("changelog not created - already exists");
@@ -144,8 +142,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 */
 	@Override
 	public void closeChangeLog() {
-		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
-			
 		changeLog.setChangeLogDocument(null);
 		changeLog.deletAllChangeSet();
 		changeLog.setCreated(false);
@@ -158,7 +154,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 */
 	@Override
 	public String printChangeLog() {
-		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		String script;
 
 		if(changeLog != null && changeLog.changeLogExists()) {
@@ -175,7 +170,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 */
 	@Override
 	public ChangeSetListDTO getAllChangeSet() {
-		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		if(changeLog != null && changeLog.changeLogExists()) {
 			return changeSetToChangeSetListDTO(changeLog.getChangeSets());
 		}
@@ -187,7 +181,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 */
 	@Override
 	public boolean removeChangeSet(String changeSetId) {
-		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		if(changeLog != null && changeLog.changeLogExists()) {
 			return changeLog.deleteChangeSetFromChangeLog(changeSetId);
 		}
@@ -199,7 +192,6 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 */
 	@Override
 	public synchronized File getChangeLogFile() {
-		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 		File scriptFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "dbchangelog.xml");
 		
 		try {

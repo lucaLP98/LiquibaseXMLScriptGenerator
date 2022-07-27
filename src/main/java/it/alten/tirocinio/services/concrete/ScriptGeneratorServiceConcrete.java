@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -13,8 +14,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -62,8 +61,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	private final ColumnMetadataRepository columnMetadataRepository;
 	private final KeyColumnMetadataRepository keyColumnMetadataRepository;
 	private final GenericEntityDAO genericEntityDAO;
-	@Autowired
-	private ApplicationContext context;
+
+	@Resource(name = "sessionChangeLog")
+	private ChangeLog changeLog;
 	
 	/* 
 	 * Contructors
@@ -186,8 +186,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	 * Method that allows you to manage the ChangeSet. It allows you to add to the general ChangeLog or to a local one, according to the specific requests
 	 */
 	private void manageChangeSet(ScriptDTO scriptDTO, Document document, Element changeSet) {
-		ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
-		
 		//changeSet element
         if(scriptDTO.getChangeLog()) {
         	//create changeLog element
@@ -405,7 +403,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String dropTableXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(dropTableScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -505,6 +502,40 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	//add column element to addColumn;
     	addColumnRollback.appendChild(newColumnScript(document, column));
     	
+    	//add data row to deleted column 
+    	String rollBackQuery = "SELECT " + dropColumnScriptDTO.getColumnName() + " FROM " + dropColumnScriptDTO.getTableSchema() + "." + dropColumnScriptDTO.getTableName();
+    	Set<Map<String, String>> resultSetRollBack = genericEntityDAO.selectQuery(rollBackQuery);
+    	
+    	if(resultSetRollBack != null) {
+    		for(Map<String, String> c : resultSetRollBack) {  
+	    		Element insertElement = document.createElement("insert");
+		    	//append INSERT to rollback
+	    		dropColumnRollBack.appendChild(insertElement);
+	    		
+	    		//INSERT element attributes
+		    	Attr schemaNameRollBack = document.createAttribute("schemaName");
+		    	schemaNameRollBack.setValue(dropColumnScriptDTO.getTableSchema());
+		    	insertElement.setAttributeNode(schemaNameRollBack);
+		    	
+		    	Attr tableNameRollBack = document.createAttribute("tableName");
+		    	tableNameRollBack.setValue(dropColumnScriptDTO.getTableName());
+		    	insertElement.setAttributeNode(tableNameRollBack);
+		    	
+	    		for(String s : c.keySet()) {
+	    			if(c.get(s) != null) {
+	    				Element columnElementRollBack = document.createElement("column");
+		        		insertElement.appendChild(columnElementRollBack);
+		        		
+		        		Attr columnNameRollBack = document.createAttribute("name");
+		        		columnNameRollBack.setValue(s);
+		        		columnElementRollBack.setAttributeNode(columnNameRollBack);
+		        		
+		        		columnElementRollBack.appendChild(document.createTextNode(c.get(s)));
+	    			}
+	    		}
+	    	}
+    	}
+    	
     	return changeSet;
 	}
 	
@@ -516,7 +547,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String dropColumnXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(dropColumnScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -680,7 +710,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String createTableXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(createTableScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -769,7 +798,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String createSchemaXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(createSchemaScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -915,7 +943,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String addColumnXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(addColumnScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1035,7 +1062,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String dropNotNullConstraintXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(dropNotNullConstraintScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1160,7 +1186,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String addNotNullConstraintXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(addNotNullConstraintScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1309,7 +1334,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String addUniqueConstraintXMLScript = "ciao";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(addUniqueConstraintScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1391,7 +1415,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String dropUniqueConstraintXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(dropUniqueConstraintScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1511,7 +1534,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String renameTableXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(renameTableScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1655,7 +1677,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String renameColumnXMLScript = "";
 		
 		try {	        
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(renameColumnScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1773,7 +1794,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String modifyColumnDataTypeXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(modifyColumnDataTypeScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1867,7 +1887,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String addAutoIncrementXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(addAutoIncrementScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -1988,7 +2007,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String addDefaultValueXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(addDefaultValueScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -2108,7 +2126,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String dropDefaultValueXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(dropDefaultValueScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -2245,7 +2262,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String addForeignKeyConstraintXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(addForeignKeyConstraintScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -2374,7 +2390,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String dropForeignKeyConstraintXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(dropForeignKeyConstraintScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -2484,7 +2499,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String deleteQueryXMLScript = "";
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(deleteDataScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -2622,7 +2636,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		String insertDataXMLScript = "";
 		
 		try {	        
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(insertDataScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {
@@ -2707,7 +2720,6 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 		
 		
 		try {
-			ChangeLog changeLog = (ChangeLog)context.getBean("sessionChangeLog");
 			Document document;
 			
 			if(updateDataScriptDTO.getAddToChangelog() && changeLog!=null && changeLog.changeLogExists()) {

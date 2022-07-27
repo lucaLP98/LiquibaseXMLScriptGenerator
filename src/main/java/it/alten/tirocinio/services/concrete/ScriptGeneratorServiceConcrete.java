@@ -43,10 +43,11 @@ import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.UpdateDataScriptDTO;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
+import it.alten.tirocinio.model.CheckConstraintMetadata;
 import it.alten.tirocinio.model.ColumnMetadata;
 import it.alten.tirocinio.model.KeyColumnMetadata;
 import it.alten.tirocinio.model.TableMetadata;
-
+import it.alten.tirocinio.repository.CheckConstraintRepository;
 import it.alten.tirocinio.repository.ColumnMetadataRepository;
 import it.alten.tirocinio.repository.KeyColumnMetadataRepository;
 import it.alten.tirocinio.repository.TableMetadataRepository;
@@ -60,6 +61,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	private final TableMetadataRepository tableMetadataRepository;
 	private final ColumnMetadataRepository columnMetadataRepository;
 	private final KeyColumnMetadataRepository keyColumnMetadataRepository;
+	private final CheckConstraintRepository checkConstraintRepository;
 	private final GenericEntityDAO genericEntityDAO;
 
 	@Resource(name = "sessionChangeLog")
@@ -71,10 +73,12 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	public ScriptGeneratorServiceConcrete(TableMetadataRepository tableMetadataRepository, 
 										  ColumnMetadataRepository columnMetadataRepository, 
 										  KeyColumnMetadataRepository keyColumnMetadataRepository, 
+										  CheckConstraintRepository checkConstraintRepository,
 										  GenericEntityDAO genericEntityDAO) {
 		this.tableMetadataRepository = tableMetadataRepository;
 		this.columnMetadataRepository = columnMetadataRepository;
 		this.keyColumnMetadataRepository = keyColumnMetadataRepository;
+		this.checkConstraintRepository = checkConstraintRepository;
 		this.genericEntityDAO = genericEntityDAO;
 	}
 	
@@ -209,43 +213,39 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	 * Create a Column XML element to append at parent element
 	 */
 	private Element newColumnScript(Document document, ColumnMetadata column) {
-		//add column element to addColumn
-    	Element columnRollback = document.createElement("column");
+		//create column element
+    	Element columnElement = document.createElement("column");
     	
     	//add column attribute
-    	Attr columnNameRolback = document.createAttribute("name");
-    	columnNameRolback.setValue(column.getColumnName());
-    	columnRollback.setAttributeNode(columnNameRolback); 
+    	Attr columnNameAttr = document.createAttribute("name");
+    	columnNameAttr.setValue(column.getColumnName());
+    	columnElement.setAttributeNode(columnNameAttr); 
     	
-    	Attr columnTypeRolback = document.createAttribute("type");
-    	columnTypeRolback.setValue(column.getColumnType());
-    	columnRollback.setAttributeNode(columnTypeRolback); 
+    	Attr columnTypeAttr = document.createAttribute("type");
+    	columnTypeAttr.setValue(column.getColumnType());
+    	columnElement.setAttributeNode(columnTypeAttr); 
     	
     	//add constraint element to column
-    	Element constraintRollback = document.createElement("constraints");
-    	columnRollback.appendChild(constraintRollback);
+    	Element constraintElement = document.createElement("constraints");
+    	columnElement.appendChild(constraintElement);
     	
     	//add constraint attribute
-    	Attr nullableRolback = document.createAttribute("nullable");     
-    	if(column.getIsNullable().equals("YES"))	nullableRolback.setValue("true");
-    	else	nullableRolback.setValue("false");
-    	constraintRollback.setAttributeNode(nullableRolback); 
-    	
-    	Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
-		uniqueNameAttribiteConstraint.setValue("Unique_constraint_"+column.getTableSchema()+"_"+column.getTableName()+"_"+column.getColumnName());
-		constraintRollback.setAttributeNode(uniqueNameAttribiteConstraint);
+    	Attr nullableAttr = document.createAttribute("nullable");     
+    	if(column.getIsNullable().equals("YES"))	nullableAttr.setValue("true");
+    	else	nullableAttr.setValue("false");
+    	constraintElement.setAttributeNode(nullableAttr); 
     	
     	if(column.getColumnKey().equals("PRI")) {
     		Attr primaryKeyRolback = document.createAttribute("primaryKey");     
     		primaryKeyRolback.setValue("true");
-    		constraintRollback.setAttributeNode(primaryKeyRolback); 
+    		constraintElement.setAttributeNode(primaryKeyRolback); 
     		
     		Attr prkmaryKeyNameAttribiteConstraint = document.createAttribute("primaryKeyName");
         	prkmaryKeyNameAttribiteConstraint.setValue("Pk_"+column.getTableSchema()+"_"+column.getTableName());
-        	constraintRollback.setAttributeNode(prkmaryKeyNameAttribiteConstraint);
+        	constraintElement.setAttributeNode(prkmaryKeyNameAttribiteConstraint);
     	}
     	
-    	return columnRollback;
+    	return columnElement;
 	}
 	
 	/*
@@ -357,6 +357,22 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
         	Attr onUpdateRollback = document.createAttribute("onUpdate");
         	onUpdateRollback.setValue(c.getOnUpdateClause());
         	addForeignKeyConstraintRollBack.setAttributeNode(onUpdateRollback);
+    	}
+    	
+    	//add Check constraint to deleted table
+    	Set<CheckConstraintMetadata> checkConstraints = checkConstraintRepository.getCheckConstraintsByTable(dropTableScriptDTO.getTableName(), dropTableScriptDTO.getTableSchema());
+    	if(checkConstraints!=null && checkConstraints.size()>0) {
+    		for(CheckConstraintMetadata c : checkConstraints) {
+    			Element sqlCheckElement = document.createElement("sql");
+    			dropTableRollBack.appendChild(sqlCheckElement);
+            	
+            	Attr dmbsCheckConstraint = document.createAttribute("dbms");
+            	dmbsCheckConstraint.setValue("mysql");
+            	sqlCheckElement.setAttributeNode(dmbsCheckConstraint);
+            	
+            	String sqlAlterQuery = "alter table " + dropTableScriptDTO.getTableSchema() + "." + dropTableScriptDTO.getTableName() + "add constraint " + c.getConstraintName() + " check " + c.getCheckClause();
+            	sqlCheckElement.appendChild(document.createTextNode(sqlAlterQuery));
+    		}
     	}
     	
     	//insert value for the deleted table

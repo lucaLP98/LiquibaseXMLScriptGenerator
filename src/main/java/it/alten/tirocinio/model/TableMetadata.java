@@ -95,7 +95,7 @@ public class TableMetadata {
 		if(!(o instanceof TableMetadata))	return false;
 		
 		TableMetadata c = (TableMetadata)o;
-		return c.tableName==this.tableName && c.tableSchema==this.tableSchema;
+		return this.tableName.equals(c.tableName) && this.tableSchema.equals(c.tableSchema);
 	}
 	
 	@Override

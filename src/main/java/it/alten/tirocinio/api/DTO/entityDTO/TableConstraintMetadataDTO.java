@@ -26,7 +26,7 @@ public class TableConstraintMetadataDTO {
 	}
 	
 	public String getTableSchema() {
-		return tableName;
+		return tableSchema;
 	}
 	
 	public String getTableName() {

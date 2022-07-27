@@ -123,7 +123,7 @@ public class KeyColumnMetadata {
 		if(!(o instanceof KeyColumnMetadata))	return false;
 		
 		KeyColumnMetadata c = (KeyColumnMetadata)o;
-		return c.baseColumnName==this.baseColumnName && c.constraintName==this.constraintName && c.baseTableName==this.baseTableName && c.baseTableSchema==this.baseTableSchema;
+		return this.baseColumnName.equals(c.baseColumnName) && this.constraintName.equals(c.constraintName) && this.baseTableName.equals(c.baseTableName) && this.baseTableSchema.equals(c.baseTableSchema);
 	}
 	
 	@Override

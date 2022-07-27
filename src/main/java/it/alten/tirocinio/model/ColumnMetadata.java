@@ -101,7 +101,7 @@ public class ColumnMetadata {
 		if(!(o instanceof ColumnMetadata))	return false;
 		
 		ColumnMetadata c = (ColumnMetadata)o;
-		return c.columnName==this.columnName && c.tableName==this.tableName && c.tableSchema==this.tableSchema;
+		return this.columnName.equals(c.columnName) && this.tableName.equals(c.columnName) && this.tableSchema.equals(c.tableSchema);
 	}
 	
 	@Override

@@ -29,7 +29,7 @@ public class TableConstraintMetadata {
 	}
 	
 	public String getTableSchema() {
-		return tableName;
+		return tableSchema;
 	}
 	
 	public String getTableName() {
@@ -68,7 +68,7 @@ public class TableConstraintMetadata {
 		if(!(o instanceof TableConstraintMetadata))	return false;
 		
 		TableConstraintMetadata c = (TableConstraintMetadata)o;
-		return c.constraintName==this.constraintName && c.tableName==this.tableName && c.tableSchema==this.tableSchema;
+		return this.constraintName.equals(c.constraintName) && this.tableName.equals(c.tableName) && this.tableSchema.equals(c.tableSchema);
 	}
 	
 	@Override

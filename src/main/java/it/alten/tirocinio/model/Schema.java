@@ -43,7 +43,7 @@ public class Schema {
 		if(!(o instanceof Schema))	return false;
 		
 		Schema c = (Schema)o;
-		return c.schemaName==this.schemaName;
+		return this.schemaName.equals(c.schemaName);
 	}
 	
 	@Override

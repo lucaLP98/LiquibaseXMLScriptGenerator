@@ -20,5 +20,6 @@ public interface ColumnMetadataMapper {
 	@Mapping(source="isNullable", target="isNullable")
 	@Mapping(source="columnName", target="columnName")
 	@Mapping(source="columnKey", target="columnKey")
+	@Mapping(source="columnDefault", target="columnDefault")
 	ColumnMetadataDTO ColumnMetadataToColumnMetadataDTO(ColumnMetadata columnMetadata);
 }

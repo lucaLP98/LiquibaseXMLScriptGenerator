@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
-import it.alten.tirocinio.services.SchemaService;
+import it.alten.tirocinio.services.SchemaMetadataService;
 
 /*
  * Spring Rest Controller for operation on Database Schemas
@@ -15,13 +15,13 @@ import it.alten.tirocinio.services.SchemaService;
 @RestController
 @RequestMapping("/api/schema/")
 public class SchemaController {
-	private final SchemaService schemaService;
+	private final SchemaMetadataService schemaMetadataService;
 	
 	/*
 	 * Constructors
 	 */
-	public SchemaController(SchemaService schemaService) {
-		this.schemaService = schemaService;
+	public SchemaController(SchemaMetadataService schemaMetadataService) {
+		this.schemaMetadataService = schemaMetadataService;
 	}
 	
 	/*
@@ -30,6 +30,6 @@ public class SchemaController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public SchemaListDTO getAllDatabaseSchema(){
-		return schemaService.getAllDatabaseSchema();
+		return schemaMetadataService.getAllDatabaseSchema();
 	}
 }

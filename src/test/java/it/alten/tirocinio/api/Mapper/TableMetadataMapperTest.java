@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
-import it.alten.tirocinio.model.TableMetadata;
+import it.alten.tirocinio.model.mysql.TableMetadataMySql;
 
 public class TableMetadataMapperTest {
 	private final String SCHEMA_NAME = "demo1";
@@ -24,13 +24,13 @@ public class TableMetadataMapperTest {
 	
 	@Test
 	public void tableMetadataToTableMetadataDTOTest() {
-		TableMetadata tableMetadata = new TableMetadata();
-		tableMetadata.setTableName(TABLE_NAME);
-		tableMetadata.setTableRows(TABLE_ROWS);
-		tableMetadata.setTableSchema(SCHEMA_NAME);
-		tableMetadata.setTableType(TABLE_TYPE);
+		TableMetadataMySql tableMetadataMySql = new TableMetadataMySql();
+		tableMetadataMySql.setTableName(TABLE_NAME);
+		tableMetadataMySql.setTableRows(TABLE_ROWS);
+		tableMetadataMySql.setTableSchema(SCHEMA_NAME);
+		tableMetadataMySql.setTableType(TABLE_TYPE);
 		
-		TableMetadataDTO dto = mapper.tableMetadataToTableMetadataDTO(tableMetadata);
+		TableMetadataDTO dto = mapper.tableMetadataToTableMetadataDTO(tableMetadataMySql);
 		
 		assertEquals(SCHEMA_NAME, dto.getTableSchema());
 		assertEquals(TABLE_NAME, dto.getTableName());

@@ -1,40 +1,42 @@
-package it.alten.tirocinio.services.concrete;
+package it.alten.tirocinio.services.concrete.mysql;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import it.alten.tirocinio.api.DTO.entityDTO.ColumnMetadataDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.ColumnMetadataListDTO;
 import it.alten.tirocinio.api.Mapper.ColumnMetadataMapper;
-import it.alten.tirocinio.repository.ColumnMetadataRepository;
+import it.alten.tirocinio.model.mysql.ColumnMetadataMySql;
 import it.alten.tirocinio.services.ColumnMetadataService;
-import it.alten.tirocinio.model.ColumnMetadata;
+import it.alten.tirocinio.repository.mysql.ColumnMetadataRepository;
 
 /*
  * Service implementation of ColumnMetadataService interface
  */
+@Profile("mysql")
 @Service
-public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
+public class ColumnMetadataServiceMySql implements ColumnMetadataService {
 	private ColumnMetadataRepository columnMetadataRepository;
 
 	/* 
 	 * Constructors
 	 */
-	public ColumnMetadataServiceConcrete(ColumnMetadataRepository columnMetadataRepository) {
+	public ColumnMetadataServiceMySql(ColumnMetadataRepository columnMetadataRepository) {
 		this.columnMetadataRepository = columnMetadataRepository;
 	}
 	
 	/*
-	 * Converter between Set of ColumnMetadata and ColumnMetadataListDTO
+	 * Converter between Set of ColumnMetadataMySql and ColumnMetadataListDTO
 	 */
-	private ColumnMetadataListDTO ColumnMetadataSetToListDTO(Set<ColumnMetadata> columnsMetadata) {
+	private ColumnMetadataListDTO ColumnMetadataSetToListDTO(Set<ColumnMetadataMySql> columnsMetadata) {
 		List<ColumnMetadataDTO> columnsDTO = new ArrayList<>();
 		
 		if(columnsMetadata != null) {
-			for(ColumnMetadata c : columnsMetadata) {
+			for(ColumnMetadataMySql c : columnsMetadata) {
 				columnsDTO.add(ColumnMetadataMapper.INSTANCE.ColumnMetadataToColumnMetadataDTO(c));
 			}
 		}
@@ -69,8 +71,8 @@ public class ColumnMetadataServiceConcrete implements ColumnMetadataService {
 		if(schemaName==null || tableName==null || columnName==null || schemaName.equals("") || tableName.equals("") || columnName.equals(""))
 			return new ColumnMetadataDTO();
 		
-		ColumnMetadata c = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName);
-		if(c == null) c = new ColumnMetadata();
+		ColumnMetadataMySql c = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName);
+		if(c == null) c = new ColumnMetadataMySql();
 		
 		return ColumnMetadataMapper.INSTANCE.ColumnMetadataToColumnMetadataDTO(c);
 	}

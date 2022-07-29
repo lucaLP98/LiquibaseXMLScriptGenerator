@@ -1,4 +1,4 @@
-package it.alten.tirocinio.model;
+package it.alten.tirocinio.model.mysql;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "information_schema.schemata")
-public class Schema {
+public class SchemaMetadatMySql {
 	@Id
 	@Column(name = "schema_name", insertable=false, updatable=false)
 	private String schemaName;
@@ -40,9 +40,9 @@ public class Schema {
 	@Override
 	public boolean equals(Object o) {
 		if(o == null)	return false;
-		if(!(o instanceof Schema))	return false;
+		if(!(o instanceof SchemaMetadatMySql))	return false;
 		
-		Schema c = (Schema)o;
+		SchemaMetadatMySql c = (SchemaMetadatMySql)o;
 		return this.schemaName.equals(c.schemaName);
 	}
 	

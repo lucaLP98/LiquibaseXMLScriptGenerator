@@ -1,4 +1,4 @@
-package it.alten.tirocinio.services;
+package it.alten.tirocinio.services.concrete.mysql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -13,16 +13,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
-import it.alten.tirocinio.model.Schema;
-import it.alten.tirocinio.repository.SchemaRepository;
-import it.alten.tirocinio.services.concrete.SchemaServiceConcrete;
+import it.alten.tirocinio.model.mysql.SchemaMetadatMySql;
+import it.alten.tirocinio.repository.mysql.SchemaRepository;
 
-public class SchemaServiceConcreteTest {
+public class SchemaMetadataServiceMySqlTest {
 	@Mock
 	private SchemaRepository schemaRepository;
 	
 	@InjectMocks
-	private SchemaServiceConcrete service;
+	private SchemaMetadataServiceMySql service;
 	
 	@BeforeEach
 	public void init() {
@@ -31,13 +30,13 @@ public class SchemaServiceConcreteTest {
 	
 	@Test
 	public void getAllDatabaseSchemaTest() {
-		Schema s1 = new Schema();
+		SchemaMetadatMySql s1 = new SchemaMetadatMySql();
 		s1.setSchemaName("s1");
-		Schema s2 = new Schema();
+		SchemaMetadatMySql s2 = new SchemaMetadatMySql();
 		s2.setSchemaName("s2");
-		Schema s3 = new Schema();
+		SchemaMetadatMySql s3 = new SchemaMetadatMySql();
 		s3.setSchemaName("s3");
-		Set<Schema> set = new HashSet<>();
+		Set<SchemaMetadatMySql> set = new HashSet<>();
 		set.add(s3);
 		set.add(s2);
 		set.add(s1);

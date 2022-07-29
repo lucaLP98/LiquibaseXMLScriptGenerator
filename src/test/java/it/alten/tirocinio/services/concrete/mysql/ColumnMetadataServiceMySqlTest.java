@@ -1,4 +1,4 @@
-package it.alten.tirocinio.services;
+package it.alten.tirocinio.services.concrete.mysql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,33 +16,32 @@ import org.mockito.MockitoAnnotations;
 
 import it.alten.tirocinio.api.DTO.entityDTO.ColumnMetadataDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.ColumnMetadataListDTO;
-import it.alten.tirocinio.model.ColumnMetadata;
-import it.alten.tirocinio.repository.ColumnMetadataRepository;
-import it.alten.tirocinio.services.concrete.ColumnMetadataServiceConcrete;
+import it.alten.tirocinio.model.mysql.ColumnMetadataMySql;
+import it.alten.tirocinio.repository.mysql.ColumnMetadataRepository;
 
-public class ColumnMetadataServiceConcreteTest {
+public class ColumnMetadataServiceMySqlTest {
 	@Mock
 	private ColumnMetadataRepository repository;
 	
 	@InjectMocks
-	private ColumnMetadataServiceConcrete service;
+	private ColumnMetadataServiceMySql service;
 	
-	private Set<ColumnMetadata> testSet;
+	private Set<ColumnMetadataMySql> testSet;
 	private int TEST_SET_SIZE;
 	
 	@BeforeEach
 	public void init() {
 		MockitoAnnotations.openMocks(this);
 		
-		ColumnMetadata c1 = new ColumnMetadata();
+		ColumnMetadataMySql c1 = new ColumnMetadataMySql();
 		c1.setColumnName("col1");
 		c1.setTableName("tab1");
 		c1.setTableSchema("demo");
-		ColumnMetadata c2 = new ColumnMetadata();
+		ColumnMetadataMySql c2 = new ColumnMetadataMySql();
 		c2.setColumnName("col2");
 		c2.setTableName("tab1");
 		c2.setTableSchema("demo");
-		ColumnMetadata c3 = new ColumnMetadata();
+		ColumnMetadataMySql c3 = new ColumnMetadataMySql();
 		c3.setColumnName("col3");
 		c3.setTableName("tab1");
 		c3.setTableSchema("demo");
@@ -554,7 +553,7 @@ public class ColumnMetadataServiceConcreteTest {
 		String tableName = "tab1";
 		String columnName = "col1";
 		
-		ColumnMetadata c = new ColumnMetadata();
+		ColumnMetadataMySql c = new ColumnMetadataMySql();
 		c.setColumnName(columnName);
 		c.setTableName(tableName);
 		c.setTableSchema(schemaName);
@@ -574,7 +573,7 @@ public class ColumnMetadataServiceConcreteTest {
 		String tableName = "tab1";
 		String columnName = "col1";
 		
-		when(repository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName)).thenReturn(new ColumnMetadata());
+		when(repository.getDBColumnByNameAndTableAndSchema(schemaName, tableName, columnName)).thenReturn(new ColumnMetadataMySql());
 		
 		ColumnMetadataDTO metadataDTO = service.getColumnByNameAndTable(schemaName, tableName, columnName);
 		

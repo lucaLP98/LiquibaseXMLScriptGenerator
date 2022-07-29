@@ -1,4 +1,4 @@
-package it.alten.tirocinio.services.concrete;
+package it.alten.tirocinio.services.concrete.mysql;
 
 import java.io.StringWriter;
 import java.util.Map;
@@ -43,21 +43,21 @@ import it.alten.tirocinio.api.DTO.scriptDTO.ScriptDTO;
 import it.alten.tirocinio.api.DTO.scriptDTO.UpdateDataScriptDTO;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
-import it.alten.tirocinio.model.CheckConstraintMetadata;
-import it.alten.tirocinio.model.ColumnMetadata;
-import it.alten.tirocinio.model.KeyColumnMetadata;
-import it.alten.tirocinio.model.TableMetadata;
-import it.alten.tirocinio.repository.CheckConstraintRepository;
-import it.alten.tirocinio.repository.ColumnMetadataRepository;
-import it.alten.tirocinio.repository.KeyColumnMetadataRepository;
-import it.alten.tirocinio.repository.TableMetadataRepository;
+import it.alten.tirocinio.model.mysql.CheckConstraintMetadataMySql;
+import it.alten.tirocinio.model.mysql.ColumnMetadataMySql;
+import it.alten.tirocinio.model.mysql.KeyColumnMetadataMySql;
+import it.alten.tirocinio.model.mysql.TableMetadataMySql;
+import it.alten.tirocinio.repository.mysql.CheckConstraintRepository;
+import it.alten.tirocinio.repository.mysql.ColumnMetadataRepository;
+import it.alten.tirocinio.repository.mysql.KeyColumnMetadataRepository;
+import it.alten.tirocinio.repository.mysql.TableMetadataRepository;
 import it.alten.tirocinio.services.ScriptGeneratorService;
 
 /*
  * Service implementation of ScriptGeneratorService interface
  */
 @Service
-public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
+public class ScriptGeneratorServiceMySql implements ScriptGeneratorService {
 	private final TableMetadataRepository tableMetadataRepository;
 	private final ColumnMetadataRepository columnMetadataRepository;
 	private final KeyColumnMetadataRepository keyColumnMetadataRepository;
@@ -70,7 +70,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	/* 
 	 * Contructors
 	 */
-	public ScriptGeneratorServiceConcrete(TableMetadataRepository tableMetadataRepository, 
+	public ScriptGeneratorServiceMySql(TableMetadataRepository tableMetadataRepository, 
 										  ColumnMetadataRepository columnMetadataRepository, 
 										  KeyColumnMetadataRepository keyColumnMetadataRepository, 
 										  CheckConstraintRepository checkConstraintRepository,
@@ -212,7 +212,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	/*
 	 * Create a Column XML element to append at parent element
 	 */
-	private Element newColumnScript(Document document, ColumnMetadata column) {
+	private Element newColumnScript(Document document, ColumnMetadataMySql column) {
 		//create column element
     	Element columnElement = document.createElement("column");
     	
@@ -297,8 +297,8 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	/*
     	 * Generate RollBack
     	 */
-    	TableMetadata table = tableMetadataRepository.getDBTablesByNameAndSchema(dropTableScriptDTO.getTableSchema(), dropTableScriptDTO.getTableName());
-    	Set<ColumnMetadata> columns = columnMetadataRepository.getAllDBColumnsByTableAndSchema(dropTableScriptDTO.getTableSchema(), dropTableScriptDTO.getTableName());
+    	TableMetadataMySql table = tableMetadataRepository.getDBTablesByNameAndSchema(dropTableScriptDTO.getTableSchema(), dropTableScriptDTO.getTableName());
+    	Set<ColumnMetadataMySql> columns = columnMetadataRepository.getAllDBColumnsByTableAndSchema(dropTableScriptDTO.getTableSchema(), dropTableScriptDTO.getTableName());
     	//create rollback element
     	Element dropTableRollBack = document.createElement("rollback");
     	changeSet.appendChild(dropTableRollBack);
@@ -316,13 +316,13 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	createTableRollBack.setAttributeNode(schemaNameRollback);   
     	
     	//add column elements to createTableRollback element
-    	for(ColumnMetadata c : columns) {
+    	for(ColumnMetadataMySql c : columns) {
     		createTableRollBack.appendChild(newColumnScript(document, c));
     	}
     	
     	//add foreign key constraint
-    	Set<KeyColumnMetadata> keyColumnsMetadata = keyColumnMetadataRepository.getKeyColumnForeignKeyConstraintsByTableAndSchema(dropTableScriptDTO.getTableName(), dropTableScriptDTO.getTableSchema());
-    	for(KeyColumnMetadata c : keyColumnsMetadata) {
+    	Set<KeyColumnMetadataMySql> keyColumnsMetadata = keyColumnMetadataRepository.getKeyColumnForeignKeyConstraintsByTableAndSchema(dropTableScriptDTO.getTableName(), dropTableScriptDTO.getTableSchema());
+    	for(KeyColumnMetadataMySql c : keyColumnsMetadata) {
 			Element addForeignKeyConstraintRollBack = document.createElement("addForeignKeyConstraint");
         	dropTableRollBack.appendChild(addForeignKeyConstraintRollBack);
         	
@@ -360,9 +360,9 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	}
     	
     	//add Check constraint to deleted table
-    	Set<CheckConstraintMetadata> checkConstraints = checkConstraintRepository.getCheckConstraintsByTable(dropTableScriptDTO.getTableName(), dropTableScriptDTO.getTableSchema());
+    	Set<CheckConstraintMetadataMySql> checkConstraints = checkConstraintRepository.getCheckConstraintsByTable(dropTableScriptDTO.getTableName(), dropTableScriptDTO.getTableSchema());
     	if(checkConstraints!=null && checkConstraints.size()>0) {
-    		for(CheckConstraintMetadata c : checkConstraints) {
+    		for(CheckConstraintMetadataMySql c : checkConstraints) {
     			Element sqlCheckElement = document.createElement("sql");
     			dropTableRollBack.appendChild(sqlCheckElement);
             	
@@ -497,7 +497,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	/*
     	 * Generate RollBack
     	 */
-    	ColumnMetadata column = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(dropColumnScriptDTO.getTableSchema(), dropColumnScriptDTO.getTableName(), dropColumnScriptDTO.getColumnName());
+    	ColumnMetadataMySql column = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(dropColumnScriptDTO.getTableSchema(), dropColumnScriptDTO.getTableName(), dropColumnScriptDTO.getColumnName());
     	//create rollback element
     	Element dropColumnRollBack = document.createElement("rollback");
     	changeSet.appendChild(dropColumnRollBack);
@@ -807,7 +807,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	}
 	
 	/*
-	 * Method for generate a Create Schema Script
+	 * Method for generate a Create SchemaMetadatMySql Script
 	 */
 	@Override
 	public String generateCreateSchemaLiquibaseXMLScript(CreateSchemaScriptDTO createSchemaScriptDTO){
@@ -2353,8 +2353,8 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	/*
     	 * Rollback Element
     	 */	
-		KeyColumnMetadata keyColumnMetadata = keyColumnMetadataRepository.getKeyColumnForeignKeyConstraintsByConstraintNameAndSchema(dropForeignKeyConstraintScriptDTO.getConstraintName(), dropForeignKeyConstraintScriptDTO.getBaseSchemaName());
-		if(keyColumnMetadata != null) {
+		KeyColumnMetadataMySql keyColumnMetadataMySql = keyColumnMetadataRepository.getKeyColumnForeignKeyConstraintsByConstraintNameAndSchema(dropForeignKeyConstraintScriptDTO.getConstraintName(), dropForeignKeyConstraintScriptDTO.getBaseSchemaName());
+		if(keyColumnMetadataMySql != null) {
 			Element rollbackElement = document.createElement("rollback");
     		changeSet.appendChild(rollbackElement);
     		
@@ -2363,35 +2363,35 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     		rollbackElement.appendChild(addForeignKeyConstraintRollback);
     		
     		Attr schemaNameRollback = document.createAttribute("baseTableSchemaName");
-        	schemaNameRollback.setValue(keyColumnMetadata.getBaseTableSchema());
+        	schemaNameRollback.setValue(keyColumnMetadataMySql.getBaseTableSchema());
         	addForeignKeyConstraintRollback.setAttributeNode(schemaNameRollback);
         	
         	Attr tableNameRollback = document.createAttribute("baseTableName");
-        	tableNameRollback.setValue(keyColumnMetadata.getBaseTableName());
+        	tableNameRollback.setValue(keyColumnMetadataMySql.getBaseTableName());
         	addForeignKeyConstraintRollback.setAttributeNode(tableNameRollback);
         	
         	Attr constraintNameRollback = document.createAttribute("constraintName");
-        	constraintNameRollback.setValue(keyColumnMetadata.getConstraintName());
+        	constraintNameRollback.setValue(keyColumnMetadataMySql.getConstraintName());
         	addForeignKeyConstraintRollback.setAttributeNode(constraintNameRollback);
         	
         	Attr referencedColumnNameRollback = document.createAttribute("referencedColumnNames");
-        	referencedColumnNameRollback.setValue(keyColumnMetadata.getReferencedColumnName());
+        	referencedColumnNameRollback.setValue(keyColumnMetadataMySql.getReferencedColumnName());
         	addForeignKeyConstraintRollback.setAttributeNode(referencedColumnNameRollback);
         	
         	Attr referencedTableNameRollback = document.createAttribute("referencedTableName");
-        	referencedTableNameRollback.setValue(keyColumnMetadata.getReferencedTableName());
+        	referencedTableNameRollback.setValue(keyColumnMetadataMySql.getReferencedTableName());
         	addForeignKeyConstraintRollback.setAttributeNode(referencedTableNameRollback);
         	
         	Attr referencedTableSchemaNameRollback = document.createAttribute("referencedTableSchemaName");
-        	referencedTableSchemaNameRollback.setValue(keyColumnMetadata.getReferencedTableSchema());
+        	referencedTableSchemaNameRollback.setValue(keyColumnMetadataMySql.getReferencedTableSchema());
         	addForeignKeyConstraintRollback.setAttributeNode(referencedTableSchemaNameRollback);
         	
         	Attr onDeleteRollback = document.createAttribute("onDelete");
-        	onDeleteRollback.setValue(keyColumnMetadata.getOnDeleteClause());
+        	onDeleteRollback.setValue(keyColumnMetadataMySql.getOnDeleteClause());
         	addForeignKeyConstraintRollback.setAttributeNode(onDeleteRollback);
         	
         	Attr onUpdateRollback = document.createAttribute("onUpdate");
-        	onUpdateRollback.setValue(keyColumnMetadata.getOnUpdateClause());
+        	onUpdateRollback.setValue(keyColumnMetadataMySql.getOnUpdateClause());
         	addForeignKeyConstraintRollback.setAttributeNode(onUpdateRollback);
 		}
 		
@@ -2544,7 +2544,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	 * Create Element ChangeSet for Insert Query Script
 	 */
 	private Element generateInsertDataChangeSet(Document document, InsertDataScriptDTO insertDataScriptDTO) {
-		Set<ColumnMetadata> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(insertDataScriptDTO.getSchemaName(), insertDataScriptDTO.getTableName());
+		Set<ColumnMetadataMySql> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(insertDataScriptDTO.getSchemaName(), insertDataScriptDTO.getTableName());
 		
 		//changeSet element
         Element changeSet = createChangeSetElement(document, insertDataScriptDTO);
@@ -2554,7 +2554,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
          */
         String whereCondition = "";
         int idFieldNumber = 0;
-		for(ColumnMetadata c : columnsMetadatas) {
+		for(ColumnMetadataMySql c : columnsMetadatas) {
 			if(c.getColumnKey().equals("PRI")) {
 				idFieldNumber++;
 				if(idFieldNumber > 1) {
@@ -2598,7 +2598,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	insertElement.setAttributeNode(tableName);
     	
     	//append column value to insert
-    	for(ColumnMetadata c : columnsMetadatas) {
+    	for(ColumnMetadataMySql c : columnsMetadatas) {
     		if(!insertDataScriptDTO.getColumns().get(c.getColumnName()).equals("")) {
     			Element columnElement = document.createElement("column");
         		insertElement.appendChild(columnElement);
@@ -2633,7 +2633,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	deleteRollback.appendChild(whereConditionElementRollback);
     	
     	String whereConditionRollback = "";
-    	for(ColumnMetadata c : columnsMetadatas) {
+    	for(ColumnMetadataMySql c : columnsMetadatas) {
     		if(!insertDataScriptDTO.getColumns().get(c.getColumnName()).equals("")) {
     			whereConditionRollback += c.getColumnName() + " = \"" + insertDataScriptDTO.getColumns().get(c.getColumnName())  + "\" AND ";
     		}
@@ -2681,7 +2681,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
 	 * Create Element ChangeSet for UPDATE data Script
 	 */
 	private Element generateUpdateDataChangeSet(Document document, UpdateDataScriptDTO updateDataScriptDTO) {
-		Set<ColumnMetadata> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(updateDataScriptDTO.getSchemaName(), updateDataScriptDTO.getTableName());
+		Set<ColumnMetadataMySql> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(updateDataScriptDTO.getSchemaName(), updateDataScriptDTO.getTableName());
 
 		//changeSet element
         Element changeSet = createChangeSetElement(document, updateDataScriptDTO);
@@ -2703,7 +2703,7 @@ public class ScriptGeneratorServiceConcrete implements ScriptGeneratorService {
     	updateElement.setAttributeNode(tableName);
     	
     	//append column value to update element
-    	for(ColumnMetadata c : columnsMetadatas) {
+    	for(ColumnMetadataMySql c : columnsMetadatas) {
     		if(!updateDataScriptDTO.getColumns().get(c.getColumnName()).equals("")) {
     			Element columnElement = document.createElement("column");
     			updateElement.appendChild(columnElement);

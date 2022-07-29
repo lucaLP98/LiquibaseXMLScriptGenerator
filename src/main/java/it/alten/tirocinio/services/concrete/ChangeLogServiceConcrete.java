@@ -52,7 +52,7 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	/*
 	 * Generate a XML Script in a String format
 	 */
-	private String generateXMLScriptToString(Document document) {
+	private String generateXMLScriptToString(Document document, boolean indent) {
 		String XMLScript = "";
 		
 		try {
@@ -64,9 +64,11 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
             Transformer transformer = transformerFactory.newTransformer();
             
             //indentation for the XML script
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            if(indent) {
+            	 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                 transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");  
+            }
+           transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             
             DOMSource domSource = new DOMSource(document);
             
@@ -98,12 +100,12 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 		
 		boolean ret;
 		try {
-	        document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-	        changeLog.setChangeLogDocument(document);
+	        document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();      
 	        
 	        //create ChangeLog element
 	        Element newChangeLog =  document.createElement("databaseChangeLog");
-			
+	        document.appendChild(newChangeLog);
+	        
 			//add changeLog's attributes
 			Attr xmlns = document.createAttribute("xmlns");
 			xmlns.setValue("http://www.liquibase.org/xml/ns/dbchangelog");
@@ -121,8 +123,8 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 			schemaLocation.setValue("http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd\r\n http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd");
 			newChangeLog.setAttributeNode(schemaLocation);
 	        
+			changeLog.setChangeLogDocument(document);
 			changeLog.createChangeLog(newChangeLog);
-			changeLog.getChangeLogDocument().appendChild(changeLog.getChangeLogElement());
 			changeLog.setCreated(true);
 			
 			System.out.println("changelog created");
@@ -153,11 +155,11 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 * Method which return changelog in String format
 	 */
 	@Override
-	public String printChangeLog() {
+	public String printChangeLog(boolean indent) {
 		String script;
 
 		if(changeLog != null && changeLog.changeLogExists()) {
-			script = generateXMLScriptToString(changeLog.getChangeLogDocument());
+			script = generateXMLScriptToString(changeLog.getChangeLogDocument(), indent);
 		}else {
 			script = "There isn't a open LiquibaseChangeLog.";
 		}
@@ -173,7 +175,7 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 		if(changeLog != null && changeLog.changeLogExists()) {
 			return changeSetToChangeSetListDTO(changeLog.getChangeSets());
 		}
-		return null;
+		return new ChangeSetListDTO(new ArrayList<>());
 	}
 	
 	/*
@@ -181,7 +183,7 @@ public class ChangeLogServiceConcrete implements ChangeLogService {
 	 */
 	@Override
 	public boolean removeChangeSet(String changeSetId) {
-		if(changeLog != null && changeLog.changeLogExists()) {
+		if(changeSetId!=null && !changeSetId.equals("") && changeLog != null && changeLog.changeLogExists()) {
 			return changeLog.deleteChangeSetFromChangeLog(changeSetId);
 		}
 		return false;

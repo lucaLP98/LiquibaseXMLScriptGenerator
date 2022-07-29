@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.alten.tirocinio.api.DTO.entityDTO.ColumnMetadataDTO;
-import it.alten.tirocinio.model.ColumnMetadata;
+import it.alten.tirocinio.model.mysql.ColumnMetadataMySql;
 
 public class ColumnMetadataMapperTest {
 	private ColumnMetadataMapper mapper;
@@ -27,7 +27,7 @@ public class ColumnMetadataMapperTest {
 	
 	@Test
 	public void ColumnMetadataToColumnMetadataDTOTest() {
-		ColumnMetadata entity = new ColumnMetadata();
+		ColumnMetadataMySql entity = new ColumnMetadataMySql();
 		entity.setColumnName(COLUMN_NAME);
 		entity.setTableSchema(TABLE_SCHEMA);
 		entity.setTableName(TABLE_NAME);

@@ -1,4 +1,4 @@
-package it.alten.tirocinio.services;
+package it.alten.tirocinio.services.concrete.mysql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,31 +16,30 @@ import org.mockito.MockitoAnnotations;
 
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataListDTO;
-import it.alten.tirocinio.model.TableMetadata;
-import it.alten.tirocinio.repository.TableMetadataRepository;
-import it.alten.tirocinio.services.concrete.TableMetadataServiceConcrete;
+import it.alten.tirocinio.model.mysql.TableMetadataMySql;
+import it.alten.tirocinio.repository.mysql.TableMetadataRepository;
 
-public class TableMetadataServiceConcreteTest {
+public class TableMetadataServiceMySqlTest {
 	@Mock
 	private TableMetadataRepository tableMetadataRepository;
 	
 	@InjectMocks
-	private TableMetadataServiceConcrete service;
+	private TableMetadataServiceMySql service;
 	
-	private Set<TableMetadata> testSet;
+	private Set<TableMetadataMySql> testSet;
 	private int TEST_SET_SIZE;
 	
 	@BeforeEach
 	public void init() {
 		MockitoAnnotations.openMocks(this);
 		
-		TableMetadata t1 = new TableMetadata();
+		TableMetadataMySql t1 = new TableMetadataMySql();
 		t1.setTableName("t1");
 		t1.setTableSchema("demo");
-		TableMetadata t2 = new TableMetadata();
+		TableMetadataMySql t2 = new TableMetadataMySql();
 		t2.setTableName("t2");
 		t2.setTableSchema("demo");
-		TableMetadata t3 = new TableMetadata();
+		TableMetadataMySql t3 = new TableMetadataMySql();
 		t3.setTableName("t3");
 		t3.setTableSchema("demo");
 		testSet = new HashSet<>();
@@ -118,7 +117,7 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = "demo";
 		String tableName = "tab";
 		
-		TableMetadata t1 = new TableMetadata();
+		TableMetadataMySql t1 = new TableMetadataMySql();
 		t1.setTableName(tableName);
 		t1.setTableSchema(schemaName);
 		
@@ -135,7 +134,7 @@ public class TableMetadataServiceConcreteTest {
 		String schemaName = "demo";
 		String tableName = "tab";
 		
-		TableMetadata t1 = new TableMetadata();
+		TableMetadataMySql t1 = new TableMetadataMySql();
 		t1.setTableName(tableName);
 		t1.setTableSchema(schemaName);
 		

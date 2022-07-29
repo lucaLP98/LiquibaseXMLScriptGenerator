@@ -1,40 +1,42 @@
-package it.alten.tirocinio.services.concrete;
+package it.alten.tirocinio.services.concrete.mysql;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataListDTO;
 import it.alten.tirocinio.api.Mapper.TableMetadataMapper;
-import it.alten.tirocinio.model.TableMetadata;
-import it.alten.tirocinio.repository.TableMetadataRepository;
+import it.alten.tirocinio.model.mysql.TableMetadataMySql;
+import it.alten.tirocinio.repository.mysql.TableMetadataRepository;
 import it.alten.tirocinio.services.TableMetadataService;
 
 /*
  * Service implementation of TableMetadataService interface
  */
+@Profile("mysql")
 @Service
-public class TableMetadataServiceConcrete implements TableMetadataService {
+public class TableMetadataServiceMySql implements TableMetadataService {
 	private final TableMetadataRepository tableMetadataRepository;
 	
 	/*
 	 * Constructors
 	 */
-	public TableMetadataServiceConcrete(TableMetadataRepository tableMetadataRepository) {
+	public TableMetadataServiceMySql(TableMetadataRepository tableMetadataRepository) {
 		this.tableMetadataRepository = tableMetadataRepository;
 	}
 	
 	/*
-	 * Converter between set of TableMetadata and TableMetadataListDTO
+	 * Converter between set of TableMetadataMySql and TableMetadataListDTO
 	 */
-	private TableMetadataListDTO TableMetadataSetToListDTO(Set<TableMetadata> tablesMetadata) {
+	private TableMetadataListDTO TableMetadataSetToListDTO(Set<TableMetadataMySql> tablesMetadata) {
 		List<TableMetadataDTO> tablesDTO = new ArrayList<>();
 		
 		if(tablesMetadata != null) {
-			for(TableMetadata t: tablesMetadata) {
+			for(TableMetadataMySql t: tablesMetadata) {
 				tablesDTO.add(TableMetadataMapper.INSTANCE.tableMetadataToTableMetadataDTO(t));
 			}
 		}
@@ -65,8 +67,8 @@ public class TableMetadataServiceConcrete implements TableMetadataService {
 	 */
 	@Override
 	public TableMetadataDTO getTableByNameAndSchema(String schemaName, String tableName) {
-		TableMetadata t = tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName);
-		if(t == null) t = new TableMetadata();
+		TableMetadataMySql t = tableMetadataRepository.getDBTablesByNameAndSchema(schemaName, tableName);
+		if(t == null) t = new TableMetadataMySql();
 		
 		return TableMetadataMapper.INSTANCE.tableMetadataToTableMetadataDTO(t);
 	}

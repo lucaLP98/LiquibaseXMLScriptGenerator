@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.alten.tirocinio.api.DTO.entityDTO.TableConstraintMetadataDTO;
-import it.alten.tirocinio.model.TableConstraintMetadata;
+import it.alten.tirocinio.model.mysql.TableConstraintMetadataMySql;
 
 public class TableConstraintMetadataMapperTest {
 	private final String SCHEMA_NAME = "demo1";
@@ -24,7 +24,7 @@ public class TableConstraintMetadataMapperTest {
 	
 	@Test
 	public void TableConstraintMetadataDTOToTableConstraintMetadataTest() {
-		TableConstraintMetadata entity = new TableConstraintMetadata();
+		TableConstraintMetadataMySql entity = new TableConstraintMetadataMySql();
 		entity.setConstraintName(CONSTRAINT_NAME);
 		entity.setConstraintType(CONSTRAINT_TYPE);
 		entity.setTableName(TABLE_NAME);

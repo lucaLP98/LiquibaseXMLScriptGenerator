@@ -1,4 +1,4 @@
-package it.alten.tirocinio.model;
+package it.alten.tirocinio.model.mysql;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "information_schema.table_constraints")
-public class TableConstraintMetadata {
+public class TableConstraintMetadataMySql {
 	@Id
 	@Column(name = "constraint_name", insertable=false, updatable=false)
 	private String constraintName;
@@ -65,9 +65,9 @@ public class TableConstraintMetadata {
 	@Override
 	public boolean equals(Object o) {
 		if(o == null)	return false;
-		if(!(o instanceof TableConstraintMetadata))	return false;
+		if(!(o instanceof TableConstraintMetadataMySql))	return false;
 		
-		TableConstraintMetadata c = (TableConstraintMetadata)o;
+		TableConstraintMetadataMySql c = (TableConstraintMetadataMySql)o;
 		return this.constraintName.equals(c.constraintName) && this.tableName.equals(c.tableName) && this.tableSchema.equals(c.tableSchema);
 	}
 	

@@ -22,11 +22,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
-import it.alten.tirocinio.services.SchemaService;
+import it.alten.tirocinio.services.SchemaMetadataService;
 
 public class SchemaControllerTest {
 	@Mock
-	private SchemaService schemaService;
+	private SchemaMetadataService schemaMetadataService;
 	
 	@InjectMocks
 	private SchemaController schemaController;
@@ -47,13 +47,13 @@ public class SchemaControllerTest {
 		
 		SchemaListDTO schemaList = new SchemaListDTO(Arrays.asList(s1, s2, s3));
 		
-		when(schemaService.getAllDatabaseSchema()).thenReturn(schemaList);
+		when(schemaMetadataService.getAllDatabaseSchema()).thenReturn(schemaList);
 		
 		mockMvc.perform(get("/api/schema/"))
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
         	.andExpect(status().isOk())
         	.andExpect(jsonPath("$.schema_list", hasSize(3)));
 		
-		verify(schemaService, times(1)).getAllDatabaseSchema();
+		verify(schemaMetadataService, times(1)).getAllDatabaseSchema();
 	}
 }

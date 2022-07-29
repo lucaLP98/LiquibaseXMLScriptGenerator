@@ -63,7 +63,7 @@ public class ChangeLogControllerTest {
 	
 	@Test
 	public void viewChangeLogTest() throws Exception {
-		when(changeLogService.printChangeLog()).thenReturn("changeLogString");
+		when(changeLogService.printChangeLog(true)).thenReturn("changeLogString");
 		
 		MvcResult result = mockMvc.perform(get(BASE_URL + "viewChangeLog"))
 				.andExpect(status().isOk())

@@ -1,4 +1,4 @@
-package it.alten.tirocinio.DAO.concrete;
+package it.alten.tirocinio.DAO.concrete.mysql;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import it.alten.tirocinio.DAO.GenericEntityDAO;
 
 @Service
-public class GenericEntityDAOConcrete implements GenericEntityDAO {
+public class GenericEntityDAOMySql implements GenericEntityDAO {
 	@Resource(name = "connection")
 	private Connection connection;
 	

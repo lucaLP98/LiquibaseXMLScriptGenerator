@@ -3,9 +3,9 @@ package it.alten.tirocinio.services;
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
 
 /*
- * Service for Database Schema Information
+ * Service for Database SchemaMetadatMySql Information
  */
-public interface SchemaService {
+public interface SchemaMetadataService {
 	/*
 	 * Get all schema which are present in DB 
 	 */

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetDTO;
 import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
-import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.services.ChangeLogService;
 
 /*
@@ -27,9 +25,6 @@ import it.alten.tirocinio.services.ChangeLogService;
 @RestController
 @RequestMapping("/changeLog/")
 public class ChangeLogController {
-	@Resource(name = "sessionChangeLog")
-	private ChangeLog sessionChangeLog;
-	
 	private final ChangeLogService changeLogService;
 	
 	/*
@@ -45,7 +40,7 @@ public class ChangeLogController {
 	@GetMapping({"viewChangeLog", "viewChangeLog/"})
 	@ResponseStatus(HttpStatus.OK)
 	public String viewChangeLog() {
-		return changeLogService.printChangeLog();
+		return changeLogService.printChangeLog(true);
 	}
 	
 	@GetMapping({"getChangeSetList", "getChangeSetList/"})

@@ -1,40 +1,42 @@
-package it.alten.tirocinio.services.concrete;
+package it.alten.tirocinio.services.concrete.mysql;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaDTO;
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
 import it.alten.tirocinio.api.Mapper.SchemaMapper;
-import it.alten.tirocinio.model.Schema;
-import it.alten.tirocinio.repository.SchemaRepository;
-import it.alten.tirocinio.services.SchemaService;
+import it.alten.tirocinio.model.mysql.SchemaMetadatMySql;
+import it.alten.tirocinio.repository.mysql.SchemaRepository;
+import it.alten.tirocinio.services.SchemaMetadataService;
 
 /*
- * Service implementation of SchemaService interface
+ * Service implementation of SchemaMetadataService interface
  */
+@Profile("mysql")
 @Service
-public class SchemaServiceConcrete implements SchemaService {
+public class SchemaMetadataServiceMySql implements SchemaMetadataService {
 	private final SchemaRepository schemaRepository;
 	
 	/* 
 	 * Constructors
 	 */
-	public SchemaServiceConcrete(SchemaRepository schemaRepository) {
+	public SchemaMetadataServiceMySql(SchemaRepository schemaRepository) {
 		this.schemaRepository = schemaRepository;
 	}
 	
 	/*
-	 * Converter between set of Schema and SchemaListDTO
+	 * Converter between set of SchemaMetadatMySql and SchemaListDTO
 	 */
-	private SchemaListDTO SchemaSetToListDTO(Set<Schema> schemas) {
+	private SchemaListDTO SchemaSetToListDTO(Set<SchemaMetadatMySql> schemaMetadatMySqls) {
 		List<SchemaDTO> schemasDTO = new ArrayList<>();
 		
-		if(schemas != null) {
-			for(Schema s : schemas) {
+		if(schemaMetadatMySqls != null) {
+			for(SchemaMetadatMySql s : schemaMetadatMySqls) {
 				schemasDTO.add(SchemaMapper.INSTANCE.schemaToSchemaDTO(s));
 			}
 		}

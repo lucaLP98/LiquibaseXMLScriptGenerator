@@ -19,7 +19,7 @@ public interface ChangeLogService {
 	/*
 	 * Method which return changelog in String format
 	 */
-	String printChangeLog();
+	String printChangeLog(boolean indent);
 	
 	/*
 	 * Method which return list of all ChangeSet contained in the ChangeLog

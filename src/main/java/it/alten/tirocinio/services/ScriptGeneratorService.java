@@ -42,7 +42,7 @@ public interface ScriptGeneratorService {
 	String generateCreateTableLiquibaseXMLScript(CreateTableScriptDTO createTableScriptDTO);
 	
 	/*
-	 * Method for generate a Create Schema Script
+	 * Method for generate a Create SchemaMetadatMySql Script
 	 */
 	String generateCreateSchemaLiquibaseXMLScript(CreateSchemaScriptDTO createSchemaScriptDTO);
 	

@@ -12,17 +12,8 @@ public class TableMetadataDTO {
 	@JsonProperty("table_name")
 	private String tableName;
 	
-	@JsonProperty("table_type")
-	private String tableType;
-	
 	@JsonProperty("table_rows")
 	private Integer tableRows;
-	
-	@JsonProperty("create_time")
-	private String createTime;
-	
-	@JsonProperty("table_comment")
-	private String tableComment;
 	
 	/*
 	 * Setter methods 
@@ -35,20 +26,8 @@ public class TableMetadataDTO {
 		this.tableSchema = tableSchema;
 	}
 	
-	public void setTableType(String tableType) {
-		this.tableType = tableType;
-	}
-	
 	public void setTableRows(Integer tableRows) {
 		this.tableRows = tableRows;
-	}
-	
-	public void setTableComment(String tableComment) {
-		this.tableComment = tableComment;
-	}
-	
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
 	}
 	
 	/*
@@ -62,19 +41,7 @@ public class TableMetadataDTO {
 		return tableSchema;
 	}
 	
-	public String getTableType() {
-		return tableType;
-	}
-	
 	public Integer getTableRows() {
 		return tableRows;
-	}
-	
-	public String getTableComment() {
-		return tableComment;
-	}
-	
-	public String getCreateTime() {
-		return createTime;
 	}
 }

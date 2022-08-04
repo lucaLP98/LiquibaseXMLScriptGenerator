@@ -3,7 +3,7 @@ package it.alten.tirocinio.api.DTO.entityDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /*
- * Data Transfer Object for Database SchemaMetadatMySql information
+ * Data Transfer Object for Database SchemaMetadata information
  */
 public class SchemaDTO {
 	@JsonProperty("schema_name")

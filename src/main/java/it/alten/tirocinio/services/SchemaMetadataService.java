@@ -3,7 +3,7 @@ package it.alten.tirocinio.services;
 import it.alten.tirocinio.api.DTO.entityDTO.SchemaListDTO;
 
 /*
- * Service for Database SchemaMetadatMySql Information
+ * Service for Database Schema Metadata Information
  */
 public interface SchemaMetadataService {
 	/*

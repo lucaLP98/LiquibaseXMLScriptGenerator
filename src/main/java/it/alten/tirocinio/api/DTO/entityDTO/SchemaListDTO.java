@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /*
- * List of Data Transfer Object for Database SchemaMetadatMySql information
+ * List of Data Transfer Object for Database SchemaMetadata information
  */
 public class SchemaListDTO {
 	@JsonProperty("schema_list")

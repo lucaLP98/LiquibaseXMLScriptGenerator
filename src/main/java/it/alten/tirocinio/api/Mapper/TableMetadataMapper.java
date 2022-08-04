@@ -5,10 +5,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import it.alten.tirocinio.api.DTO.entityDTO.TableMetadataDTO;
-import it.alten.tirocinio.model.mysql.TableMetadataMySql;
+import it.alten.tirocinio.model.TableMetadata;
 
 /*
- * Mapper for TableMetadataMySql and TableMetadataDTO
+ * Mapper for TableMetadata and TableMetadataDTO
  */
 @Mapper
 public interface TableMetadataMapper {
@@ -16,9 +16,6 @@ public interface TableMetadataMapper {
 	
 	@Mapping(source="tableSchema", target="tableSchema")
 	@Mapping(source="tableName", target="tableName")
-	@Mapping(source="tableType", target="tableType")
 	@Mapping(source="tableRows", target="tableRows")
-	@Mapping(source="createTime", target="createTime")
-	@Mapping(source="tableComment", target="tableComment")
-	TableMetadataDTO tableMetadataToTableMetadataDTO(TableMetadataMySql tableMetadataMySql);
+	TableMetadataDTO tableMetadataToTableMetadataDTO(TableMetadata tableMetadata);
 }

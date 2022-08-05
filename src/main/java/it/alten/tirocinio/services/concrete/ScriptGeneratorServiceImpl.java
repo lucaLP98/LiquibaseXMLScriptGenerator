@@ -14,6 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -66,6 +68,9 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 
 	@Resource(name = "sessionChangeLog")
 	private ChangeLog changeLog;
+	
+	@Autowired
+	private Environment environment;
 	
 	/* 
 	 * Contructors
@@ -135,7 +140,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	/*
 	 * Generate a XML Script in a String format
 	 */
-	private String generateXMLScriptToString(Document document) {
+	private String generateXMLScriptToString(Document document, boolean indentation) {
 		String XMLScript = "";
 		
 		try {
@@ -147,8 +152,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
             Transformer transformer = transformerFactory.newTransformer();
             
             //indentation for the XML script
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            if(indentation) {
+            	transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            }
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             
             DOMSource domSource = new DOMSource(document);
@@ -427,8 +434,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Drop Table Script
 	 */
 	@Override
-	public String generateDropTableLiquibaseXMLScript(DropTableScriptDTO dropTableScriptDTO) {
+	public String generateDropTableLiquibaseXMLScript(DropTableScriptDTO dropTableScriptDTO, boolean indentation) {
 		String dropTableXMLScript = "";
+		
+		if(dropTableScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -448,7 +457,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
         	 * generate XML script
         	 */
-        	dropTableXMLScript = generateXMLScriptToString(document);
+        	dropTableXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -571,8 +580,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Drop Column Script
 	 */
 	@Override
-	public String generateDropColumnLiquibaseXMLScript(DropColumnScriptDTO dropColumnScriptDTO) {
+	public String generateDropColumnLiquibaseXMLScript(DropColumnScriptDTO dropColumnScriptDTO, boolean indentation) {
 		String dropColumnXMLScript = "";
+		
+		if(dropColumnScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -592,7 +603,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
         	 * generate XML script
         	 */
-        	dropColumnXMLScript = generateXMLScriptToString(document);
+        	dropColumnXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -734,8 +745,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Create Table Script
 	 */
 	@Override
-	public String generateCreateTableLiquibaseXMLScript(CreateTableScriptDTO createTableScriptDTO) {
+	public String generateCreateTableLiquibaseXMLScript(CreateTableScriptDTO createTableScriptDTO, boolean indentation) {
 		String createTableXMLScript = "";
+		
+		if(createTableScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -755,7 +768,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
         	 * generate XML script
         	 */
-        	createTableXMLScript = generateXMLScriptToString(document);
+        	createTableXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -785,7 +798,23 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 		expectedResultAttribute.setValue("0");
 		sqlCheckElement.setAttributeNode(expectedResultAttribute);
 		
-		String querySchemaAlreadyExists = "SELECT COUNT(*) FROM information_schema.schemata WHERE (schema_name = '"+createSchemaScriptDTO.getSchemaName()+"')";
+		String[] profiles = environment.getActiveProfiles();
+		boolean mySql = false;
+		boolean oracle = false;
+		for(String s : profiles) {
+			if(s.equals("mysql")) {
+				mySql = true;
+				break;
+			}else if(s.equals("oracle")) {
+				oracle = true;
+				break;
+			}
+		}
+		
+		String querySchemaAlreadyExists = "";
+		if(mySql) querySchemaAlreadyExists = "SELECT COUNT(*) FROM information_schema.schemata WHERE (schema_name = '"+createSchemaScriptDTO.getSchemaName()+"')";
+		else if(oracle)	querySchemaAlreadyExists = "SELECT COUNT(*) FROM sys.all_users WHERE (username = \""+createSchemaScriptDTO.getSchemaName()+"\")";
+		
 		sqlCheckElement.appendChild(document.createTextNode(querySchemaAlreadyExists));
         
         /*
@@ -822,8 +851,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Create SchemaMetadata Script
 	 */
 	@Override
-	public String generateCreateSchemaLiquibaseXMLScript(CreateSchemaScriptDTO createSchemaScriptDTO){
+	public String generateCreateSchemaLiquibaseXMLScript(CreateSchemaScriptDTO createSchemaScriptDTO, boolean indentation){
 		String createSchemaXMLScript = "";
+		
+		if(createSchemaScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -843,7 +874,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	        /*
 	         * generate XML script
 	         */
-	        createSchemaXMLScript = generateXMLScriptToString(document);
+	        createSchemaXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -967,8 +998,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Add Column Script
 	 */
 	@Override
-	public String generateAddColumnLiquibaseXMLScript(AddColumnScriptDTO addColumnScriptDTO) {
+	public String generateAddColumnLiquibaseXMLScript(AddColumnScriptDTO addColumnScriptDTO, boolean indentation) {
 		String addColumnXMLScript = "";
+		
+		if(addColumnScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -988,7 +1021,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	        /*
 	         * generate XML script
 	         */
-	        addColumnXMLScript = generateXMLScriptToString(document);
+	        addColumnXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -1086,8 +1119,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Drop Not Null Constraint Script
 	 */
 	@Override
-	public String generateDropNotNullConstraintLiquibaseXMLScript(DropNotNullConstraintScriptDTO dropNotNullConstraintScriptDTO) {
+	public String generateDropNotNullConstraintLiquibaseXMLScript(DropNotNullConstraintScriptDTO dropNotNullConstraintScriptDTO, boolean indentation) {
 		String dropNotNullConstraintXMLScript = "";
+		
+		if(dropNotNullConstraintScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -1107,7 +1142,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 	         * generate XML script
 	         */
-        	dropNotNullConstraintXMLScript = generateXMLScriptToString(document);
+        	dropNotNullConstraintXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -1210,8 +1245,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Add Not Null Constraint Script
 	 */
 	@Override
-	public String generateAddNotNullConstraintLiquibaseXMLScript(AddNotNullConstraintScriptDTO addNotNullConstraintScriptDTO) {
+	public String generateAddNotNullConstraintLiquibaseXMLScript(AddNotNullConstraintScriptDTO addNotNullConstraintScriptDTO, boolean indentation) {
 		String addNotNullConstraintXMLScript = "";
+		
+		if(addNotNullConstraintScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -1231,7 +1268,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 	         * generate XML script
 	         */
-        	addNotNullConstraintXMLScript = generateXMLScriptToString(document);
+        	addNotNullConstraintXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -1358,8 +1395,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Add Unique Constraint Script
 	 */
 	@Override
-	public String generateAddUniqueConstraintLiquibaseXMLScript(AddUniqueConstraintScriptDTO addUniqueConstraintScriptDTO) {
-		String addUniqueConstraintXMLScript = "ciao";
+	public String generateAddUniqueConstraintLiquibaseXMLScript(AddUniqueConstraintScriptDTO addUniqueConstraintScriptDTO, boolean indentation) {
+		String addUniqueConstraintXMLScript = "";
+		
+		if(addUniqueConstraintScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -1379,7 +1418,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 			/*
 	         * generate XML script
 	         */
-			addUniqueConstraintXMLScript = generateXMLScriptToString(document);
+			addUniqueConstraintXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -1439,8 +1478,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Drop Unique Constraint Script
 	 */
 	@Override
-	public String generateDropUniqueConstraintLiquibaseXMLScript(DropUniqueConstraintScriptDTO dropUniqueConstraintScriptDTO) {
+	public String generateDropUniqueConstraintLiquibaseXMLScript(DropUniqueConstraintScriptDTO dropUniqueConstraintScriptDTO, boolean indentation) {
 		String dropUniqueConstraintXMLScript = "";
+		
+		if(dropUniqueConstraintScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -1460,7 +1501,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 	         * generate XML script
 	         */
-        	dropUniqueConstraintXMLScript = generateXMLScriptToString(document);
+        	dropUniqueConstraintXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         }
@@ -1471,7 +1512,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	/*
 	 * Create Element ChangeSet for Rename Table Script
 	 */
-	public Element generateRenameTableChangeSet(Document document, RenameTableScriptDTO renameTableScriptDTO) {
+	private Element generateRenameTableChangeSet(Document document, RenameTableScriptDTO renameTableScriptDTO) {
 		//changeSet element
         Element changeSet = createChangeSetElement(document, renameTableScriptDTO);
         
@@ -1558,8 +1599,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Rename Table Script
 	 */
 	@Override
-	public String generateRenameTableLiquibaseXMLScript(RenameTableScriptDTO renameTableScriptDTO) {
+	public String generateRenameTableLiquibaseXMLScript(RenameTableScriptDTO renameTableScriptDTO, boolean indentation) {
 		String renameTableXMLScript = "";
+		
+		if(renameTableScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -1579,7 +1622,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 			/*
 			 * generate XML script
 			 */
-			renameTableXMLScript = generateXMLScriptToString(document);
+			renameTableXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -1701,8 +1744,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Rename Column Script
 	 */
 	@Override
-	public String generateRenameColumnLiquibaseXMLScript(RenameColumnScriptDTO renameColumnScriptDTO) {
+	public String generateRenameColumnLiquibaseXMLScript(RenameColumnScriptDTO renameColumnScriptDTO, boolean indentation) {
 		String renameColumnXMLScript = "";
+		
+		if(renameColumnScriptDTO == null)	return "";
 		
 		try {	        
 			Document document;
@@ -1722,7 +1767,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	        /*
 			 * generate XML script
 			 */
-	        renameColumnXMLScript = generateXMLScriptToString(document);
+	        renameColumnXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}  
@@ -1818,8 +1863,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Modify Column Data Type Script
 	 */
 	@Override
-	public String generateModifyColumnDataTypeLiquibaseXMLScript(ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO) {
+	public String generateModifyColumnDataTypeLiquibaseXMLScript(ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO, boolean indentation) {
 		String modifyColumnDataTypeXMLScript = "";
+		
+		if(modifyColumnDataTypeScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -1839,7 +1886,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	        /*
 			 * generate XML script
 			 */
-	        modifyColumnDataTypeXMLScript = generateXMLScriptToString(document);
+	        modifyColumnDataTypeXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}  
@@ -1911,8 +1958,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Add Auto Increment Script
 	 */
 	@Override
-	public String generateAddAutoIncrementLiquibaseXMLScript(AddAutoIncrementScriptDTO addAutoIncrementScriptDTO) {
+	public String generateAddAutoIncrementLiquibaseXMLScript(AddAutoIncrementScriptDTO addAutoIncrementScriptDTO, boolean indentation) {
 		String addAutoIncrementXMLScript = "";
+		
+		if(addAutoIncrementScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -1932,7 +1981,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 			 * generate XML script
 			 */
-        	addAutoIncrementXMLScript = generateXMLScriptToString(document);
+        	addAutoIncrementXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -2031,8 +2080,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Add Default Value Script
 	 */
 	@Override
-	public String generateAddDefaultValueLiquibaseXMLScript(AddDefaultValueScriptDTO addDefaultValueScriptDTO) {
+	public String generateAddDefaultValueLiquibaseXMLScript(AddDefaultValueScriptDTO addDefaultValueScriptDTO, boolean indentation) {
 		String addDefaultValueXMLScript = "";
+		
+		if(addDefaultValueScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -2052,7 +2103,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 			 * generate XML script
 			 */
-        	addDefaultValueXMLScript = generateXMLScriptToString(document);
+        	addDefaultValueXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -2150,8 +2201,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Drop Default Value Script
 	 */
 	@Override
-	public String generateDropDefaultValueLiquibaseXMLScript(DropDefaultValueScriptDTO dropDefaultValueScriptDTO) {
+	public String generateDropDefaultValueLiquibaseXMLScript(DropDefaultValueScriptDTO dropDefaultValueScriptDTO, boolean indentation) {
 		String dropDefaultValueXMLScript = "";
+		
+		if(dropDefaultValueScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -2171,7 +2224,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 			 * generate XML script
 			 */
-        	dropDefaultValueXMLScript = generateXMLScriptToString(document);
+        	dropDefaultValueXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -2286,8 +2339,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Add Foreign Key Constraint Script
 	 */
 	@Override
-	public String generateAddForeignKeyConstraintLiquibaseXMLScript(AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO) {
+	public String generateAddForeignKeyConstraintLiquibaseXMLScript(AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO, boolean indentation) {
 		String addForeignKeyConstraintXMLScript = "";
+		
+		if(addForeignKeyConstraintScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -2307,7 +2362,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 			 * generate XML script
 			 */
-        	addForeignKeyConstraintXMLScript = generateXMLScriptToString(document);
+        	addForeignKeyConstraintXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -2418,8 +2473,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate an Drop Foreign Key Constraint Script
 	 */
 	@Override
-	public String generateDropForeignKeyConstraintLiquibaseXMLScript(DropForeignKeyConstraintScriptDTO dropForeignKeyConstraintScriptDTO) {
+	public String generateDropForeignKeyConstraintLiquibaseXMLScript(DropForeignKeyConstraintScriptDTO dropForeignKeyConstraintScriptDTO, boolean indentation) {
 		String dropForeignKeyConstraintXMLScript = "";
+		
+		if(dropForeignKeyConstraintScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -2439,7 +2496,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 			 * generate XML script
 			 */
-        	dropForeignKeyConstraintXMLScript = generateXMLScriptToString(document);
+        	dropForeignKeyConstraintXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -2527,8 +2584,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Delete Query Script
 	 */
 	@Override
-	public String generateDeleteDataLiquibaseXMLScript(DeleteDataScriptDTO deleteDataScriptDTO) {
+	public String generateDeleteDataLiquibaseXMLScript(DeleteDataScriptDTO deleteDataScriptDTO, boolean indentation) {
 		String deleteQueryXMLScript = "";
+		
+		if(deleteDataScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -2548,7 +2607,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	/*
 			 * generate XML script
 			 */
-    		deleteQueryXMLScript = generateXMLScriptToString(document);
+    		deleteQueryXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -2664,8 +2723,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Insert Query Script
 	 */
 	@Override
-	public String generateInsertDataLiquibaseXMLScript(InsertDataScriptDTO insertDataScriptDTO) {
+	public String generateInsertDataLiquibaseXMLScript(InsertDataScriptDTO insertDataScriptDTO, boolean indentation) {
 		String insertDataXMLScript = "";
+		
+		if(insertDataScriptDTO == null)	return "";
 		
 		try {	        
 			Document document;
@@ -2685,7 +2746,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
     		/*
 			 * generate XML script
 			 */
-    		insertDataXMLScript = generateXMLScriptToString(document);
+    		insertDataXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}
@@ -2747,8 +2808,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Method for generate a Update Query Script
 	 */
 	@Override
-	public String generateUpdateDataLiquibaseXMLScript(UpdateDataScriptDTO updateDataScriptDTO) {
+	public String generateUpdateDataLiquibaseXMLScript(UpdateDataScriptDTO updateDataScriptDTO, boolean indentation) {
 		String updateDataXMLScript = "";
+		
+		if(updateDataScriptDTO == null)	return "";
 		
 		try {
 			Document document;
@@ -2768,7 +2831,7 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	        /*
 			 * generate XML script
 			 */
-	        updateDataXMLScript = generateXMLScriptToString(document);
+	        updateDataXMLScript = generateXMLScriptToString(document, indentation);
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		}

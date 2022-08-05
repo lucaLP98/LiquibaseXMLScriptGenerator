@@ -94,7 +94,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setTableName("tabTest");
 		scriptDTO.setTableSchema("demo");
 		
-		when(scriptGeneratorService.generateDropTableLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateDropTableLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 				
 		MvcResult result = mockMvc.perform(post(BASE_URL + "dropTableScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -102,7 +102,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateDropTableLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateDropTableLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -115,7 +115,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setTableName("tab1");
 		scriptDTO.setTableSchema("demo");
 		
-		when(scriptGeneratorService.generateDropColumnLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateDropColumnLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "dropColumnScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -123,7 +123,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateDropColumnLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateDropColumnLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -137,7 +137,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setPrimaryKeyName("pk1");
 		scriptDTO.setPrimaryKeyType("int");	
 		
-		when(scriptGeneratorService.generateCreateTableLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateCreateTableLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "createTableScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -145,7 +145,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateCreateTableLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateCreateTableLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -156,7 +156,7 @@ public class ScriptGeneratorControllerTest {
 		initScriptDTOForTesting(scriptDTO);
 		scriptDTO.setSchemaName("demo");
 		
-		when(scriptGeneratorService.generateCreateSchemaLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateCreateSchemaLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "createSchemaScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -164,7 +164,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateCreateSchemaLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateCreateSchemaLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -180,7 +180,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setTableName("tab");
 		scriptDTO.setUnique(false);
 		
-		when(scriptGeneratorService.generateAddColumnLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateAddColumnLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "addColumnScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -188,7 +188,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateAddColumnLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateAddColumnLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -202,7 +202,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setTableName("tab");
 		scriptDTO.setColumnDataType("int");
 		
-		when(scriptGeneratorService.generateDropNotNullConstraintLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateDropNotNullConstraintLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "dropNotNullConstraintScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -210,7 +210,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateDropNotNullConstraintLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateDropNotNullConstraintLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -224,7 +224,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setTableName("tab");
 		scriptDTO.setColumnDataType("int");
 		
-		when(scriptGeneratorService.generateAddNotNullConstraintLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateAddNotNullConstraintLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "addNotNullConstraintScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -232,7 +232,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateAddNotNullConstraintLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateAddNotNullConstraintLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -250,7 +250,7 @@ public class ScriptGeneratorControllerTest {
 		list.add(c1);
 		scriptDTO.setColumns(list);
 		
-		when(scriptGeneratorService.generateAddUniqueConstraintLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateAddUniqueConstraintLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "addUniqueConstraintScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -258,7 +258,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateAddUniqueConstraintLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateAddUniqueConstraintLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -271,7 +271,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setConstrainName("con");
 		scriptDTO.setTableName("tab");
 		
-		when(scriptGeneratorService.generateDropUniqueConstraintLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateDropUniqueConstraintLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "dropUniqueConstraintScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -279,7 +279,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateDropUniqueConstraintLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateDropUniqueConstraintLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -292,7 +292,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setOldTableName("oldName");
 		scriptDTO.setSchemaName("demo");
 		
-		when(scriptGeneratorService.generateRenameTableLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateRenameTableLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "renameTableScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -300,7 +300,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateRenameTableLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateRenameTableLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -315,7 +315,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setNewColumnName("newName");
 		scriptDTO.setColumnType("int");
 		
-		when(scriptGeneratorService.generateRenameColumnLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateRenameColumnLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "renameColumnScript/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -323,7 +323,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateRenameColumnLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateRenameColumnLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -338,7 +338,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setOldColumnType("int");
 		scriptDTO.setNewColumnType("float");
 		
-		when(scriptGeneratorService.generateModifyColumnDataTypeLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateModifyColumnDataTypeLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "modifyColumnDataType/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -346,7 +346,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateModifyColumnDataTypeLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateModifyColumnDataTypeLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -361,7 +361,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setIncrementBy(1);
 		scriptDTO.setStartWith(1);
 		
-		when(scriptGeneratorService.generateAddAutoIncrementLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateAddAutoIncrementLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "addAutoIncrement/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -369,7 +369,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateAddAutoIncrementLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateAddAutoIncrementLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -384,7 +384,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setColumnType("int");
 		scriptDTO.setDefaultValue("default");
 		
-		when(scriptGeneratorService.generateAddDefaultValueLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateAddDefaultValueLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "addDefaultValue/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -392,7 +392,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateAddDefaultValueLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateAddDefaultValueLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -407,7 +407,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setColumnType("int");
 		scriptDTO.setDefaultValue("default");
 		
-		when(scriptGeneratorService.generateDropDefaultValueLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateDropDefaultValueLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "dropDefaultValue/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -415,7 +415,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateDropDefaultValueLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateDropDefaultValueLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -434,7 +434,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setReferencedSchemaName("demo1");
 		scriptDTO.setReferencedTableName("refTab1");
 		
-		when(scriptGeneratorService.generateAddForeignKeyConstraintLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateAddForeignKeyConstraintLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "addForeignKeyConstraint/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -442,7 +442,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateAddForeignKeyConstraintLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateAddForeignKeyConstraintLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -455,7 +455,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setBaseTableName("tab1");
 		scriptDTO.setConstraintName("con1");
 		
-		when(scriptGeneratorService.generateDropForeignKeyConstraintLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateDropForeignKeyConstraintLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "dropForeignKeyConstraint/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -463,7 +463,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateDropForeignKeyConstraintLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateDropForeignKeyConstraintLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -475,7 +475,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setSchemaName("demo");
 		scriptDTO.setTableName("tab");
 		
-		when(scriptGeneratorService.generateDeleteDataLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateDeleteDataLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "deleteData/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -483,7 +483,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateDeleteDataLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateDeleteDataLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -496,7 +496,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setTableName("tab");
 		scriptDTO.setColumns(new HashMap<String, String>());
 		
-		when(scriptGeneratorService.generateUpdateDataLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateUpdateDataLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "updateData/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -504,7 +504,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateUpdateDataLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateUpdateDataLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}
@@ -517,7 +517,7 @@ public class ScriptGeneratorControllerTest {
 		scriptDTO.setTableName("tab");
 		scriptDTO.setColumns(new HashMap<String, String>());
 		
-		when(scriptGeneratorService.generateInsertDataLiquibaseXMLScript(scriptDTO)).thenReturn(SCRIPT_TEST_STRING);
+		when(scriptGeneratorService.generateInsertDataLiquibaseXMLScript(scriptDTO, true)).thenReturn(SCRIPT_TEST_STRING);
 
 		MvcResult result = mockMvc.perform(post(BASE_URL + "insertData/")
 				.contentType(APPLICATION_JSON_UTF8)
@@ -525,7 +525,7 @@ public class ScriptGeneratorControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		verify(scriptGeneratorService, times(1)).generateInsertDataLiquibaseXMLScript(scriptDTO);
+		verify(scriptGeneratorService, times(1)).generateInsertDataLiquibaseXMLScript(scriptDTO, true);
 		
 		assertEquals(SCRIPT_TEST_STRING, result.getResponse().getContentAsString());
 	}

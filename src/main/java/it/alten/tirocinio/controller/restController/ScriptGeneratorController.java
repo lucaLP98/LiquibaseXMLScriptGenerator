@@ -52,7 +52,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/dropTableScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropTableScriptRequest(@RequestBody DropTableScriptDTO dropTableScriptDTO) {
-		return scriptGeneratorService.generateDropTableLiquibaseXMLScript(dropTableScriptDTO);
+		return scriptGeneratorService.generateDropTableLiquibaseXMLScript(dropTableScriptDTO, true);
 	}
 	
 	/*
@@ -61,7 +61,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/dropColumnScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropColumnScriptRequest(@RequestBody DropColumnScriptDTO dropColumnScriptDTO) {
-		return scriptGeneratorService.generateDropColumnLiquibaseXMLScript(dropColumnScriptDTO);
+		return scriptGeneratorService.generateDropColumnLiquibaseXMLScript(dropColumnScriptDTO, true);
 	}
 	
 	/*
@@ -70,7 +70,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/createTableScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateCreateTableScriptRequest(@RequestBody CreateTableScriptDTO createTableScriptDTO) {
-		return scriptGeneratorService.generateCreateTableLiquibaseXMLScript(createTableScriptDTO);
+		return scriptGeneratorService.generateCreateTableLiquibaseXMLScript(createTableScriptDTO, true);
 	}
 	
 	/*
@@ -79,7 +79,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/createSchemaScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateCreateSchemaScriptRequest(@RequestBody CreateSchemaScriptDTO createSchemaScriptDTO) {
-		return scriptGeneratorService.generateCreateSchemaLiquibaseXMLScript(createSchemaScriptDTO);
+		return scriptGeneratorService.generateCreateSchemaLiquibaseXMLScript(createSchemaScriptDTO, true);
 	}
 	
 	/*
@@ -88,7 +88,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/addColumnScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddColumnScriptRequest(@RequestBody AddColumnScriptDTO addColumnScriptDTO) {
-		return scriptGeneratorService.generateAddColumnLiquibaseXMLScript(addColumnScriptDTO);
+		return scriptGeneratorService.generateAddColumnLiquibaseXMLScript(addColumnScriptDTO, true);
 	}
 	
 	/*
@@ -97,7 +97,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/dropNotNullConstraintScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropNotNullConstraintScriptRequest(@RequestBody DropNotNullConstraintScriptDTO dropNotNullConstraintScriptDTO) {
-		return scriptGeneratorService.generateDropNotNullConstraintLiquibaseXMLScript(dropNotNullConstraintScriptDTO);
+		return scriptGeneratorService.generateDropNotNullConstraintLiquibaseXMLScript(dropNotNullConstraintScriptDTO, true);
 	}
 	
 	/*
@@ -106,7 +106,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/addNotNullConstraintScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddNotNullConstraintScriptRequest(@RequestBody AddNotNullConstraintScriptDTO addNotNullConstraintScriptDTO) {
-		return scriptGeneratorService.generateAddNotNullConstraintLiquibaseXMLScript(addNotNullConstraintScriptDTO);
+		return scriptGeneratorService.generateAddNotNullConstraintLiquibaseXMLScript(addNotNullConstraintScriptDTO, true);
 	}
 	
 	/*
@@ -115,7 +115,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/addUniqueConstraintScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddUniqueConstraintScriptRequest(@RequestBody AddUniqueConstraintScriptDTO addUniqueConstraintScriptDTO) {
-		return scriptGeneratorService.generateAddUniqueConstraintLiquibaseXMLScript(addUniqueConstraintScriptDTO);
+		return scriptGeneratorService.generateAddUniqueConstraintLiquibaseXMLScript(addUniqueConstraintScriptDTO, true);
 	}
 	
 	/*
@@ -124,7 +124,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/dropUniqueConstraintScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropUniqueConstraintScriptRequest(@RequestBody DropUniqueConstraintScriptDTO dropUniqueConstraintScriptDTO) {
-		return scriptGeneratorService.generateDropUniqueConstraintLiquibaseXMLScript(dropUniqueConstraintScriptDTO);
+		return scriptGeneratorService.generateDropUniqueConstraintLiquibaseXMLScript(dropUniqueConstraintScriptDTO, true);
 	}
 	
 	/*
@@ -133,7 +133,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/renameTableScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateRenameTableScriptRequest(@RequestBody RenameTableScriptDTO renameTableScriptDTO) {
-		return scriptGeneratorService.generateRenameTableLiquibaseXMLScript(renameTableScriptDTO);
+		return scriptGeneratorService.generateRenameTableLiquibaseXMLScript(renameTableScriptDTO, true);
 	}
 	
 	/*
@@ -142,7 +142,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/renameColumnScript/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateRenameColumnScriptRequest(@RequestBody RenameColumnScriptDTO renameColumnScriptDTO) {
-		return scriptGeneratorService.generateRenameColumnLiquibaseXMLScript(renameColumnScriptDTO);
+		return scriptGeneratorService.generateRenameColumnLiquibaseXMLScript(renameColumnScriptDTO, true);
 	}
 	
 	/*
@@ -151,7 +151,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/modifyColumnDataType/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateModifyColumnDataTypeScriptRequest(@RequestBody ModifyColumnDataTypeScriptDTO modifyColumnDataTypeScriptDTO) {
-		return scriptGeneratorService.generateModifyColumnDataTypeLiquibaseXMLScript(modifyColumnDataTypeScriptDTO);
+		return scriptGeneratorService.generateModifyColumnDataTypeLiquibaseXMLScript(modifyColumnDataTypeScriptDTO, true);
 	}
 	
 	/*
@@ -160,7 +160,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/addAutoIncrement/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddAutoIncrementScriptRequest(@RequestBody AddAutoIncrementScriptDTO addAutoIncrementScriptDTO) {
-		return scriptGeneratorService.generateAddAutoIncrementLiquibaseXMLScript(addAutoIncrementScriptDTO);
+		return scriptGeneratorService.generateAddAutoIncrementLiquibaseXMLScript(addAutoIncrementScriptDTO, true);
 	}
 	
 	/*
@@ -169,7 +169,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/addDefaultValue/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddDefaultValueScriptRequest(@RequestBody AddDefaultValueScriptDTO addDefaultValueScriptDTO) {
-		return scriptGeneratorService.generateAddDefaultValueLiquibaseXMLScript(addDefaultValueScriptDTO);
+		return scriptGeneratorService.generateAddDefaultValueLiquibaseXMLScript(addDefaultValueScriptDTO, true);
 	}
 	
 	/*
@@ -178,7 +178,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/dropDefaultValue/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropDefaultValueScriptRequest(@RequestBody DropDefaultValueScriptDTO dropDefaultValueScriptDTO) {
-		return scriptGeneratorService.generateDropDefaultValueLiquibaseXMLScript(dropDefaultValueScriptDTO);
+		return scriptGeneratorService.generateDropDefaultValueLiquibaseXMLScript(dropDefaultValueScriptDTO, true);
 	}
 	
 	/*
@@ -187,7 +187,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/addForeignKeyConstraint/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateAddForeignKeyConstraintScriptRequest(@RequestBody AddForeignKeyConstraintScriptDTO addForeignKeyConstraintScriptDTO) {
-		return scriptGeneratorService.generateAddForeignKeyConstraintLiquibaseXMLScript(addForeignKeyConstraintScriptDTO);
+		return scriptGeneratorService.generateAddForeignKeyConstraintLiquibaseXMLScript(addForeignKeyConstraintScriptDTO, true);
 	}
 	
 	/*
@@ -196,7 +196,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/dropForeignKeyConstraint/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDropForeignKeyConstraintScriptRequest(@RequestBody DropForeignKeyConstraintScriptDTO dropForeignKeyConstraintScriptDTO) {
-		return scriptGeneratorService.generateDropForeignKeyConstraintLiquibaseXMLScript(dropForeignKeyConstraintScriptDTO);
+		return scriptGeneratorService.generateDropForeignKeyConstraintLiquibaseXMLScript(dropForeignKeyConstraintScriptDTO, true);
 	}
 	
 	/*
@@ -205,7 +205,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/deleteData/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateDeleteScriptRequest(@RequestBody DeleteDataScriptDTO deleteDataScriptDTO) {
-		return scriptGeneratorService.generateDeleteDataLiquibaseXMLScript(deleteDataScriptDTO);
+		return scriptGeneratorService.generateDeleteDataLiquibaseXMLScript(deleteDataScriptDTO, true);
 	}
 	
 	/*
@@ -214,7 +214,7 @@ public class ScriptGeneratorController {
 	@PostMapping("/insertData/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateInsertScriptRequest(@RequestBody InsertDataScriptDTO insertDataScriptDTO) {
-		return scriptGeneratorService.generateInsertDataLiquibaseXMLScript(insertDataScriptDTO);
+		return scriptGeneratorService.generateInsertDataLiquibaseXMLScript(insertDataScriptDTO, true);
 	}
 	
 	/*
@@ -223,6 +223,6 @@ public class ScriptGeneratorController {
 	@PostMapping("/updateData/")
 	@ResponseStatus(HttpStatus.OK)
 	public String generateUpdateScriptRequest(@RequestBody UpdateDataScriptDTO updateDataScriptDTO) {
-		return scriptGeneratorService.generateUpdateDataLiquibaseXMLScript(updateDataScriptDTO);
+		return scriptGeneratorService.generateUpdateDataLiquibaseXMLScript(updateDataScriptDTO, true);
 	}
 }

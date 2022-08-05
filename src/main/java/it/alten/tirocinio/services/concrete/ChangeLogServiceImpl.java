@@ -30,7 +30,7 @@ import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
 import it.alten.tirocinio.services.ChangeLogService;
 
 @Service
-public class ChangeLogServiceConcrete implements ChangeLogService {
+public class ChangeLogServiceImpl implements ChangeLogService {
 	@Resource(name = "sessionChangeLog")
 	private ChangeLog changeLog;
 	 

@@ -32,7 +32,7 @@ public interface ColumnMetadataRepositoryOracle extends ColumnMetadataRepository
 	 */
 	@Query(
 			value = "select A.OWNER AS TABLE_SCHEMA, A.TABLE_NAME AS TABLE_NAME, A.COLUMN_NAME AS COLUMN_NAME, A.nullable as is_nullable, A.DATA_TYPE as column_type, A.data_default as column_default, B.CONSTRAINT_TYPE AS column_key "
-					+ "from  all_tab_columns A left join (ALL_CONSTRAINTs B JOIN ALL_CONS_COLUMNS C ON (B.CONSTRAINT_NAME = C.CONSTRAINT_NAME  and B.constraint_type = 'P')) on C.column_name = A.column_name "
+					+ "from  all_tab_columns A left join (ALL_CONSTRAINTS B JOIN ALL_CONS_COLUMNS C ON (B.CONSTRAINT_NAME = C.CONSTRAINT_NAME  and B.constraint_type = 'P')) on C.column_name = A.column_name "
 					+ "where A.owner = :table_schema AND A.table_name = :table_name", 
 			nativeQuery = true)
 	@Override
@@ -54,12 +54,9 @@ public interface ColumnMetadataRepositoryOracle extends ColumnMetadataRepository
 	 * Query for retrieve metadata of column with not null constraint by their membership table and schema 
 	 * (primary key columns are excluded)
 	 */
-	@Query(value = "Select C.owner AS table_schema, C.table_name AS table_name, C.column_name as column_name, C.nullable as is_nullable, C.DATA_TYPE as column_type, null as column_default, null as column_key"
-			+ "    from sys.all_tab_columns C"
-			+ "    where C.owner= :table_schema AND C.table_name = :table_name AND C.nullable = 'N' AND C.column_name not in ("
-			+ "        select  D.column_name"
-			+ "        from (sys.ALL_constraints A join sys.all_cons_columns B on A.constraint_name=B.constraint_name) join sys.all_tab_columns D on B.column_name = D.column_name"
-			+ "        where D.owner = :table_schema AND D.table_name = :table_name AND A.constraint_type='P')", 
+	@Query(value = "select A.OWNER AS TABLE_SCHEMA, A.TABLE_NAME AS TABLE_NAME, A.COLUMN_NAME AS COLUMN_NAME, A.nullable as is_nullable, A.DATA_TYPE as column_type, A.data_default as column_default, B.CONSTRAINT_TYPE AS column_key "
+			+ "from  all_tab_columns A left join (ALL_CONSTRAINTS B JOIN ALL_CONS_COLUMNS C ON (B.CONSTRAINT_NAME = C.CONSTRAINT_NAME  and B.constraint_type = 'P')) on C.column_name = A.column_name "
+			+ "where A.owner = :table_schema AND B.CONSTRAINT_TYPE is null AND A.TABLE_NAME = :table_name", 
 			nativeQuery = true)
 	@Override
 	Set<ColumnMetadata> getAllDBNotNullColumnsByTableAndSchema(@Param("table_schema") String tableSchema, @Param("table_name") String tableName);

@@ -2750,7 +2750,6 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	public String generateUpdateDataLiquibaseXMLScript(UpdateDataScriptDTO updateDataScriptDTO) {
 		String updateDataXMLScript = "";
 		
-		
 		try {
 			Document document;
 			

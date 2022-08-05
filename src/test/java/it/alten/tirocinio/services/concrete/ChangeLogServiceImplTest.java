@@ -24,12 +24,12 @@ import it.alten.tirocinio.api.DTO.changeLogDTO.ChangeSetListDTO;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeLog;
 import it.alten.tirocinio.liquibaseChangeElement.ChangeSet;
 
-public class ChangeLogServiceConcreteTest {
+public class ChangeLogServiceImplTest {
 	@Mock
 	private ChangeLog changeLog;
 	
 	@InjectMocks
-	private ChangeLogServiceConcrete service;
+	private ChangeLogServiceImpl service;
 	
 	@BeforeEach
 	public void init() {

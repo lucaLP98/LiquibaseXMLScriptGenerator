@@ -122,8 +122,8 @@ public class ChangeLogServiceImpl implements ChangeLogService {
 			Attr schemaLocation = document.createAttribute("xsi:schemaLocation");
 			schemaLocation.setValue("http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd\r\n http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd");
 			newChangeLog.setAttributeNode(schemaLocation);
-	        
-			changeLog.setChangeLogDocument(document);
+			
+			changeLog.setChangeLogDocument(document);		
 			changeLog.createChangeLog(newChangeLog);
 			changeLog.setCreated(true);
 			

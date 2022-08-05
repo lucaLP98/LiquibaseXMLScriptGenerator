@@ -29,3 +29,7 @@ function dropSubMenu(idDrop) {
     	x.previousElementSibling.className.replace(" w3-blue", "");
   	}
 }
+
+function clearTextArea(){
+	document.getElementById("scriptTextArea").innerHTML = "";
+}

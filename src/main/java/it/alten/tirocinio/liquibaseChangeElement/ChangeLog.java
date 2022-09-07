@@ -104,9 +104,8 @@ public class ChangeLog implements Cloneable{
 	 * Add a new changeSet to set
 	 */
 	public boolean addChangeSetToChangeLog(ChangeSet newChangeSet) {
-		if(!created)	return false;
-		
-		if(newChangeSet == null)	return false;
+		if(!created || newChangeSet == null)	
+			return false;
 		
 		boolean added = changeSets.add(newChangeSet);
 		if(added) {

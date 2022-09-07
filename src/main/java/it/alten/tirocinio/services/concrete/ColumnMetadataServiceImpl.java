@@ -127,6 +127,6 @@ public class ColumnMetadataServiceImpl implements ColumnMetadataService {
 		if(schemaName==null || tableName==null || dataType==null || schemaName.equals("") || tableName.equals("") || dataType.equals(""))
 			return new ColumnMetadataListDTO();
 		
-		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsByDataTypeAndTable(dataType.toUpperCase(), schemaName.toUpperCase(), tableName.toUpperCase()));
+		return ColumnMetadataSetToListDTO(columnMetadataRepository.getAllDBColumnsByDataTypeAndTable(dataType, schemaName.toUpperCase(), tableName.toUpperCase()));
 	}
 }

@@ -498,15 +498,11 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
     	/*
     	 * add dropColumn element
     	 */
-    	Element dropColumnElement = document.createElement("dropTable");
+    	Element dropColumnElement = document.createElement("dropColumn");
     	//add dropColumn element to changeSet element
     	changeSet.appendChild(dropColumnElement);
     	
     	//add dropColumn attribute
-    	Attr columnName = document.createAttribute("columnName");
-    	columnName.setValue(dropColumnScriptDTO.getColumnName());
-    	dropColumnElement.setAttributeNode(columnName);
-    	
     	Attr schemaName = document.createAttribute("schemaName");
     	schemaName.setValue(dropColumnScriptDTO.getTableSchema());
     	dropColumnElement.setAttributeNode(schemaName);
@@ -514,6 +510,14 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
     	Attr tableName = document.createAttribute("tableName");
     	tableName.setValue(dropColumnScriptDTO.getTableName());
     	dropColumnElement.setAttributeNode(tableName); 
+    	
+    	//add column to delete
+    	Element columnElement = document.createElement("column");
+    	dropColumnElement.appendChild(columnElement);
+
+    	Attr columnName = document.createAttribute("name");
+    	columnName.setValue(dropColumnScriptDTO.getColumnName());
+    	columnElement.setAttributeNode(columnName);
     	
     	/*
     	 * Generate RollBack
@@ -715,9 +719,11 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
     		uniqueAttributeConstraint.setValue(c.getUnique().toString());
     		constraintElement.setAttributeNode(uniqueAttributeConstraint);
     		
-    		Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
-    		uniqueNameAttribiteConstraint.setValue("Unique_constraint_"+createTableScriptDTO.getTableSchema()+"_"+createTableScriptDTO.getTableName()+"_"+c.getColumnName());
-    		constraintElement.setAttributeNode(uniqueNameAttribiteConstraint);
+    		if(c.getUnique().toString().equals("true")) {
+    			Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
+        		uniqueNameAttribiteConstraint.setValue("Unique_constraint_"+createTableScriptDTO.getTableSchema()+"_"+createTableScriptDTO.getTableName()+"_"+c.getColumnName());
+        		constraintElement.setAttributeNode(uniqueNameAttribiteConstraint);
+    		}
     		
     	}
     	

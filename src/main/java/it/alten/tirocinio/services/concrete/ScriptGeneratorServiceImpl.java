@@ -239,24 +239,27 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	columnElement.setAttributeNode(columnDefaultAttr); 
     	}
     	
-    	//add constraint element to column
-    	Element constraintElement = document.createElement("constraints");
-    	columnElement.appendChild(constraintElement);
+    	//add nullable constraint element to column
+    	Element nullableConstraintElement = document.createElement("constraints");
+    	columnElement.appendChild(nullableConstraintElement);
     	
-    	//add constraint attribute
     	Attr nullableAttr = document.createAttribute("nullable");     
     	if(column.getIsNullable().equals("YES") || column.getIsNullable().equals("Y"))	nullableAttr.setValue("true");
     	else	nullableAttr.setValue("false");
-    	constraintElement.setAttributeNode(nullableAttr); 
+    	nullableConstraintElement.setAttributeNode(nullableAttr); 
     	
+    	//add key constraint element to column
     	if(column.getColumnKey()!=null && (column.getColumnKey().equals("PRI") || column.getColumnKey().equals("P"))) {
+    		Element keyConstraintElement = document.createElement("constraints");
+        	columnElement.appendChild(keyConstraintElement);
+        	
     		Attr primaryKeyRolback = document.createAttribute("primaryKey");     
     		primaryKeyRolback.setValue("true");
-    		constraintElement.setAttributeNode(primaryKeyRolback); 
+    		keyConstraintElement.setAttributeNode(primaryKeyRolback); 
     		
     		Attr prkmaryKeyNameAttribiteConstraint = document.createAttribute("primaryKeyName");
         	prkmaryKeyNameAttribiteConstraint.setValue("Pk_"+column.getTableSchema()+"_"+column.getTableName());
-        	constraintElement.setAttributeNode(prkmaryKeyNameAttribiteConstraint);
+        	keyConstraintElement.setAttributeNode(prkmaryKeyNameAttribiteConstraint);
     	}
     	
     	return columnElement;
@@ -708,21 +711,24 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
     		}
     		
     		//add column constraint
-    		Element constraintElement = document.createElement("constraints");
-    		columnElement.appendChild(constraintElement);
+    		Element nullableConstraintElement = document.createElement("constraints");
+    		columnElement.appendChild(nullableConstraintElement);
     		
     		Attr nullableAttributeConstraint = document.createAttribute("nullable");
     		nullableAttributeConstraint.setValue(c.getIsNullable().toString());
-    		constraintElement.setAttributeNode(nullableAttributeConstraint);
+    		nullableConstraintElement.setAttributeNode(nullableAttributeConstraint);
+    		
+    		Element uniqueConstraintElement = document.createElement("constraints");
+    		columnElement.appendChild(uniqueConstraintElement);
     		
     		Attr uniqueAttributeConstraint = document.createAttribute("unique");
     		uniqueAttributeConstraint.setValue(c.getUnique().toString());
-    		constraintElement.setAttributeNode(uniqueAttributeConstraint);
+    		uniqueConstraintElement.setAttributeNode(uniqueAttributeConstraint);
     		
     		if(c.getUnique().toString().equals("true")) {
     			Attr uniqueNameAttribiteConstraint = document.createAttribute("uniqueConstraintName");
         		uniqueNameAttribiteConstraint.setValue("Unique_constraint_"+createTableScriptDTO.getTableSchema()+"_"+createTableScriptDTO.getTableName()+"_"+c.getColumnName());
-        		constraintElement.setAttributeNode(uniqueNameAttribiteConstraint);
+        		uniqueConstraintElement.setAttributeNode(uniqueNameAttribiteConstraint);
     		}
     		
     	}
@@ -956,22 +962,27 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	columnElement.setAttributeNode(columnDefaultValue);
     	}
     	
-    	//append constraint element to column element
-    	Element columnConstraintElement = document.createElement("constraints");
-    	columnElement.appendChild(columnConstraintElement);
-    	
-    	//add constraint element's attributes
+    	//append not null constraint element to column element
+    	Element columnNullableConstraintElement = document.createElement("constraints");
+    	columnElement.appendChild(columnNullableConstraintElement);
+
     	Attr nullable = document.createAttribute("nullable");
     	nullable.setValue(addColumnScriptDTO.getIsNullable().toString());
-    	columnConstraintElement.setAttributeNode(nullable);
+    	columnNullableConstraintElement.setAttributeNode(nullable);
+    	
+    	//append unique constraint element to column element
+    	Element columnUniqueConstraintElement = document.createElement("constraints");
+    	columnElement.appendChild(columnUniqueConstraintElement);
     	
     	Attr unique = document.createAttribute("unique");
     	unique.setValue(addColumnScriptDTO.getUnique().toString());
-    	columnConstraintElement.setAttributeNode(unique);
+    	columnUniqueConstraintElement.setAttributeNode(unique);
     	
-    	Attr uniqueName = document.createAttribute("uniqueConstraintName");
-    	uniqueName.setValue("Unique_constraint_"+addColumnScriptDTO.getSchemaName()+"_"+addColumnScriptDTO.getTableName()+"_"+addColumnScriptDTO.getColumnName());
-    	columnConstraintElement.setAttributeNode(uniqueName);
+    	if(addColumnScriptDTO.getUnique().toString().equals("true")) {
+    		Attr uniqueName = document.createAttribute("uniqueConstraintName");
+        	uniqueName.setValue("Unique_constraint_"+addColumnScriptDTO.getSchemaName()+"_"+addColumnScriptDTO.getTableName()+"_"+addColumnScriptDTO.getColumnName());
+        	columnUniqueConstraintElement.setAttributeNode(uniqueName);
+    	}
     	
     	/*
     	 * add rollback element

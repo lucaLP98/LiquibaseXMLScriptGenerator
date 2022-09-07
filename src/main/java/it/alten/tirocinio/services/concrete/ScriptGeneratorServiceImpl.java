@@ -2470,13 +2470,13 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	referencedTableSchemaNameRollback.setValue(keyColumnMetadata.getReferencedTableSchema());
         	addForeignKeyConstraintRollback.setAttributeNode(referencedTableSchemaNameRollback);
         	
-        	if(keyColumnMetadata.getOnDeleteClause() != null || !keyColumnMetadata.getOnDeleteClause().equals("")) {
+        	if(keyColumnMetadata.getOnDeleteClause() != null && !keyColumnMetadata.getOnDeleteClause().equals("")) {
         		Attr onDeleteRollback = document.createAttribute("onDelete");
             	onDeleteRollback.setValue(keyColumnMetadata.getOnDeleteClause());
             	addForeignKeyConstraintRollback.setAttributeNode(onDeleteRollback);
         	}
         	
-        	if(keyColumnMetadata.getOnUpdateClause() != null || !keyColumnMetadata.getOnUpdateClause().equals("")) {
+        	if(keyColumnMetadata.getOnUpdateClause() != null && !keyColumnMetadata.getOnUpdateClause().equals("")) {
         		Attr onUpdateRollback = document.createAttribute("onUpdate");
             	onUpdateRollback.setValue(keyColumnMetadata.getOnUpdateClause());
             	addForeignKeyConstraintRollback.setAttributeNode(onUpdateRollback);

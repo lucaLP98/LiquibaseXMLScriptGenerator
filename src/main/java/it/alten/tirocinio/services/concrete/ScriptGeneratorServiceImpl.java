@@ -2775,48 +2775,46 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 * Create Element ChangeSet for UPDATE data Script
 	 */
 	private Element generateUpdateDataChangeSet(Document document, UpdateDataScriptDTO updateDataScriptDTO) {
-		Set<ColumnMetadata> columnsMetadatas = columnMetadataRepository.getAllDBColumnsByTableAndSchema(updateDataScriptDTO.getSchemaName(), updateDataScriptDTO.getTableName());
-
 		//changeSet element
-        Element changeSet = createChangeSetElement(document, updateDataScriptDTO);
+        	Element changeSet = createChangeSetElement(document, updateDataScriptDTO);
         
-        /*
-         * Append UPDATE element
-         */
-        Element updateElement = document.createElement("update");
-    	//append UPDATE to changeSet
-    	changeSet.appendChild(updateElement);
+        	/*
+         	* Append UPDATE element
+         	*/
+        	Element updateElement = document.createElement("update");
+    		//append UPDATE to changeSet
+    		changeSet.appendChild(updateElement);
     	
-    	//UPDATE element attributes
-    	Attr schemaName = document.createAttribute("schemaName");
-    	schemaName.setValue(updateDataScriptDTO.getSchemaName());
-    	updateElement.setAttributeNode(schemaName);
+    		//UPDATE element attributes
+    		Attr schemaName = document.createAttribute("schemaName");
+    		schemaName.setValue(updateDataScriptDTO.getSchemaName());
+    		updateElement.setAttributeNode(schemaName);
     	
-    	Attr tableName = document.createAttribute("tableName");
-    	tableName.setValue(updateDataScriptDTO.getTableName());
-    	updateElement.setAttributeNode(tableName);
+    		Attr tableName = document.createAttribute("tableName");
+    		tableName.setValue(updateDataScriptDTO.getTableName());
+    		updateElement.setAttributeNode(tableName);
     	
-    	//append column value to update element
-    	for(ColumnMetadata c : columnsMetadatas) {
-    		if(!updateDataScriptDTO.getColumns().get(c.getColumnName()).equals("")) {
-    			Element columnElement = document.createElement("column");
-    			updateElement.appendChild(columnElement);
+    		//append column value to update element
+    		for(String columnName : updateDataScriptDTO.getColumns().keySet()) {
+    			if(!updateDataScriptDTO.getColumns().get(columnName).equals("")) {
+    				Element columnElement = document.createElement("column");
+    				updateElement.appendChild(columnElement);
         		
-        		Attr columnName = document.createAttribute("name");
-        		columnName.setValue(c.getColumnName());
-        		columnElement.setAttributeNode(columnName);
+        			Attr columnNameAttr = document.createAttribute("name");
+        			columnNameAttr.setValue(columnName);
+        			columnElement.setAttributeNode(columnNameAttr);
         		
-        		columnElement.appendChild(document.createTextNode(updateDataScriptDTO.getColumns().get(c.getColumnName())));
+        			columnElement.appendChild(document.createTextNode(updateDataScriptDTO.getColumns().get(columnName)));
+    			}
     		}
-    	}
     	
-    	//append WHERE condition element to UPDATE
-    	if(!updateDataScriptDTO.getWhereCondition().equals("")) {
-    		Element whereCondition = document.createElement("where");
-    		updateElement.appendChild(whereCondition);
+    		//append WHERE condition element to UPDATE
+    		if(!updateDataScriptDTO.getWhereCondition().equals("")) {
+    			Element whereCondition = document.createElement("where");
+    			updateElement.appendChild(whereCondition);
     		
-    		whereCondition.appendChild(document.createTextNode(updateDataScriptDTO.getWhereCondition()));
-    	}
+    			whereCondition.appendChild(document.createTextNode(updateDataScriptDTO.getWhereCondition()));
+    		}
 		
 		return changeSet;
 	}

@@ -2461,6 +2461,10 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	Attr referencedColumnNameRollback = document.createAttribute("referencedColumnNames");
         	referencedColumnNameRollback.setValue(keyColumnMetadata.getReferencedColumnName());
         	addForeignKeyConstraintRollback.setAttributeNode(referencedColumnNameRollback);
+			
+		Attr baseColumnNameRollback = document.createAttribute("baseColumnNames");
+        	baseColumnNameRollback.setValue(keyColumnMetadata.getBaseColumnName());
+        	addForeignKeyConstraintRollback.setAttributeNode(baseColumnNameRollback);
         	
         	Attr referencedTableNameRollback = document.createAttribute("referencedTableName");
         	referencedTableNameRollback.setValue(keyColumnMetadata.getReferencedTableName());

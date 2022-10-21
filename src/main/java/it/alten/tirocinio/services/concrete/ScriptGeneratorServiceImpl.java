@@ -533,6 +533,25 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
     	Element dropColumnRollBack = document.createElement("rollback");
     	changeSet.appendChild(dropColumnRollBack);
     	
+    	//create addColumn element
+    	Element addColumnRollback = document.createElement("addColumn");
+    	dropColumnRollBack.appendChild(addColumnRollback);
+    	
+    	//set addColumn element's attributes
+    	Attr tableNameAddColumnRollBack = document.createAttribute("tableName");
+    	tableNameAddColumnRollBack.setValue(dropColumnScriptDTO.getTableName());
+    	addColumnRollback.setAttributeNode(tableNameAddColumnRollBack);
+    	
+    	Attr schemaNameAddColumnRollBack = document.createAttribute("tableName");
+    	schemaNameAddColumnRollBack.setValue(dropColumnScriptDTO.getTableSchema());
+    	addColumnRollback.setAttributeNode(schemaNameAddColumnRollBack);
+    	
+    	//retrieve column metadata information
+    	ColumnMetadata column = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(dropColumnScriptDTO.getTableSchema().toUpperCase(), dropColumnScriptDTO.getTableName().toUpperCase(), dropColumnScriptDTO.getColumnName().toUpperCase());
+    	
+    	//add column element to addColumn
+    	addColumnRollback.appendChild(newColumnScript(document, column));
+    	
     	//retrieve column's value for rollback
     	Set<Map<String, String>> records = genericEntityDAO.selectQuery("SELECT * FROM " + dropColumnScriptDTO.getTableSchema().toUpperCase() + "." + dropColumnScriptDTO.getTableName().toUpperCase());
     	

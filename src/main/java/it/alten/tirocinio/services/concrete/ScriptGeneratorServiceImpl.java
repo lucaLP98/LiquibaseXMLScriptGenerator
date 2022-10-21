@@ -354,8 +354,8 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	Attr foreignKeyConstraintNameRollback = document.createAttribute("constraintName");
         	foreignKeyConstraintNameRollback.setValue(c.getConstraintName());
         	addForeignKeyConstraintRollBack.setAttributeNode(foreignKeyConstraintNameRollback);
-		
-		Attr baseColumnNameRollback = document.createAttribute("baseColumnNames");
+        	
+        	Attr baseColumnNameRollback = document.createAttribute("baseColumnNames");
         	baseColumnNameRollback.setValue(c.getBaseColumnName());
         	addForeignKeyConstraintRollBack.setAttributeNode(baseColumnNameRollback);
         	
@@ -529,59 +529,52 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
     	/*
     	 * Generate RollBack
     	 */
-    	ColumnMetadata column = columnMetadataRepository.getDBColumnByNameAndTableAndSchema(dropColumnScriptDTO.getTableSchema(), dropColumnScriptDTO.getTableName(), dropColumnScriptDTO.getColumnName());
     	//create rollback element
     	Element dropColumnRollBack = document.createElement("rollback");
     	changeSet.appendChild(dropColumnRollBack);
     	
-    	//create element addColumn
-    	Element addColumnRollback = document.createElement("addColumn");
-    	dropColumnRollBack.appendChild(addColumnRollback);
+    	//retrieve column's value for rollback
+    	Set<Map<String, String>> records = genericEntityDAO.selectQuery("SELECT * FROM " + dropColumnScriptDTO.getTableSchema().toUpperCase() + "." + dropColumnScriptDTO.getTableName().toUpperCase());
     	
-    	//add addColumn attribute
-    	Attr tableNameRollback = document.createAttribute("tableName");
-    	tableNameRollback.setValue(column.getTableName());
-    	addColumnRollback.setAttributeNode(tableNameRollback); 
-    	
-    	Attr tableSchemaRollback = document.createAttribute("schemaName");
-    	tableSchemaRollback.setValue(column.getTableSchema());
-    	addColumnRollback.setAttributeNode(tableSchemaRollback); 
-    	
-    	//add column element to addColumn;
-    	addColumnRollback.appendChild(newColumnScript(document, column));
-    	
-    	//add data row to deleted column 
-    	String rollBackQuery = "SELECT " + dropColumnScriptDTO.getColumnName() + " FROM " + dropColumnScriptDTO.getTableSchema() + "." + dropColumnScriptDTO.getTableName();
-    	Set<Map<String, String>> resultSetRollBack = genericEntityDAO.selectQuery(rollBackQuery);
-    	
-    	if(resultSetRollBack != null) {
-    		for(Map<String, String> c : resultSetRollBack) {  
-	    		Element insertElement = document.createElement("insert");
-		    	//append INSERT to rollback
-	    		dropColumnRollBack.appendChild(insertElement);
-	    		
-	    		//INSERT element attributes
-		    	Attr schemaNameRollBack = document.createAttribute("schemaName");
-		    	schemaNameRollBack.setValue(dropColumnScriptDTO.getTableSchema());
-		    	insertElement.setAttributeNode(schemaNameRollBack);
-		    	
-		    	Attr tableNameRollBack = document.createAttribute("tableName");
-		    	tableNameRollBack.setValue(dropColumnScriptDTO.getTableName());
-		    	insertElement.setAttributeNode(tableNameRollBack);
-		    	
-	    		for(String s : c.keySet()) {
-	    			if(c.get(s) != null) {
-	    				Element columnElementRollBack = document.createElement("column");
-		        		insertElement.appendChild(columnElementRollBack);
-		        		
-		        		Attr columnNameRollBack = document.createAttribute("name");
-		        		columnNameRollBack.setValue(s);
-		        		columnElementRollBack.setAttributeNode(columnNameRollBack);
-		        		
-		        		columnElementRollBack.appendChild(document.createTextNode(c.get(s)));
-	    			}
-	    		}
-	    	}
+    	if(records != null) {
+    		for(Map<String, String> record : records) {
+    			//create UPDATE element
+        		Element updateRollback = document.createElement("update");
+            	dropColumnRollBack.appendChild(updateRollback);
+            	
+            	//attributes for Update element
+            	Attr tableNameRollback = document.createAttribute("tableName");
+            	tableNameRollback.setValue(dropColumnScriptDTO.getTableName());
+            	updateRollback.setAttributeNode(tableNameRollback); 
+            	
+            	Attr tableSchemaRollback = document.createAttribute("schemaName");
+            	tableSchemaRollback.setValue(dropColumnScriptDTO.getTableSchema());
+            	updateRollback.setAttributeNode(tableSchemaRollback);
+            	
+            	//create element column to update
+            	Element columnRollback = document.createElement("column");
+            	updateRollback.appendChild(columnRollback);
+            	
+            	//set column attribute
+            	Attr columnNameAttrRollback = document.createAttribute("name");
+            	columnNameAttrRollback.setValue(dropColumnScriptDTO.getColumnName());
+            	columnRollback.setAttributeNode(columnNameAttrRollback);
+            	
+            	String columnRollbackValue = record.get(dropColumnScriptDTO.getColumnName());
+            	columnRollback.appendChild(document.createTextNode(columnRollbackValue));
+            	
+            	//WHERE element for update columns
+            	String whereClause = "";
+            	for(String k : record.keySet()) {
+            		if(!k.equals(dropColumnScriptDTO.getColumnName()))
+            			whereClause += k + " = \"" + record.get(k) + "\" AND ";
+            	}
+            	whereClause = whereClause.substring(0, whereClause.length() - 5);
+            	
+            	Element whereRollback = document.createElement("where");
+            	updateRollback.appendChild(whereRollback);
+            	whereRollback.appendChild(document.createTextNode(whereClause));
+        	}
     	}
     	
     	return changeSet;
@@ -2465,8 +2458,8 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
         	Attr referencedColumnNameRollback = document.createAttribute("referencedColumnNames");
         	referencedColumnNameRollback.setValue(keyColumnMetadata.getReferencedColumnName());
         	addForeignKeyConstraintRollback.setAttributeNode(referencedColumnNameRollback);
-			
-		Attr baseColumnNameRollback = document.createAttribute("baseColumnNames");
+        	
+        	Attr baseColumnNameRollback = document.createAttribute("baseColumnNames");
         	baseColumnNameRollback.setValue(keyColumnMetadata.getBaseColumnName());
         	addForeignKeyConstraintRollback.setAttributeNode(baseColumnNameRollback);
         	
@@ -2784,45 +2777,45 @@ public class ScriptGeneratorServiceImpl implements ScriptGeneratorService {
 	 */
 	private Element generateUpdateDataChangeSet(Document document, UpdateDataScriptDTO updateDataScriptDTO) {
 		//changeSet element
-        	Element changeSet = createChangeSetElement(document, updateDataScriptDTO);
+        Element changeSet = createChangeSetElement(document, updateDataScriptDTO);
         
-        	/*
-         	* Append UPDATE element
-         	*/
-        	Element updateElement = document.createElement("update");
-    		//append UPDATE to changeSet
-    		changeSet.appendChild(updateElement);
+        /*
+         * Append UPDATE element
+         */
+        Element updateElement = document.createElement("update");
+    	//append UPDATE to changeSet
+    	changeSet.appendChild(updateElement);
     	
-    		//UPDATE element attributes
-    		Attr schemaName = document.createAttribute("schemaName");
-    		schemaName.setValue(updateDataScriptDTO.getSchemaName());
-    		updateElement.setAttributeNode(schemaName);
+    	//UPDATE element attributes
+    	Attr schemaName = document.createAttribute("schemaName");
+    	schemaName.setValue(updateDataScriptDTO.getSchemaName());
+    	updateElement.setAttributeNode(schemaName);
     	
-    		Attr tableName = document.createAttribute("tableName");
-    		tableName.setValue(updateDataScriptDTO.getTableName());
-    		updateElement.setAttributeNode(tableName);
+    	Attr tableName = document.createAttribute("tableName");
+    	tableName.setValue(updateDataScriptDTO.getTableName());
+    	updateElement.setAttributeNode(tableName);
     	
-    		//append column value to update element
-    		for(String columnName : updateDataScriptDTO.getColumns().keySet()) {
-    			if(!updateDataScriptDTO.getColumns().get(columnName).equals("")) {
-    				Element columnElement = document.createElement("column");
-    				updateElement.appendChild(columnElement);
+    	//append column value to update element
+    	for(String columnName : updateDataScriptDTO.getColumns().keySet()) {
+    		if(!updateDataScriptDTO.getColumns().get(columnName).equals("")) {
+    			Element columnElement = document.createElement("column");
+    			updateElement.appendChild(columnElement);
         		
-        			Attr columnNameAttr = document.createAttribute("name");
-        			columnNameAttr.setValue(columnName);
-        			columnElement.setAttributeNode(columnNameAttr);
+        		Attr columnNameAttr = document.createAttribute("name");
+        		columnNameAttr.setValue(columnName);
+        		columnElement.setAttributeNode(columnNameAttr);
         		
-        			columnElement.appendChild(document.createTextNode(updateDataScriptDTO.getColumns().get(columnName)));
-    			}
+        		columnElement.appendChild(document.createTextNode(updateDataScriptDTO.getColumns().get(columnName)));
     		}
+    	}
     	
-    		//append WHERE condition element to UPDATE
-    		if(!updateDataScriptDTO.getWhereCondition().equals("")) {
-    			Element whereCondition = document.createElement("where");
-    			updateElement.appendChild(whereCondition);
+    	//append WHERE condition element to UPDATE
+    	if(!updateDataScriptDTO.getWhereCondition().equals("")) {
+    		Element whereCondition = document.createElement("where");
+    		updateElement.appendChild(whereCondition);
     		
-    			whereCondition.appendChild(document.createTextNode(updateDataScriptDTO.getWhereCondition()));
-    		}
+    		whereCondition.appendChild(document.createTextNode(updateDataScriptDTO.getWhereCondition()));
+    	}
 		
 		return changeSet;
 	}

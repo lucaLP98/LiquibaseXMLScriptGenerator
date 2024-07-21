@@ -38,3 +38,7 @@ Le tecnologie utilizzate sono:
 </ul>
 
 Il testing è stato effettuato con jUnit e Mockito, seguendo la metodologia SECT per il testing Black Box e Branch Coverage per il testing White Box.
+
+# Documentazione
+Il progetto in questione è stato svolto nell'ambito di un tirocinio curricolare presso una importante multinazionale nel settore ICT, in collaborazione con l'Università degli studi di Napoli Federico II. La realizzazione del progetto era finalizzata alla stesura della tesi di laurea triennale presso la medesima univerità, per cui di seguito viene fornito il link alla tesi di laurea completa contenente anche la documentazioone dell'intero applicativo.
+Vedi <a href"https://drive.google.com/file/d/1q-7YKrnldXI-SRMjaBw5asE6Wo-0DHRC/view?usp=sharing">documentazione</a> 
